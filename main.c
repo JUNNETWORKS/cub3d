@@ -9,7 +9,7 @@ typedef struct  s_data {
     int         endian;
 }               t_data;
 
-// mlx_pixel_put() は1ピクセルずつ描画するので激遅なので, 同じ動きをする関数を自作する
+// mlx_pixel_put() はレンダリングを待たずに1ピクセルずつ描画するので激遅, なので同じ動きをする関数を自作する
 void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
     char    *dst;
@@ -22,16 +22,15 @@ void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
 int     main(void)
 {
     void    *mlx;
-	t_data  img;
+    void    *mlx_win;
+    t_data  img;
 
     mlx = mlx_init();
-	img.img = mlx_new_image(mlx, 1920, 1080);
-
-	/*
-    ** After creating an image, we can call `mlx_get_data_addr`, we pass
-    ** `bits_per_pixel`, `line_length`, and `endian` by reference. These will
-    ** then be set accordingly for the *current* data address.
-    */
+    mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello world!");
+    img.img = mlx_new_image(mlx, 1920, 1080);
     img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
+    my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);  // (5,5)に赤(0, 255, 0, 0)を描画する
+    mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
+    mlx_loop(mlx);
 }
