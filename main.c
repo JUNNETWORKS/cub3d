@@ -1,6 +1,14 @@
 /* https://harm-smits.github.io/42docs/libs/minilibx/getting_started.html */
 #include "./minilibx-linux/mlx.h"
+#include <stdio.h>
 
+// mlxのポインタやウィンドウのポインタを保持
+typedef struct  s_vars {
+    void        *mlx;
+    void        *win;
+}               t_vars;
+
+// 描画するためのイメージ情報を保持
 typedef struct  s_data {
     void        *img;
     char        *addr;
@@ -19,15 +27,30 @@ void            my_mlx_pixel_put(t_data *data, int x, int y, int color)
     *(unsigned int*)dst = color;
 }
 
+// キーボード入力のフック
+int 			key_hook(int keycode, t_vars *vars)
+{
+	printf("Pressed Key Code: %d\n", keycode);
+}
+
+// マウスのフック (man mlx_loop)
+int 			mouse_hook(int button, int x, int y, t_vars *vars)
+{
+	printf("Mouse Button: %d\n", button);
+	printf("x: %d, y: %d\n", x, y);
+}
+
+
 int     main(void)
 {
-    void    *mlx;
-    void    *mlx_win;
+	t_vars	vars;
     t_data  img;
 
-    mlx = mlx_init();
-    mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello world!");
-    img.img = mlx_new_image(mlx, 1920, 1080);
+    vars.mlx = mlx_init();
+    vars.win = mlx_new_window(vars.mlx, 1920, 1080, "Hello world!");
+	mlx_key_hook(vars.win, key_hook, &vars);
+	mlx_mouse_hook(vars.win, mouse_hook, &vars);
+    img.img = mlx_new_image(vars.mlx, 1920, 1080);
     img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
     my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);  // (5,5)に赤(0, 255, 0, 0)を描画する
@@ -54,6 +77,6 @@ int     main(void)
 	for (int i = 100; i < 200; i++)
 	  my_mlx_pixel_put(&img, i, 199, 0x00FFFFFF);
 
-    mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-    mlx_loop(mlx);
+    mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
+    mlx_loop(vars.mlx);
 }
