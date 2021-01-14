@@ -31,6 +31,17 @@ int     main(void)
     img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
     my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);  // (5,5)に赤(0, 255, 0, 0)を描画する
+
+	// 四角形の描画
+	for (int i = 100; i < 200; i++)
+	  my_mlx_pixel_put(&img, i, 100, 0x00FFFFFF);
+	for (int i = 100; i < 200; i++){
+	  my_mlx_pixel_put(&img, 100, i, 0x00FFFFFF);
+	  my_mlx_pixel_put(&img, 199, i, 0x00FFFFFF);
+	}
+	for (int i = 100; i < 200; i++)
+	  my_mlx_pixel_put(&img, i, 199, 0x00FFFFFF);
+
     mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
     mlx_loop(mlx);
 }
