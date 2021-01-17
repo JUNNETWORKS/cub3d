@@ -1,6 +1,7 @@
 /* https://harm-smits.github.io/42docs/libs/minilibx/getting_started.html */
 #include "./minilibx-linux/mlx.h"
 #include <stdio.h>
+#include <X11/X.h>
 
 // mlxのポインタやウィンドウのポインタを保持
 typedef struct  s_vars {
@@ -40,6 +41,17 @@ int 			mouse_hook(int button, int x, int y, t_vars *vars)
 	printf("x: %d, y: %d\n", x, y);
 }
 
+int 			key_release(int keycode, t_vars *vars)
+{
+	printf("key was released\n");
+	printf("keycode: %d\n", keycode);
+}
+
+int 			focusin_func(t_vars *vars)
+{
+  printf("focus in!!\n");
+}
+
 
 int     main(void)
 {
@@ -50,6 +62,8 @@ int     main(void)
     vars.win = mlx_new_window(vars.mlx, 1920, 1080, "Hello world!");
 	mlx_key_hook(vars.win, key_hook, &vars);
 	mlx_mouse_hook(vars.win, mouse_hook, &vars);
+	mlx_hook(vars.win, KeyRelease, KeyReleaseMask, key_release, &vars);
+	mlx_hook(vars.win, FocusIn, 0, focusin_func, &vars);
     img.img = mlx_new_image(vars.mlx, 1920, 1080);
     img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
                                  &img.endian);
