@@ -7,6 +7,11 @@
 # include <stdint.h>
 # include <math.h>
 
+// display definitions
+# define WIDTH 1920
+# define HEIGHT 1080
+# define BLOCK_SIZE 20
+
 // Key definitions
 # define KEY_q 113
 # define KEY_esc 65307
@@ -29,5 +34,11 @@ typedef struct  s_game {
 
 // MLX Utils
 void            my_mlx_pixel_put(t_game *game, int x, int y, int color);
+
+// Game functions
+void	initialize_game(t_game *game);
+
+// Hooks
+int 			key_hook(int keycode, t_game *vars);
 
 #endif
