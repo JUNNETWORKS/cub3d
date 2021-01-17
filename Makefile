@@ -9,7 +9,9 @@ LIBFT_LIB = ./libft/libft.a
 NAME = cub3d
 CC = gcc
 SRCS = main.c \
-	   mlx_utils.c
+	   mlx_utils.c \
+	   initialize_game.c \
+	   key_hooks.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
