@@ -7,22 +7,27 @@
 # include <stdint.h>
 # include <math.h>
 
-// mlxのポインタやウィンドウのポインタを保持
-typedef struct  s_vars {
-    void        *mlx;
-    void        *win;
-}               t_vars;
+// Key definitions
+# define KEY_q 113
+# define KEY_esc 65307
 
 // 描画するためのイメージ情報を保持
-typedef struct  s_data {
+typedef struct  s_img {
     void        *img;
     char        *addr;
     int         bits_per_pixel;
     int         line_length;
     int         endian;
-}               t_data;
+}               t_img;
+
+// mlxのポインタやウィンドウのポインタを保持
+typedef struct  s_game {
+    void		*mlx;
+    void		*win;
+	t_img		img;
+}               t_game;
 
 // MLX Utils
-void            my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void            my_mlx_pixel_put(t_game *game, int x, int y, int color);
 
 #endif
