@@ -31,7 +31,8 @@ typedef struct	s_img {
 
 // Player
 typedef struct	s_player {
-	int			*position;
+	int			*position;  // 現在位置(px)[x, y]
+	int			angle;      // 角度(rad)
 }				t_player;
 
 // mlxのポインタやウィンドウのポインタを保持
