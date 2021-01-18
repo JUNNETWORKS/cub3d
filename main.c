@@ -17,6 +17,15 @@ char *MAP[] = {
 	"11111111 1111111 111111111111",
 };
 
+void	draw_block(t_game *game, int x, int y, int color){
+	// 正方形を描画
+	for (int xx = 0; xx < BLOCK_SIZE; xx++){
+		for (int yy = 0; yy < BLOCK_SIZE; yy++){
+			my_mlx_pixel_put(game, x + xx, y + yy, color);
+		}
+	}
+}
+
 void	draw_wall(t_game *game)
 {
 	// 各壁ごとに縦横10pxのブロックを描画
@@ -24,12 +33,10 @@ void	draw_wall(t_game *game)
 	  for (int j = 0; j < ft_strlen(MAP[i]); j++){
 		printf("%c", MAP[i][j]);
 		if (MAP[i][j] == '1'){
-			// 正方形を描画
-			for (int y = i * BLOCK_SIZE; y < i * BLOCK_SIZE + BLOCK_SIZE; y++){
-				for (int x = j * BLOCK_SIZE; x < j * BLOCK_SIZE + BLOCK_SIZE; x++){
-					my_mlx_pixel_put(game, x, y, 0x00FFFFFF);
-				}
-			}
+			draw_block(game, j * BLOCK_SIZE, i * BLOCK_SIZE, 0x00FFFFFF);
+		}
+		if (ft_strchr("NSEW", MAP[i][j])){
+			draw_block(game, j * BLOCK_SIZE, i * BLOCK_SIZE, 0x00FF0000);
 		}
 	  }
 	  printf("\n");
