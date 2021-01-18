@@ -31,7 +31,6 @@ void	draw_wall(t_game *game)
 	// 各壁ごとに縦横10pxのブロックを描画
 	for(int i = 0; i < sizeof(MAP) / sizeof(MAP[0]); i++){
 	  for (int j = 0; j < ft_strlen(MAP[i]); j++){
-		printf("%c", MAP[i][j]);
 		if (MAP[i][j] == '1'){
 			draw_block(game, j * BLOCK_SIZE, i * BLOCK_SIZE, 0x00FFFFFF);
 		}
@@ -39,7 +38,6 @@ void	draw_wall(t_game *game)
 			draw_block(game, j * BLOCK_SIZE, i * BLOCK_SIZE, 0x00FF0000);
 		}
 	  }
-	  printf("\n");
 	}
 }
 
@@ -55,7 +53,6 @@ int main(int argc, char **argv){
 	initialize_game(&game);
 
 	mlx_key_hook(game.win, key_hook, &game);
-    mlx_put_image_to_window(game.mlx, game.win, game.img.img, 0, 0);
 	mlx_loop_hook(game.mlx, &main_loop, &game);
     mlx_loop(game.mlx);
 }

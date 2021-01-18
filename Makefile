@@ -27,7 +27,6 @@ clean:
 	${RM} ${OBJS}
 
 fclean: clean
-	$(MLX_MAKE) fclean
 	$(LIBFT_MAKE) fclean
 	${RM} ${NAME}
 

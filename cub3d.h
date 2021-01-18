@@ -10,11 +10,15 @@
 // display definitions
 # define WIDTH 1920
 # define HEIGHT 1080
-# define BLOCK_SIZE 20
+# define BLOCK_SIZE 64
 
 // Key definitions
 # define KEY_q 113
 # define KEY_esc 65307
+# define KEY_w 119
+# define KEY_a 97
+# define KEY_s 115
+# define KEY_d 100
 
 // 描画するためのイメージ情報を保持
 typedef struct	s_img {
@@ -36,6 +40,7 @@ typedef struct  s_game {
 	void		*win;
 	t_img		img;
 	t_player	player;
+	char		**map;
 }               t_game;
 
 // MLX Utils
