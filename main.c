@@ -50,10 +50,9 @@ int		main_loop(t_game *game)
 	return (0);
 }
 
-int main(){
+int main(int argc, char **argv){
 	t_game	game;
 	initialize_game(&game);
-
 
 	mlx_key_hook(game.win, key_hook, &game);
     mlx_put_image_to_window(game.mlx, game.win, game.img.img, 0, 0);
