@@ -17,28 +17,32 @@
 # define KEY_esc 65307
 
 // 描画するためのイメージ情報を保持
-typedef struct  s_img {
-    void        *img;
-    char        *addr;
-    int         bits_per_pixel;
-    int         line_length;
-    int         endian;
-}               t_img;
+typedef struct	s_img {
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+}				t_img;
+
+// Player
+typedef struct	s_player {
+	int			*position;
+}				t_player;
 
 // mlxのポインタやウィンドウのポインタを保持
 typedef struct  s_game {
-    void		*mlx;
-    void		*win;
+	void		*mlx;
+	void		*win;
 	t_img		img;
+	t_player	player;
 }               t_game;
 
 // MLX Utils
-void            my_mlx_pixel_put(t_game *game, int x, int y, int color);
-
+void			my_mlx_pixel_put(t_game *game, int x, int y, int color);
 // Game functions
-void	initialize_game(t_game *game);
-
+void			initialize_game(t_game *game);
 // Hooks
-int 			key_hook(int keycode, t_game *vars);
+int 			key_hook(int keycode, t_game *game);
 
 #endif
