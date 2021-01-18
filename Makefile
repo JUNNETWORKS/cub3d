@@ -10,7 +10,8 @@ NAME = cub3d
 CC = gcc
 SRCS = main.c \
 	   mlx_utils.c \
-	   key_hooks.c
+	   key_hooks.c \
+	   debug_utils.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

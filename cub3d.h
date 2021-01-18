@@ -5,12 +5,16 @@
 # include <X11/X.h>
 # include <stdio.h>
 # include <stdint.h>
+# include <stdlib.h>
 # include <math.h>
 
 // display definitions
 # define WIDTH 1920
 # define HEIGHT 1080
 # define BLOCK_SIZE 64
+
+// Game Settings
+# define PLAYER_MOVE_PX (BLOCK_SIZE / 2)
 
 // Key definitions
 # define KEY_q 113
@@ -29,10 +33,16 @@ typedef struct	s_img {
 	int			endian;
 }				t_img;
 
+// Vector2D
+typedef struct	s_vec2 {
+	int			x;
+	int			y;
+} t_vec2;
+
 // Player
 typedef struct	s_player {
-	int			*position;  // 現在位置(px)[x, y]
-	int			angle;      // 角度(rad)
+	t_vec2		position;  // 現在位置(px)[x, y]
+	int			angle;      // 角度(deg)
 }				t_player;
 
 // mlxのポインタやウィンドウのポインタを保持
@@ -50,5 +60,7 @@ void			my_mlx_pixel_put(t_game *game, int x, int y, int color);
 void			initialize_game(t_game *game);
 // Hooks
 int 			key_hook(int keycode, t_game *game);
+// Debug
+void			print_game(t_game *game);
 
 #endif
