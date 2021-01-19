@@ -100,6 +100,15 @@ void	draw_wall(t_game *game)
 void	draw_player(t_game *game)
 {
 	draw_line_angle_length(game, game->player.position, game->player.angle, BLOCK_SIZE / 2, 0x00FF0000);
+
+	/*
+	double rad = (double)game->player.angle / 180 * M_PI;
+	// ブレゼンハムのアルゴリズムのテスト
+	t_vec2 v2;
+	v2.x = game->player.position.x + PLAYER_MOVE_PX * cos(rad);
+	v2.y = game->player.position.y + PLAYER_MOVE_PX * sin(rad);
+	draw_2vec2(game, game->player.position, v2, 0x000000FF);
+	*/
 }
 
 void	initialize_game(t_game *game)
