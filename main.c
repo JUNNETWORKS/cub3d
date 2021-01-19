@@ -33,6 +33,27 @@ void	draw_block(t_game *game, int x, int y, int color){
 	}
 }
 
+// 2つのベクトル間に直線を引く
+// ブレゼンハムのアルゴリズム
+void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color){
+	double deltax = v2.x - v1.x;
+	double deltay = v2.y - v1.y;
+	double error = 0;
+	double deltaerr = deltay / deltax < 0 ? -1 * (deltay / deltax) : (deltay / deltax);    // deltax != 0 と仮定（垂直な線は扱わない）
+	// この除算は分数を保持する形で行う必要がある。
+	int y = v1.y;
+	int xmin = v1.x < v2.x ? v1.x : v2.x;
+	int xmax = v1.x > v2.x ? v1.x : v2.x;
+	for (int x = xmin; x <= xmax; x++){
+		my_mlx_pixel_put(game, x, y, color);
+		error = error + deltaerr;
+		if (error >= 0.5){
+			y++;
+			error -= 1.0;
+		}
+	}
+}
+
 // position: 位置ベクトル
 // angle: 角度(deg)
 // length: 線の長さ
