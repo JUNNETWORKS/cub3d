@@ -14,7 +14,8 @@
 # define BLOCK_SIZE 64
 
 // Game Settings
-# define PLAYER_MOVE_PX (BLOCK_SIZE / 2)
+# define PLAYER_MOVE_PX (8)
+# define PLAYER_ROTATE_DEG (10)
 
 // Key definitions
 # define KEY_q 113
@@ -42,7 +43,9 @@ typedef struct	s_vec2 {
 // Player
 typedef struct	s_player {
 	t_vec2		position;  // 現在位置(px)[x, y]
+	int			is_moving; // 動くキーが押されているか (W=1, S=-1, None=0)
 	int			angle;      // 角度(deg)
+	int			is_rotating; // 動くキーが押されているか (D=1, A=-1, None=0)
 }				t_player;
 
 // mlxのポインタやウィンドウのポインタを保持
@@ -59,7 +62,8 @@ void			my_mlx_pixel_put(t_game *game, int x, int y, int color);
 // Game functions
 void			initialize_game(t_game *game);
 // Hooks
-int 			key_hook(int keycode, t_game *game);
+int 			key_press_hook(int keycode, t_game *game);
+int 			key_release_hook(int keycode, t_game *game);
 // Debug
 void			print_game(t_game *game);
 

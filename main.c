@@ -50,6 +50,20 @@ void	draw_line_angle_length(t_game *game, t_vec2 position, int angle, int length
 	}
 }
 
+void	move_player(t_game *game)
+{
+	if (game->player.is_rotating)
+	{
+		game->player.angle = (game->player.angle += game->player.is_rotating * PLAYER_ROTATE_DEG) % 360;
+	}
+	if (game->player.is_moving)
+	{
+		double rad = (double)game->player.angle / 180 * M_PI;
+		game->player.position.x += game->player.is_moving * PLAYER_MOVE_PX * cos(rad);
+		game->player.position.y += game->player.is_moving * PLAYER_MOVE_PX * sin(rad);
+	}
+}
+
 void	draw_wall(t_game *game)
 {
 	// 各壁ごとに縦横10pxのブロックを描画
@@ -77,14 +91,21 @@ void	initialize_game(t_game *game)
 
 	game->player.position.x = 0;
 	game->player.position.y = 0;
+	game->player.is_moving = 0;
 	game->player.angle = 0;
+	game->player.is_rotating = 0;
+
+	// Game Settings
+	mlx_do_key_autorepeaton(game->mlx);
 }
 
 int		main_loop(t_game *game)
 {
+	move_player(game);
 	clear_img(game);
 	draw_wall(game);
 	draw_player(game);
+	print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
@@ -93,7 +114,8 @@ int main(int argc, char **argv){
 	t_game	game;
 	initialize_game(&game);
 
-	mlx_key_hook(game.win, key_hook, &game);
+	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
+	mlx_hook(game.win, KeyRelease, KeyReleaseMask, key_release_hook, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);
     mlx_loop(game.mlx);
 }

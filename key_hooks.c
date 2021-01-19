@@ -1,27 +1,32 @@
 #include "./cub3d.h"
 
-// キーボード入力のフック
-int 			key_hook(int keycode, t_game *game)
+int 			key_press_hook(int keycode, t_game *game)
 {
 	printf("Pressed Key Code: %d\n", keycode);
 	if (keycode == KEY_q || keycode == KEY_esc){
 		mlx_destroy_window(game->mlx, game->win);
 		exit(0);
 	}
-	if (keycode == KEY_w){
-		double rad = (double)game->player.angle / 180 * M_PI;
-		game->player.position.x += PLAYER_MOVE_PX * cos(rad);
-		game->player.position.y += PLAYER_MOVE_PX * sin(rad);
-	}
-	if (keycode == KEY_s){
-		double rad = (double)game->player.angle / 180 * M_PI;
-		game->player.position.x -= PLAYER_MOVE_PX * cos(rad);
-		game->player.position.y -= PLAYER_MOVE_PX * sin(rad);
-	}
+	if (keycode == KEY_w)
+		game->player.is_moving = 1;
+	if (keycode == KEY_s)
+		game->player.is_moving = -1;
 	if (keycode == KEY_a)
-		game->player.angle = (game->player.angle -= 30) % 360;
+		game->player.is_rotating = -1;
 	if (keycode == KEY_d)
-		game->player.angle = (game->player.angle += 30) % 360;
-	print_game(game);
+		game->player.is_rotating = 1;
+	return (0);
+}
+
+int 			key_release_hook(int keycode, t_game *game)
+{
+	if (keycode == KEY_w)
+		game->player.is_moving = 0;
+	if (keycode == KEY_s)
+		game->player.is_moving = 0;
+	if (keycode == KEY_a)
+		game->player.is_rotating = 0;
+	if (keycode == KEY_d)
+		game->player.is_rotating = 0;
 	return (0);
 }
