@@ -17,6 +17,11 @@ char *MAP[] = {
 	"11111111 1111111 111111111111",
 };
 
+double	deg2rad(int x)
+{
+	return ((double)x / 180 * M_PI);
+}
+
 void	clear_img(t_game *game)
 {
 	for (int x = 0; x < WIDTH; x++)
@@ -45,7 +50,8 @@ void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color){
 	int xmin = v1.x < v2.x ? v1.x : v2.x;
 	int xmax = v1.x > v2.x ? v1.x : v2.x;
 	for (int x = xmin; x <= xmax; x++){
-		my_mlx_pixel_put(game, x, y, color);
+		if (x >= 0 && x < WIDTH && y >= 0 && y <= HEIGHT)
+			my_mlx_pixel_put(game, x, y, color);
 		error = error + deltaerr;
 		if (error >= 0.5){
 			y++;
@@ -79,7 +85,7 @@ void	move_player(t_game *game)
 	}
 	if (game->player.is_moving)
 	{
-		double rad = (double)game->player.angle / 180 * M_PI;
+		double rad = deg2rad(game->player.angle);
 		game->player.position.x += game->player.is_moving * PLAYER_MOVE_PX * cos(rad);
 		game->player.position.y += game->player.is_moving * PLAYER_MOVE_PX * sin(rad);
 	}
@@ -101,14 +107,22 @@ void	draw_player(t_game *game)
 {
 	draw_line_angle_length(game, game->player.position, game->player.angle, BLOCK_SIZE / 2, 0x00FF0000);
 
-	/*
-	double rad = (double)game->player.angle / 180 * M_PI;
+	double rad = deg2rad(game->player.angle);
 	// ブレゼンハムのアルゴリズムのテスト
-	t_vec2 v2;
-	v2.x = game->player.position.x + PLAYER_MOVE_PX * cos(rad);
-	v2.y = game->player.position.y + PLAYER_MOVE_PX * sin(rad);
-	draw_2vec2(game, game->player.position, v2, 0x000000FF);
-	*/
+	t_vec2 v1_ = {0, 0};
+	t_vec2 v2_ = {1000, 1000};
+	draw_2vec2(game, v1_, v2_, 0x000000FF);
+
+	// Playerを三角形で描画
+	int angle = -1 * game->player.angle;
+	t_vec2 player = game->player.position;
+	int length = 20;
+	t_vec2 v1 = {player.x + length * cos(deg2rad(angle)), player.y + length * sin(deg2rad(angle))};
+	t_vec2 v2 = {player.x + length * cos(deg2rad(90 + angle)), player.y + length * sin(deg2rad(90 + angle))};
+	t_vec2 v3 = {player.x + length * cos(deg2rad(90 - angle)), player.y + length * sin(deg2rad(90 - angle))};
+	draw_2vec2(game, v1, v2, 0x000000FF);
+	draw_2vec2(game, v2, v3, 0x000000FF);
+	draw_2vec2(game, v3, v1, 0x000000FF);
 }
 
 void	initialize_game(t_game *game)

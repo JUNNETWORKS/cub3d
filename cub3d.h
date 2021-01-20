@@ -14,8 +14,8 @@
 # define BLOCK_SIZE 64
 
 // Game Settings
-# define PLAYER_MOVE_PX (8)
-# define PLAYER_ROTATE_DEG (10)
+# define PLAYER_MOVE_PX (4)
+# define PLAYER_ROTATE_DEG (2)
 
 // Key definitions
 # define KEY_q 113
