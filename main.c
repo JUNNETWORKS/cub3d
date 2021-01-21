@@ -41,21 +41,44 @@ void	draw_block(t_game *game, int x, int y, int color){
 // 2つのベクトル間に直線を引く
 // ブレゼンハムのアルゴリズム
 void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color){
-	double deltax = v2.x - v1.x;
-	double deltay = v2.y - v1.y;
-	double error = 0;
-	double deltaerr = deltay / deltax < 0 ? -1 * (deltay / deltax) : (deltay / deltax);    // deltax != 0 と仮定（垂直な線は扱わない）
-	// この除算は分数を保持する形で行う必要がある。
+	int dx = ABS(v2.x - v1.x);
+	int dy = ABS(v2.y - v1.y);
+	if (dx == 0 && dy == 0)
+		return;
+	int sx = (v1.x < v2.x) ? 1 : -1;  // Eが閾値を超えた時増加量
+	int sy = (v1.y < v2.y) ? 1 : -1;
+	int dx2 = dx * 2;
+	int dy2 = dy * 2;
+
+	int x = v1.x;
 	int y = v1.y;
-	int xmin = v1.x < v2.x ? v1.x : v2.x;
-	int xmax = v1.x > v2.x ? v1.x : v2.x;
-	for (int x = xmin; x <= xmax; x++){
-		if (x >= 0 && x < WIDTH && y >= 0 && y <= HEIGHT)
-			my_mlx_pixel_put(game, x, y, color);
-		error = error + deltaerr;
-		if (error >= 0.5){
-			y++;
-			error -= 1.0;
+	printf("dx: %d, dy: %d\n", dx, dy);
+	printf("sx: %d, sy: %d\n", sx, sy);
+	if (dy <= dx) {
+		int E = -dx;
+		for (int i = 0; i <= dx; i++) {
+			printf("dy <= dx\t x: %d, y: %d, E: %d\n", x, y, E);
+			if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
+				my_mlx_pixel_put(game, x, y, color);
+			x += sx;
+			E += dy2;
+			if (0 <= E) {
+				y += sy;
+				E -= dx2;
+			}
+		}
+	} else {
+		int E = -dy;
+		for (int i = 0; i <= dy; i++) {
+			printf("dy > dx\t x: %d, y: %d, E: %d\n", x, y, E);
+			if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
+				my_mlx_pixel_put(game, x, y, color);
+			y += sy;
+			E += dx2;
+			if (0 <= E) {
+				x += sx;
+				E -= dy2;
+			}
 		}
 	}
 }
@@ -109,20 +132,26 @@ void	draw_player(t_game *game)
 
 	double rad = deg2rad(game->player.angle);
 	// ブレゼンハムのアルゴリズムのテスト
-	t_vec2 v1_ = {0, 0};
-	t_vec2 v2_ = {1000, 1000};
+	t_vec2 v1_ = {100, 0};
+	t_vec2 v2_ = {0, 100};
 	draw_2vec2(game, v1_, v2_, 0x000000FF);
+	t_vec2 v3_ = {0, 0};
+	t_vec2 v4_ = {100, 100};
+	draw_2vec2(game, v3_, v4_, 0x0000FFFF);
 
 	// Playerを三角形で描画
 	int angle = -1 * game->player.angle;
 	t_vec2 player = game->player.position;
-	int length = 20;
-	t_vec2 v1 = {player.x + length * cos(deg2rad(angle)), player.y + length * sin(deg2rad(angle))};
-	t_vec2 v2 = {player.x + length * cos(deg2rad(90 + angle)), player.y + length * sin(deg2rad(90 + angle))};
-	t_vec2 v3 = {player.x + length * cos(deg2rad(90 - angle)), player.y + length * sin(deg2rad(90 - angle))};
+	int length = 50;
+	printf("angle  : %d\n", angle);
+	t_vec2 v1 = player;
+	t_vec2 v2 = {player.x + length * cos(deg2rad(angle + 150)), player.y + length * sin(deg2rad(angle + 150))};
+	t_vec2 v3 = {player.x + length * cos(deg2rad(angle - 150)), player.y + length * sin(deg2rad(angle - 150))};
+	printf("v2\tx: %d, y: %d\n", v2.x, v2.y);
+	printf("v3\tx: %d, y: %d\n", v3.x, v3.y);
 	draw_2vec2(game, v1, v2, 0x000000FF);
-	draw_2vec2(game, v2, v3, 0x000000FF);
-	draw_2vec2(game, v3, v1, 0x000000FF);
+	// draw_2vec2(game, v2, v3, 0x0000FF00);
+	draw_2vec2(game, v3, v1, 0x00FF00FF);
 }
 
 void	initialize_game(t_game *game)

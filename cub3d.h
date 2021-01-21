@@ -25,6 +25,9 @@
 # define KEY_s 115
 # define KEY_d 100
 
+// utils
+# define ABS(x) ((x) < 0 ? -1 * (x) : (x))
+
 // 描画するためのイメージ情報を保持
 typedef struct	s_img {
 	void		*img;
