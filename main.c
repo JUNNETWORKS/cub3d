@@ -52,12 +52,9 @@ void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color){
 
 	int x = v1.x;
 	int y = v1.y;
-	printf("dx: %d, dy: %d\n", dx, dy);
-	printf("sx: %d, sy: %d\n", sx, sy);
 	if (dy <= dx) {
 		int E = -dx;
 		for (int i = 0; i <= dx; i++) {
-			printf("dy <= dx\t x: %d, y: %d, E: %d\n", x, y, E);
 			if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 				my_mlx_pixel_put(game, x, y, color);
 			x += sx;
@@ -70,7 +67,6 @@ void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color){
 	} else {
 		int E = -dy;
 		for (int i = 0; i <= dy; i++) {
-			printf("dy > dx\t x: %d, y: %d, E: %d\n", x, y, E);
 			if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT)
 				my_mlx_pixel_put(game, x, y, color);
 			y += sy;
@@ -142,15 +138,12 @@ void	draw_player(t_game *game)
 	// Playerを三角形で描画
 	int angle = -1 * game->player.angle;
 	t_vec2 player = game->player.position;
-	int length = 50;
-	printf("angle  : %d\n", angle);
+	int length = 20;
 	t_vec2 v1 = player;
-	t_vec2 v2 = {player.x + length * cos(deg2rad(angle + 150)), player.y + length * sin(deg2rad(angle + 150))};
-	t_vec2 v3 = {player.x + length * cos(deg2rad(angle - 150)), player.y + length * sin(deg2rad(angle - 150))};
-	printf("v2\tx: %d, y: %d\n", v2.x, v2.y);
-	printf("v3\tx: %d, y: %d\n", v3.x, v3.y);
+	t_vec2 v2 = {player.x + length * cos(deg2rad(angle + 150)), player.y - length * sin(deg2rad(angle + 150))};
+	t_vec2 v3 = {player.x + length * cos(deg2rad(angle - 150)), player.y - length * sin(deg2rad(angle - 150))};
 	draw_2vec2(game, v1, v2, 0x000000FF);
-	// draw_2vec2(game, v2, v3, 0x0000FF00);
+	draw_2vec2(game, v2, v3, 0x0000FF00);
 	draw_2vec2(game, v3, v1, 0x00FF00FF);
 }
 
