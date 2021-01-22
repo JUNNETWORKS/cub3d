@@ -15,7 +15,7 @@
 
 // Game Settings
 # define PLAYER_MOVE_PX (4)
-# define PLAYER_ROTATE_DEG (2)
+# define PLAYER_ROTATE_RAD (M_PI / 90)
 
 // Key definitions
 # define KEY_q 113
@@ -43,11 +43,18 @@ typedef struct	s_vec2 {
 	int			y;
 } t_vec2;
 
+
+// Ray 2D
+typedef struct	s_ray2 {
+	t_vec2		pos;  // レイの始点の位置ベクトル
+	t_vec2		way;  // レイの始点から伸びる方向ベクトル
+} t_ray2;
+
 // Player
 typedef struct	s_player {
 	t_vec2		position;  // 現在位置(px)[x, y]
 	int			is_moving; // 動くキーが押されているか (W=1, S=-1, None=0)
-	int			angle;      // 角度(deg)
+	double		angle;      // 角度(rad)
 	int			is_rotating; // 動くキーが押されているか (D=1, A=-1, None=0)
 }				t_player;
 
@@ -67,6 +74,13 @@ void			initialize_game(t_game *game);
 // Hooks
 int 			key_press_hook(int keycode, t_game *game);
 int 			key_release_hook(int keycode, t_game *game);
+// Drawers
+void	clear_img(t_game *game);
+void	draw_block(t_game *game, int x, int y, int color);
+void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color);
+void	draw_line_angle_length(t_game *game, t_vec2 position, int angle, int length, int color);
+// Utils
+double	deg2rad(int x);
 // Debug
 void			print_game(t_game *game);
 

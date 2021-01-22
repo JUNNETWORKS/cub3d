@@ -11,6 +11,8 @@ CC = gcc
 SRCS = main.c \
 	   mlx_utils.c \
 	   key_hooks.c \
+	   drawers.c \
+	   utils.c \
 	   debug_utils.c
 OBJS = $(SRCS:.c=.o)
 
