@@ -15,7 +15,7 @@
 
 // Game Settings
 # define PLAYER_MOVE_PX (4)
-# define PLAYER_ROTATE_RAD (M_PI / 90)
+# define PLAYER_ROTATE_RAD (M_PI / 10)
 
 // Key definitions
 # define KEY_q 113

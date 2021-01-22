@@ -21,17 +21,18 @@ void	move_player(t_game *game)
 {
 	if (game->player.is_rotating)
 	{
-		game->player.angle = game->player.angle += game->player.is_rotating * PLAYER_ROTATE_RAD;
+		game->player.angle = game->player.angle + game->player.is_rotating * PLAYER_ROTATE_RAD;
+		/*
 		if (game->player.angle >= 2 * M_PI)
 			game->player.angle -= 2 * M_PI;
-		if (game->player.angle <= -2 * M_PI)
+		else if (game->player.angle <= -2 * M_PI)
 			game->player.angle += 2 * M_PI;
+			*/
 	}
 	if (game->player.is_moving)
 	{
-		double rad = deg2rad(game->player.angle);
-		game->player.position.x += game->player.is_moving * PLAYER_MOVE_PX * cos(rad);
-		game->player.position.y += game->player.is_moving * PLAYER_MOVE_PX * sin(rad);
+		game->player.position.x += game->player.is_moving * PLAYER_MOVE_PX * cos(game->player.angle);
+		game->player.position.y += game->player.is_moving * PLAYER_MOVE_PX * sin(game->player.angle);
 	}
 }
 
@@ -56,8 +57,8 @@ void	draw_player(t_game *game)
 	t_vec2 player = game->player.position;
 	int length = 20;
 	t_vec2 v1 = player;
-	t_vec2 v2 = {player.x + length * cos(deg2rad(angle + 150)), player.y - length * sin(deg2rad(angle + 150))};
-	t_vec2 v3 = {player.x + length * cos(deg2rad(angle - 150)), player.y - length * sin(deg2rad(angle - 150))};
+	t_vec2 v2 = {player.x + length * cos(game->player.angle + 5 / 6 * M_PI), player.y - length * sin(game->player.angle + 5 / 6 * M_PI)};
+	t_vec2 v3 = {player.x + length * cos(game->player.angle - 5 / 6 * M_PI), player.y - length * sin(game->player.angle - 5 / 6 * M_PI)};
 	draw_2vec2(game, v1, v2, 0x000000FF);
 	draw_2vec2(game, v2, v3, 0x0000FF00);
 	draw_2vec2(game, v3, v1, 0x00FF00FF);
