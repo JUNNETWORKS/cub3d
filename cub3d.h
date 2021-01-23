@@ -79,6 +79,10 @@ void	clear_img(t_game *game);
 void	draw_block(t_game *game, int x, int y, int color);
 void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color);
 void	draw_line_angle_length(t_game *game, t_vec2 position, double angle, int length, int color);
+// Vector
+double	vec2_length(t_vec2 vec);         // ベクトルの長さを求める
+void	vec2_add(t_vec2 *a, t_vec2 b);   // ベクトルの足し算
+void	vec2_mult(t_vec2 vec, int num);  // ベクトルを定数倍する
 // Utils
 double	deg2rad(int x);
 // Debug
