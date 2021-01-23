@@ -15,7 +15,7 @@
 
 // Game Settings
 # define PLAYER_MOVE_PX (4)
-# define PLAYER_ROTATE_RAD (M_PI / 10)
+# define PLAYER_ROTATE_RAD (M_PI / 100)
 
 // Key definitions
 # define KEY_q 113
@@ -78,7 +78,7 @@ int 			key_release_hook(int keycode, t_game *game);
 void	clear_img(t_game *game);
 void	draw_block(t_game *game, int x, int y, int color);
 void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color);
-void	draw_line_angle_length(t_game *game, t_vec2 position, int angle, int length, int color);
+void	draw_line_angle_length(t_game *game, t_vec2 position, double angle, int length, int color);
 // Utils
 double	deg2rad(int x);
 // Debug

@@ -60,16 +60,15 @@ void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color)
 }
 
 // position: 位置ベクトル
-// angle: 角度(deg)
+// angle: 角度(rad)
 // length: 線の長さ
-void	draw_line_angle_length(t_game *game, t_vec2 position, int angle, int length, int color)
+void	draw_line_angle_length(t_game *game, t_vec2 position, double angle, int length, int color)
 {
-	double rad = (double)angle / 180 * M_PI;
 	/* 長さ分の線を描画 */
 	for(int l = 0; l < length; l++){
 		/* x座標とy座標を計算 */
-		int x = position.x + l * cos(rad);
-		int y = position.y + l * sin(rad);
+		int x = position.x + l * cos(angle);
+		int y = position.y + l * sin(angle);
 		if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
 			continue;
 		my_mlx_pixel_put(game, x, y, color);

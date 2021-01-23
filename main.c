@@ -22,12 +22,10 @@ void	move_player(t_game *game)
 	if (game->player.is_rotating)
 	{
 		game->player.angle = game->player.angle + game->player.is_rotating * PLAYER_ROTATE_RAD;
-		/*
 		if (game->player.angle >= 2 * M_PI)
 			game->player.angle -= 2 * M_PI;
 		else if (game->player.angle <= -2 * M_PI)
 			game->player.angle += 2 * M_PI;
-			*/
 	}
 	if (game->player.is_moving)
 	{
@@ -52,16 +50,25 @@ void	draw_player(t_game *game)
 {
 	draw_line_angle_length(game, game->player.position, game->player.angle, 20, 0x00FF0000);
 
+	// ブレゼンハムのアルゴリズムのテスト
+	t_vec2 v1_ = {100, 0};
+	t_vec2 v2_ = {0, 100};
+	draw_2vec2(game, v1_, v2_, 0x000000FF);
+	t_vec2 v3_ = {0, 0};
+	t_vec2 v4_ = {100, 100};
+	draw_2vec2(game, v3_, v4_, 0x0000FFFF);
+
 	// Playerを三角形で描画
-	int angle = -1 * game->player.angle;
+	double angle = -1 * game->player.angle;
 	t_vec2 player = game->player.position;
-	int length = 20;
-	t_vec2 v1 = player;
-	t_vec2 v2 = {player.x + length * cos(game->player.angle + 5 / 6 * M_PI), player.y - length * sin(game->player.angle + 5 / 6 * M_PI)};
-	t_vec2 v3 = {player.x + length * cos(game->player.angle - 5 / 6 * M_PI), player.y - length * sin(game->player.angle - 5 / 6 * M_PI)};
-	draw_2vec2(game, v1, v2, 0x000000FF);
+	double length = 20;
+	t_vec2 v2 = {player.x + length * cos(angle + 5.0 / 6.0 * M_PI), player.y - length * sin(angle + 5.0 / 6.0 * M_PI)};
+	t_vec2 v3 = {player.x + length * cos(angle - 5.0 / 6.0 * M_PI), player.y - length * sin(angle - 5.0 / 6.0 * M_PI)};
+	printf("v2\n\tx: %d\n\ty: %d\n", v2.x, v2.y);
+	printf("v3\n\tx: %d\n\ty: %d\n", v3.x, v3.y);
+	draw_2vec2(game, player, v2, 0x000000FF);
 	draw_2vec2(game, v2, v3, 0x0000FF00);
-	draw_2vec2(game, v3, v1, 0x00FF00FF);
+	draw_2vec2(game, v3, player, 0x00FF00FF);
 }
 
 void	initialize_game(t_game *game)
