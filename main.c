@@ -60,15 +60,20 @@ void	draw_player(t_game *game)
 
 	// Playerを三角形で描画
 	double angle = -1 * game->player.angle;
-	t_vec2 player = game->player.position;
+	t_vec2 player_pos = game->player.position;
 	double length = 20;
-	t_vec2 v2 = {player.x + length * cos(angle + 5.0 / 6.0 * M_PI), player.y - length * sin(angle + 5.0 / 6.0 * M_PI)};
-	t_vec2 v3 = {player.x + length * cos(angle - 5.0 / 6.0 * M_PI), player.y - length * sin(angle - 5.0 / 6.0 * M_PI)};
-	printf("v2\n\tx: %d\n\ty: %d\n", v2.x, v2.y);
-	printf("v3\n\tx: %d\n\ty: %d\n", v3.x, v3.y);
-	draw_2vec2(game, player, v2, 0x000000FF);
+	t_vec2 v2 = {player_pos.x + length * cos(angle + 5.0 / 6.0 * M_PI), player_pos.y - length * sin(angle + 5.0 / 6.0 * M_PI)};
+	t_vec2 v3 = {player_pos.x + length * cos(angle - 5.0 / 6.0 * M_PI), player_pos.y - length * sin(angle - 5.0 / 6.0 * M_PI)};
+	draw_2vec2(game, player_pos, v2, 0x000000FF);
 	draw_2vec2(game, v2, v3, 0x0000FF00);
-	draw_2vec2(game, v3, player, 0x00FF00FF);
+	draw_2vec2(game, v3, player_pos, 0x00FF00FF);
+
+	// 光線(Ray)を作成,描画
+	const double ray_length = 100;
+	for (double ray_angle = -M_PI / 2.0; ray_angle <= M_PI / 2.0; ray_angle += M_PI / 10.0){
+		t_vec2 ray_end = {player_pos.x + ray_length * cos(angle + ray_angle), player_pos.y - ray_length * sin(angle + ray_angle)};
+		draw_2vec2(game, player_pos, ray_end, 0x00FFFF00);
+	}
 }
 
 void	initialize_game(t_game *game)
