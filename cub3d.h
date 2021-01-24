@@ -9,8 +9,8 @@
 # include <math.h>
 
 // display definitions
-# define WIDTH 1920
-# define HEIGHT 1080
+# define SCREEN_WIDTH 640
+# define SCREEN_HEIGHT 480
 # define BLOCK_SIZE 64
 
 // Game Settings

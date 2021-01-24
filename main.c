@@ -69,7 +69,7 @@ void	draw_player(t_game *game)
 	draw_2vec2(game, v3, player_pos, 0x00FF00FF);
 
 	// 光線(Ray)を作成,描画
-	const double ray_length = WIDTH;
+	const double ray_length = SCREEN_WIDTH;
 	for (double ray_angle = -M_PI / 2.0; ray_angle <= M_PI / 2.0; ray_angle += M_PI / 1000.0){
 		t_vec2 ray_end = {ray_length * cos(angle + ray_angle), -ray_length * sin(angle + ray_angle)};
 		vec2_add(&ray_end, player_pos);
@@ -81,8 +81,8 @@ void	draw_player(t_game *game)
 void	initialize_game(t_game *game)
 {
     game->mlx = mlx_init();
-    game->win = mlx_new_window(game->mlx, WIDTH, HEIGHT, "Hello world!");
-    game->img.img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+    game->win = mlx_new_window(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "Hello world!");
+    game->img.img = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
     game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 	game->map = MAP;
 
