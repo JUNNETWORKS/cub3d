@@ -13,6 +13,7 @@ SRCS = main.c \
 	   key_hooks.c \
 	   drawers.c \
 	   utils.c \
+	   vector_utils.c \
 	   debug_utils.c
 OBJS = $(SRCS:.c=.o)
 

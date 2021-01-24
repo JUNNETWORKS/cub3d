@@ -69,9 +69,11 @@ void	draw_player(t_game *game)
 	draw_2vec2(game, v3, player_pos, 0x00FF00FF);
 
 	// 光線(Ray)を作成,描画
-	const double ray_length = 100;
-	for (double ray_angle = -M_PI / 2.0; ray_angle <= M_PI / 2.0; ray_angle += M_PI / 10.0){
-		t_vec2 ray_end = {player_pos.x + ray_length * cos(angle + ray_angle), player_pos.y - ray_length * sin(angle + ray_angle)};
+	const double ray_length = WIDTH;
+	for (double ray_angle = -M_PI / 2.0; ray_angle <= M_PI / 2.0; ray_angle += M_PI / 1000.0){
+		t_vec2 ray_end = {ray_length * cos(angle + ray_angle), -ray_length * sin(angle + ray_angle)};
+		vec2_add(&ray_end, player_pos);
+		// t_vec2 ray_end = {player_pos.x + ray_length * cos(angle + ray_angle), player_pos.y - ray_length * sin(angle + ray_angle)};
 		draw_2vec2(game, player_pos, ray_end, 0x00FFFF00);
 	}
 }
