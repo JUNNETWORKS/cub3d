@@ -86,10 +86,16 @@ void	initialize_game(t_game *game)
     game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 	game->map = MAP;
 
+	// プレイヤーの初期座標
 	game->player.position.x = 0;
 	game->player.position.y = 0;
+	// プレイヤーの初期方向
+	game->player.dir.x = -1;
+	game->player.dir.y = 0;
+	// 方向ベクトルに垂直になるようにカメラの平面ベクトルを初期化
+	game->player.plane.x = 0;
+	game->player.plane.y = 0.66;
 	game->player.is_moving = 0;
-	game->player.angle = 0;
 	game->player.is_rotating = 0;
 
 	// Game Settings
