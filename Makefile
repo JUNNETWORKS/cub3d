@@ -8,7 +8,6 @@ LIBFT_LIB = ./libft/libft.a
 
 NAME = cub3d
 CC = gcc
-CFLAGS = -g -fsanitize=address
 SRCS = main.c \
 	   mlx_utils.c \
 	   key_hooks.c \
@@ -23,7 +22,7 @@ all: $(NAME)
 $(NAME): ${OBJS}
 	$(MLX_MAKE)
 	$(LIBFT_MAKE)
-	$(CC) -o $(NAME) $(OBJS) $(LIBFT_LIB) -L$(MLX_PATH) -lmlx -L$(INCLIB) -lXext -lX11 -lm -lbsd
+	$(CC) -g -fsanitize=address -o $(NAME) $(OBJS) $(LIBFT_LIB) -L$(MLX_PATH) -lmlx -L$(INCLIB) -lXext -lX11 -lm -lbsd
 
 clean:
 	$(MLX_MAKE) clean
