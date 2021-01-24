@@ -34,7 +34,7 @@ void	move_player(t_game *game)
 		game->player.position.y += game->player.is_moving * PLAYER_MOVE_PX * sin(game->player.angle);
 	}
 }
-
+*/
 void	draw_wall(t_game *game)
 {
 	// 各壁ごとに縦横10pxのブロックを描画
@@ -47,6 +47,7 @@ void	draw_wall(t_game *game)
 	}
 }
 
+/*
 void	draw_player(t_game *game)
 {
 	draw_line_angle_length(game, game->player.position, game->player.angle, 20, 0x00FF0000);
@@ -97,6 +98,7 @@ void	initialize_game(t_game *game)
 	// 方向ベクトルに垂直になるようにカメラの平面ベクトルを初期化
 	game->player.plane.x = 0;
 	game->player.plane.y = 0.66;
+	// 状態の初期化
 	game->player.is_moving = 0;
 	game->player.is_rotating = 0;
 
@@ -114,6 +116,8 @@ void	lodev_loop(t_game *game)
 		t_vec2 ray_dir;
 		ray_dir.x = game->player.dir.x + game->player.plane.x * camera_x;
 		ray_dir.y = game->player.dir.y + game->player.plane.y * camera_x;
+		printf("ray_dir\t");
+		print_vec2(ray_dir);
 		// map: 現在対象としているマップ内の正方形を表す
 		int map_x = (int)game->player.pos.x;
 		int map_y = (int)game->player.pos.y;
@@ -160,7 +164,8 @@ void	lodev_loop(t_game *game)
 		while (hit == 0)
 		{
 			if (side_dist_x < side_dist_y)
-			{ side_dist_x += delta_dist_x;
+			{
+				side_dist_x += delta_dist_x;
 				map_x += step_x;
 				side = 0;
 			}
@@ -174,6 +179,7 @@ void	lodev_loop(t_game *game)
 			if (game->map[map_x][map_y] > 0)
 				hit = 1;
 		}
+		printf("hit at x: %d, y: %d\n", map_x, map_y);
 
 		// 壁までの光線の距離を計算する
 		if (side == 0)
@@ -197,8 +203,16 @@ void	lodev_loop(t_game *game)
 		else
 			color = 0x00888888;
 
+		printf("perp_wall_dist: %lf\n", perp_wall_dist);
+		printf("line_height:    %d\n", line_height);
+		printf("draw_start:     %d\n", draw_start);
+		printf("draw_end:       %d\n", draw_end);
+
 		t_vec2 v_start = {x, draw_start};
 		t_vec2 v_end = {x, draw_end};
+		printf("v_start:\n\tx: %lf\n\ty: %lf\n", v_start.x, v_start.y);
+		printf("v_end:\n\tx: %lf\n\ty: %lf\n", v_end.x, v_end.y);
+		printf("\n\n");
 		draw_2vec2(game, v_start, v_end, color);
 	}
 }
@@ -207,13 +221,13 @@ int		main_loop(t_game *game)
 {
 	clear_img(game);
 	lodev_loop(game);
+	// draw_wall(game);
 	/*
-	draw_wall(game);
 	draw_player(game);
 	print_game(game);
 	move_player(game);
 	*/
-	print_game(game);
+	// print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }

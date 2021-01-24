@@ -9,3 +9,8 @@ void	print_game(t_game *game)
 	printf("plane\n\tx: %lf\n\ty: %lf\n", game->player.plane.x, game->player.plane.y);
 	printf("status\n\tis_moving: %d\n\tis_rotating: %d\n", game->player.is_moving, game->player.is_rotating);
 }
+
+void	print_vec2(t_vec2 vec)
+{
+	printf("x: %lf, y: %lf\n", vec.x, vec.y);
+}

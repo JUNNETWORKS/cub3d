@@ -21,12 +21,16 @@ void	draw_block(t_game *game, int x, int y, int color)
 // ブレゼンハムのアルゴリズム
 void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color)
 {
-	int dx = ABS(v2.x - v1.x);
-	int dy = ABS(v2.y - v1.y);
+	int v1x = (int)v1.x;
+	int v1y = (int)v1.y;
+	int v2x = (int)v2.x;
+	int v2y = (int)v2.y;
+	int dx = ABS(v2x - v1x);
+	int dy = ABS(v2y - v1y);
 	if (dx == 0 && dy == 0)
 		return;
-	int sx = (v1.x < v2.x) ? 1 : -1;  // Eが閾値を超えた時増加量
-	int sy = (v1.y < v2.y) ? 1 : -1;
+	int sx = (v1x < v2x) ? 1 : -1;  // Eが閾値を超えた時増加量
+	int sy = (v1y < v2y) ? 1 : -1;
 	int dx2 = dx * 2;
 	int dy2 = dy * 2;
 

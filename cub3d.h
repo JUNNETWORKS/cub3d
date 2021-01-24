@@ -88,5 +88,6 @@ void	vec2_mult(t_vec2 vec, int num);  // ベクトルを定数倍する
 double	deg2rad(int x);
 // Debug
 void			print_game(t_game *game);
+void			print_vec2(t_vec2 vec);
 
 #endif
