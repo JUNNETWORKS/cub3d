@@ -60,7 +60,7 @@ void	draw_player(t_game *game)
 
 	// Playerを三角形で描画
 	double angle = -1 * game->player.angle;
-	t_vec2 player_pos = game->player.position;
+	t_vec2 player_pos = game->player.pos;
 	double length = 20;
 	t_vec2 v2 = {player_pos.x + length * cos(angle + 5.0 / 6.0 * M_PI), player_pos.y - length * sin(angle + 5.0 / 6.0 * M_PI)};
 	t_vec2 v3 = {player_pos.x + length * cos(angle - 5.0 / 6.0 * M_PI), player_pos.y - length * sin(angle - 5.0 / 6.0 * M_PI)};
@@ -87,8 +87,8 @@ void	initialize_game(t_game *game)
 	game->map = MAP;
 
 	// プレイヤーの初期座標
-	game->player.position.x = 0;
-	game->player.position.y = 0;
+	game->player.pos.x = 0;
+	game->player.pos.y = 0;
 	// プレイヤーの初期方向
 	game->player.dir.x = -1;
 	game->player.dir.y = 0;
@@ -102,13 +102,32 @@ void	initialize_game(t_game *game)
 	mlx_do_key_autorepeaton(game->mlx);
 }
 
+void	lodev_loop(t_game *game)
+{
+	// スクリーンの全てのxについて計算する
+	for (int x = 0; x < SCREEN_WIDTH; x++)
+	{
+		// カメラ平面上のx座標 (3D表示時の画面のx座標)
+		double camera_x = 2 * x / (double)SCREEN_WIDTH - 1;
+		t_vec2 ray_dir;
+		ray_dir.x = game->player.dir.x + game->player.plane.x * camera_x;
+		ray_dir.y = game->player.dir.y + game->player.plane.y * camera_x;
+		// map: 現在プレイヤーがいるマップ内の正方形を表す
+		int map_x = (int)game->player.pos.x;
+		int map_y = (int)game->player.pos.y;
+	}
+}
+
 int		main_loop(t_game *game)
 {
 	move_player(game);
 	clear_img(game);
+	lodev_loop(game);
+	/*
 	draw_wall(game);
 	draw_player(game);
 	print_game(game);
+	*/
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }

@@ -52,7 +52,7 @@ typedef struct	s_ray2 {
 
 // Player
 typedef struct	s_player {
-	t_vec2		position;  // 現在位置(px)[x, y]
+	t_vec2		pos;  // 現在位置(px)[x, y]
 	t_vec2		dir;       // 現在向いている方向のベクトル
 	t_vec2		plane;     // 2Dレイキャスティング用のカメラ平面
 	int			is_moving; // 動くキーが押されているか (W=1, S=-1, None=0)
