@@ -17,6 +17,7 @@ char *MAP[] = {
 	"11111111 1111111 111111111111",
 };
 
+/*
 void	move_player(t_game *game)
 {
 	if (game->player.is_rotating)
@@ -77,6 +78,7 @@ void	draw_player(t_game *game)
 		draw_2vec2(game, player_pos, ray_end, 0x00FFFF00);
 	}
 }
+*/
 
 void	initialize_game(t_game *game)
 {
@@ -112,21 +114,105 @@ void	lodev_loop(t_game *game)
 		t_vec2 ray_dir;
 		ray_dir.x = game->player.dir.x + game->player.plane.x * camera_x;
 		ray_dir.y = game->player.dir.y + game->player.plane.y * camera_x;
-		// map: 現在プレイヤーがいるマップ内の正方形を表す
+		// map: 現在対象としているマップ内の正方形を表す
 		int map_x = (int)game->player.pos.x;
 		int map_y = (int)game->player.pos.y;
+		// sideDistは, 光線が開始位置から最初の次の正方形に移動するまでの距離
+		double side_dist_x;
+		double side_dist_y;
+		// deltaDistは, 光線が今の正方形から次の正方形に行くために移動する距離
+		double delta_dist_x = (1 / ray_dir.x) < 0 ? -(1 / ray_dir.x) : (1 / ray_dir.x);
+		double delta_dist_y = (1 / ray_dir.y) < 0 ? -(1 / ray_dir.y) : (1 / ray_dir.y);
+		// perpWallDistは, 後に光線の長さを計算する時に使う
+		double perp_wall_dist;
+		// stepはx,yそれぞれ正か負かどちらの方向に進むか記録する (必ず +1 or -1)
+		int step_x;
+		int step_y;
+		
+		// 壁に衝突したか
+		int hit = 0;
+		// 壁のx面かy面どちらに当たったかを判断するための変数
+		int side;
+
+		// stepとsideDistを求める
+		if (ray_dir.x < 0)
+		{
+			step_x = -1;
+			side_dist_x = (game->player.pos.x - map_x) * delta_dist_x;
+		}
+		else
+		{
+			step_x = 1;
+			side_dist_x = (map_x + 1.0 - game->player.pos.x) * delta_dist_x;
+		}
+		if (ray_dir.y < 0)
+		{
+			step_y = -1;
+			side_dist_y = (game->player.pos.y - map_y) * delta_dist_y;
+		}
+		else
+		{
+			step_y = 1;
+			side_dist_y = (map_y + 1.0 - game->player.pos.y) * delta_dist_y;
+		}
+
+		// 光線が壁にぶつかるまで光線を進める
+		while (hit == 0)
+		{
+			if (side_dist_x < side_dist_y)
+			{
+				side_dist_x += delta_dist_x;
+				map_x += step_x;
+				side = 0;
+			}
+			else
+			{
+				side_dist_y += delta_dist_y;
+				map_y += step_y;
+				side = 1;
+			}
+			// 光線が壁にぶつかったか確認する
+			if (game->map[map_x][map_y] > 0)
+				hit = 1;
+		}
+
+		// 壁までの光線の距離を計算する
+		if (side == 0)
+			perp_wall_dist = (map_x - game->player.pos.x + (1 - step_x) / 2) / ray_dir.x;
+		else
+			perp_wall_dist = (map_y - game->player.pos.y + (1 - step_y) / 2) / ray_dir.y;
+
+		// スクリーンに描画する必要のある縦線の長さを求める
+		int line_height = (int)(SCREEN_HEIGHT / perp_wall_dist);
+		// 実際に描画すべき場所の開始位置と終了位置を計算
+		int draw_start = -line_height / 2 + SCREEN_HEIGHT / 2;
+		if (draw_start < 0)
+			draw_start = 0;
+		int draw_end = line_height / 2 + SCREEN_HEIGHT / 2;
+		if (draw_end >= SCREEN_HEIGHT)
+			draw_end = SCREEN_HEIGHT - 1;
+
+		int color;
+		if (side == 0)
+			color = 0x00FFFFFF;
+		else
+			color = 0x00888888;
+
+		t_vec2 v_start = {x, draw_start};
+		t_vec2 v_end = {x, draw_end};
+		draw_2vec2(game, v_start, v_end, color);
 	}
 }
 
 int		main_loop(t_game *game)
 {
-	move_player(game);
 	clear_img(game);
 	lodev_loop(game);
 	/*
 	draw_wall(game);
 	draw_player(game);
 	print_game(game);
+	move_player(game);
 	*/
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);

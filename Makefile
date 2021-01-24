@@ -8,6 +8,7 @@ LIBFT_LIB = ./libft/libft.a
 
 NAME = cub3d
 CC = gcc
+CFLAGS = -g -fsanitize=address
 SRCS = main.c \
 	   mlx_utils.c \
 	   key_hooks.c \
