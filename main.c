@@ -89,8 +89,8 @@ void	initialize_game(t_game *game)
 	game->map = MAP;
 
 	// プレイヤーの初期座標
-	game->player.pos.x = 0;
-	game->player.pos.y = 0;
+	game->player.pos.x = 1;
+	game->player.pos.y = 1;
 	// プレイヤーの初期方向
 	game->player.dir.x = -1;
 	game->player.dir.y = 0;
@@ -160,8 +160,7 @@ void	lodev_loop(t_game *game)
 		while (hit == 0)
 		{
 			if (side_dist_x < side_dist_y)
-			{
-				side_dist_x += delta_dist_x;
+			{ side_dist_x += delta_dist_x;
 				map_x += step_x;
 				side = 0;
 			}
@@ -214,6 +213,7 @@ int		main_loop(t_game *game)
 	print_game(game);
 	move_player(game);
 	*/
+	print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }

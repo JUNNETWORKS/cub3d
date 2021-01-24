@@ -3,5 +3,9 @@
 void	print_game(t_game *game)
 {
 	printf("\n-------------game-------------\n");
-	printf("player\n\tpos\n\t\tx: %lf\n\t\ty: %lf\n\tstatus\n\t\tis_rotating: %d\n\t\tis_moving: %d\n", game->player.pos.x, game->player.pos.y, game->player.is_rotating, game->player.is_moving);
+	printf("player\n");
+	printf("pos\n\tx: %lf\n\ty: %lf\n", game->player.pos.x, game->player.pos.y);
+	printf("dir\n\tx: %lf\n\ty: %lf\n", game->player.dir.x, game->player.dir.y);
+	printf("plane\n\tx: %lf\n\ty: %lf\n", game->player.plane.x, game->player.plane.y);
+	printf("status\n\tis_moving: %d\n\tis_rotating: %d\n", game->player.is_moving, game->player.is_rotating);
 }
