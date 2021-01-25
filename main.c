@@ -3,7 +3,7 @@
 char *MAP[] = {
 	"1111111111111111111111111",
 	"1000000000110000000000001",
-	"1011000001110000002000001",
+	"1000000001110000002000001",
 	"100100000000000000000000111111111",
 	"111111111011000001110000000000001",
 	"100000000011000001110111110111111",
@@ -35,6 +35,7 @@ void	move_player(t_game *game)
 	}
 }
 */
+
 void	draw_wall(t_game *game)
 {
 	// 各壁ごとに縦横10pxのブロックを描画
@@ -90,8 +91,8 @@ void	initialize_game(t_game *game)
 	game->map = MAP;
 
 	// プレイヤーの初期座標
-	game->player.pos.x = 1;
-	game->player.pos.y = 1;
+	game->player.pos.x = 2;
+	game->player.pos.y = 2;
 	// プレイヤーの初期方向
 	game->player.dir.x = -1;
 	game->player.dir.y = 0;
@@ -125,8 +126,8 @@ void	lodev_loop(t_game *game)
 		double side_dist_x;
 		double side_dist_y;
 		// deltaDistは, 光線が今の正方形から次の正方形に行くために移動する距離
-		double delta_dist_x = (1 / ray_dir.x) < 0 ? -(1 / ray_dir.x) : (1 / ray_dir.x);
-		double delta_dist_y = (1 / ray_dir.y) < 0 ? -(1 / ray_dir.y) : (1 / ray_dir.y);
+		double delta_dist_x = (1 / ray_dir.x) < 0 ? -1 * (1 / ray_dir.x) : (1 / ray_dir.x);
+		double delta_dist_y = (1 / ray_dir.y) < 0 ? -1 * (1 / ray_dir.y) : (1 / ray_dir.y);
 		// perpWallDistは, 後に光線の長さを計算する時に使う
 		double perp_wall_dist;
 		// stepはx,yそれぞれ正か負かどちらの方向に進むか記録する (必ず +1 or -1)
@@ -176,10 +177,10 @@ void	lodev_loop(t_game *game)
 				side = 1;
 			}
 			// 光線が壁にぶつかったか確認する
-			if (game->map[map_x][map_y] > 0)
+			if (game->map[map_y][map_x] > '0')
 				hit = 1;
 		}
-		printf("hit at x: %d, y: %d\n", map_x, map_y);
+		printf("hit at map_x: %d, map_y: %d, side: %d\n", map_x, map_y, side);
 
 		// 壁までの光線の距離を計算する
 		if (side == 0)
@@ -203,6 +204,9 @@ void	lodev_loop(t_game *game)
 		else
 			color = 0x00888888;
 
+		printf("delta_dist_x: %lf, delta_dist_y: %lf\n", delta_dist_x, delta_dist_y);
+		printf("side_dist_x: %lf, side_dist_y: %lf\n", side_dist_x, side_dist_y);
+		printf("step_x: %d, step_y: %d\n", step_x, step_y);
 		printf("perp_wall_dist: %lf\n", perp_wall_dist);
 		printf("line_height:    %d\n", line_height);
 		printf("draw_start:     %d\n", draw_start);
@@ -212,7 +216,6 @@ void	lodev_loop(t_game *game)
 		t_vec2 v_end = {x, draw_end};
 		printf("v_start:\n\tx: %lf\n\ty: %lf\n", v_start.x, v_start.y);
 		printf("v_end:\n\tx: %lf\n\ty: %lf\n", v_end.x, v_end.y);
-		printf("\n\n");
 		draw_2vec2(game, v_start, v_end, color);
 	}
 }
