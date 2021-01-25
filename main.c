@@ -17,24 +17,35 @@ char *MAP[] = {
 	"11111111 1111111 111111111111",
 };
 
-/*
 void	move_player(t_game *game)
 {
 	if (game->player.is_rotating)
 	{
-		game->player.angle = game->player.angle + game->player.is_rotating * PLAYER_ROTATE_RAD;
-		if (game->player.angle >= 2 * M_PI)
-			game->player.angle -= 2 * M_PI;
-		else if (game->player.angle <= -2 * M_PI)
-			game->player.angle += 2 * M_PI;
+		double rot_speed = game->player.is_rotating * PLAYER_ROTATE_RAD;
+
+		t_vec2 old_dir = game->player.dir;
+		game->player.dir.x = game->player.dir.x * cos(rot_speed) - game->player.dir.y * sin(rot_speed);
+		game->player.dir.y = old_dir.x * sin(rot_speed) + game->player.dir.y * cos(rot_speed);
+
+		t_vec2 old_plane = game->player.plane;
+		game->player.plane.x = game->player.plane.x * cos(rot_speed) - game->player.plane.y * sin(rot_speed);
+		game->player.plane.y = old_plane.x * sin(rot_speed) + game->player.plane.y * cos(rot_speed);
 	}
 	if (game->player.is_moving)
 	{
-		game->player.position.x += game->player.is_moving * PLAYER_MOVE_PX * cos(game->player.angle);
-		game->player.position.y += game->player.is_moving * PLAYER_MOVE_PX * sin(game->player.angle);
+		double new_pos_x = game->player.pos.x + game->player.is_moving * game->player.dir.x * PLAYER_MOVE_PX;
+		new_pos_x = new_pos_x < 0 ? 0 : new_pos_x;
+		if (game->map[(int)(game->player.pos.y)][(int)new_pos_x] == '0')
+			game->player.pos.x = new_pos_x;
+			// game->player.pos.x += game->player.is_moving * game->player.dir.x * PLAYER_MOVE_PX;
+
+		double new_pos_y = game->player.pos.y + game->player.is_moving * game->player.dir.y * PLAYER_MOVE_PX;
+		new_pos_y = new_pos_y < 0 ? 0 : new_pos_y;
+		if (game->map[(int)new_pos_y][(int)(game->player.pos.x)] == '0')
+			game->player.pos.y = new_pos_y;
+			// game->player.pos.y += game->player.is_moving * game->player.dir.y * PLAYER_MOVE_PX;
 	}
 }
-*/
 
 void	draw_wall(t_game *game)
 {
@@ -117,8 +128,6 @@ void	lodev_loop(t_game *game)
 		t_vec2 ray_dir;
 		ray_dir.x = game->player.dir.x + game->player.plane.x * camera_x;
 		ray_dir.y = game->player.dir.y + game->player.plane.y * camera_x;
-		printf("ray_dir\t");
-		print_vec2(ray_dir);
 		// map: 現在対象としているマップ内の正方形を表す
 		int map_x = (int)game->player.pos.x;
 		int map_y = (int)game->player.pos.y;
@@ -180,7 +189,6 @@ void	lodev_loop(t_game *game)
 			if (game->map[map_y][map_x] > '0')
 				hit = 1;
 		}
-		printf("hit at map_x: %d, map_y: %d, side: %d\n", map_x, map_y, side);
 
 		// 壁までの光線の距離を計算する
 		if (side == 0)
@@ -204,6 +212,14 @@ void	lodev_loop(t_game *game)
 		else
 			color = 0x00888888;
 
+		t_vec2 v_start = {x, draw_start};
+		t_vec2 v_end = {x, draw_end};
+		draw_2vec2(game, v_start, v_end, color);
+
+		/*
+		printf("ray_dir\t");
+		print_vec2(ray_dir);
+		printf("hit at map_x: %d, map_y: %d, side: %d\n", map_x, map_y, side);
 		printf("delta_dist_x: %lf, delta_dist_y: %lf\n", delta_dist_x, delta_dist_y);
 		printf("side_dist_x: %lf, side_dist_y: %lf\n", side_dist_x, side_dist_y);
 		printf("step_x: %d, step_y: %d\n", step_x, step_y);
@@ -211,12 +227,9 @@ void	lodev_loop(t_game *game)
 		printf("line_height:    %d\n", line_height);
 		printf("draw_start:     %d\n", draw_start);
 		printf("draw_end:       %d\n", draw_end);
-
-		t_vec2 v_start = {x, draw_start};
-		t_vec2 v_end = {x, draw_end};
 		printf("v_start:\n\tx: %lf\n\ty: %lf\n", v_start.x, v_start.y);
 		printf("v_end:\n\tx: %lf\n\ty: %lf\n", v_end.x, v_end.y);
-		draw_2vec2(game, v_start, v_end, color);
+		*/
 	}
 }
 
@@ -228,9 +241,9 @@ int		main_loop(t_game *game)
 	/*
 	draw_player(game);
 	print_game(game);
-	move_player(game);
 	*/
-	// print_game(game);
+	move_player(game);
+	print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }

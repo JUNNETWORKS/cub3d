@@ -12,9 +12,9 @@ int 			key_press_hook(int keycode, t_game *game)
 	if (keycode == KEY_s)
 		game->player.is_moving = -1;
 	if (keycode == KEY_a)
-		game->player.is_rotating = -1;
-	if (keycode == KEY_d)
 		game->player.is_rotating = 1;
+	if (keycode == KEY_d)
+		game->player.is_rotating = -1;
 	return (0);
 }
 
