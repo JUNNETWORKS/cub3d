@@ -5,17 +5,43 @@ char *MAP[] = {
 	"1000000000110000000000001",
 	"1000000001110000002000001",
 	"100100000000000000000000111111111",
-	"111111111011000001110000000000001",
+	"112345678011000001110000000000001",
 	"100000000011000001110111110111111",
 	"11110111111111011100000010001",
 	"11110111111111011101010010001",
 	"11000000110101011100000010001",
 	"10002000000000001100000010001",
 	"10000000000000001101010010001",
-	"11000001110101011101011010N0111",
+	"1100000111010101110101101000111",
 	"11110111 1110101 101111010001",
 	"11111111 1111111 111111111111",
 };
+
+// テクスチャデータ  textures[i][TEXTURE_HEIGHT * y + x] って感じ
+uint32_t textures[8][TEXTURE_HEIGHT * TEXTURE_WIDTH];
+
+// テクスチャデータを生成する
+void generate_textures(void){
+  //generate some textures  
+  for(int y = 0; y < TEXTURE_WIDTH; y++)
+  {
+	for(int x = 0; x < TEXTURE_HEIGHT; x++)
+	{
+	  int xorcolor = (x * 256 / TEXTURE_WIDTH) ^ (y * 256 / TEXTURE_HEIGHT);
+	  //int xcolor = x * 256 / TEXTURE_WIDTH;
+	  int ycolor = y * 256 / TEXTURE_HEIGHT;
+	  int xycolor = y * 128 / TEXTURE_HEIGHT + x * 128 / TEXTURE_WIDTH;
+	  textures[0][TEXTURE_WIDTH * y + x] = 0x10001 * 254 * (x != y && x != TEXTURE_WIDTH - y); //flat red texture with black cross
+	  textures[1][TEXTURE_WIDTH * y + x] = xycolor + 256 * xycolor + 0x10001 * xycolor; //sloped greyscale
+	  textures[2][TEXTURE_WIDTH * y + x] = 256 * xycolor + 0x10001 * xycolor; //sloped yellow gradient
+	  textures[3][TEXTURE_WIDTH * y + x] = xorcolor + 256 * xorcolor + 0x10001 * xorcolor; //xor greyscale
+	  textures[4][TEXTURE_WIDTH * y + x] = 256 * xorcolor; //xor green
+	  textures[5][TEXTURE_WIDTH * y + x] = 0x10001 * 192 * (x % 16 && y % 16); //red bricks
+	  textures[6][TEXTURE_WIDTH * y + x] = 0x10001 * ycolor; //red gradient
+	  textures[7][TEXTURE_WIDTH * y + x] = 128 + 256 * 128 + 0x10001 * 128; //flat grey texture
+	}
+  }
+}
 
 void	move_player(t_game *game)
 {
@@ -100,11 +126,12 @@ void	initialize_game(t_game *game)
     game->img.img = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
     game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 	game->map = MAP;
+	generate_textures();
 
 	// プレイヤーの初期座標
 	game->player.pos.x = 2;
 	game->player.pos.y = 2;
-	// プレイヤーの初期方向
+	// プレイヤーの初期方向  (長さが1の正規化されたベクトルにする必要がある)
 	game->player.dir.x = -1;
 	game->player.dir.y = 0;
 	// 方向ベクトルに垂直になるようにカメラの平面ベクトルを初期化
@@ -137,7 +164,7 @@ void	lodev_loop(t_game *game)
 		// deltaDistは, 光線が今の正方形から次の正方形に行くために移動する距離
 		double delta_dist_x = (1 / ray_dir.x) < 0 ? -1 * (1 / ray_dir.x) : (1 / ray_dir.x);
 		double delta_dist_y = (1 / ray_dir.y) < 0 ? -1 * (1 / ray_dir.y) : (1 / ray_dir.y);
-		// perpWallDistは, 後に光線の長さを計算する時に使う
+		// perpWallDistは, 当たった壁とカメラ平面ベクトルとの距離を表す
 		double perp_wall_dist;
 		// stepはx,yそれぞれ正か負かどちらの方向に進むか記録する (必ず +1 or -1)
 		int step_x;
@@ -145,7 +172,7 @@ void	lodev_loop(t_game *game)
 		
 		// 壁に衝突したか
 		int hit = 0;
-		// 壁のx面かy面どちらに当たったかを判断するための変数
+		// 壁のx面かy面どちらに当たったかを判断するための変数  0: x面, 1: y面
 		int side;
 
 		// stepとsideDistを求める
@@ -206,6 +233,7 @@ void	lodev_loop(t_game *game)
 		if (draw_end >= SCREEN_HEIGHT)
 			draw_end = SCREEN_HEIGHT - 1;
 
+		/* テクスチャ無しバージョン
 		int color;
 		if (side == 0)
 			color = 0x00FFFFFF;
@@ -215,6 +243,42 @@ void	lodev_loop(t_game *game)
 		t_vec2 v_start = {x, draw_start};
 		t_vec2 v_end = {x, draw_end};
 		draw_2vec2(game, v_start, v_end, color);
+		*/
+
+		// テクスチャの番号をマップから取得
+		int texture_num = game->map[map_y][map_x] - '0' - 1;
+
+		/* 当たった壁上の正確なx座標を求める */
+		// 正確なx座標 (整数型ではない)
+		double wall_x;
+		if (side == 0)
+		  wall_x = game->player.pos.y + perp_wall_dist * ray_dir.y;
+		else
+		  wall_x = game->player.pos.x + perp_wall_dist * ray_dir.x;
+		wall_x -= floor(wall_x);  // 正方形のどの部分にヒットしたのか0.0~1.0で表す
+
+		// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
+		int texture_x = (int)(wall_x * TEXTURE_WIDTH);
+		if ((side == 0 && ray_dir.x > 0) || (side == 1 && ray_dir.y < 0))
+		  texture_x = TEXTURE_WIDTH - texture_x - 1;
+
+		/* 各ピクセルにどのテクスチャのピクセルを描画するか計算する */
+		// y方向の1ピクセルごとにテクスチャのy座標が動く量
+		double step = 1.0 * TEXTURE_HEIGHT / (double)line_height;
+		// テクスチャの現在のy座標
+		double texture_pos_y = (draw_start - SCREEN_HEIGHT / 2 + line_height / 2) * step;
+		for (int y = draw_start; y < draw_end; y++)
+		{
+		  // テクスチャの現在のy座標(double型)を整数型に変換する.
+		  int texture_y = (int)texture_pos_y & (TEXTURE_HEIGHT - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
+		  texture_pos_y += step;
+		  uint32_t color = textures[texture_num][TEXTURE_HEIGHT * texture_y + texture_x];
+		  // 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
+		  if (side == 1)
+			color = (color >> 1) & 0x7f7f7f;
+		  my_mlx_pixel_put(game, x, y, color);
+		}
+
 
 		/*
 		printf("ray_dir\t");
