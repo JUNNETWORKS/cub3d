@@ -10,7 +10,7 @@ void            my_mlx_pixel_put(t_game *game, int x, int y, int color)
     *(unsigned int*)dst = color;
 }
 
-unsigned int	get_color(t_img img, int x, int y)
+uint32_t	get_color_from_img(t_img img, int x, int y)
 {
 	return *(img.addr + (y * img.line_length + x * (img.bits_per_pixel / 8)));
 }

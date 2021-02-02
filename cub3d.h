@@ -63,13 +63,9 @@ typedef struct	s_player {
 
 // texture
 typedef struct	s_texture {
-	void		*img;
+	t_img		img;
 	int			width;
 	int			height;
-	char		*addr;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
 }				t_texture;
 
 enum e_nswe {
@@ -86,11 +82,14 @@ typedef struct  s_game {
 	t_img		img;
 	t_player	player;
 	char		**map;
-	t_texture	texture_n; // 北
+	t_img		texture_n; // 北
+	int			texture_width;
+	int			texture_height;
 }               t_game;
 
 // MLX Utils
 void			my_mlx_pixel_put(t_game *game, int x, int y, int color);
+uint32_t		get_color_from_img(t_img img, int x, int y);
 // Game functions
 void			initialize_game(t_game *game);
 // Hooks

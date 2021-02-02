@@ -119,6 +119,12 @@ void	draw_player(t_game *game)
 }
 */
 
+void	load_textures(t_game *game)
+{
+  char *texture_path = "./textures/test.xpm";
+
+}
+
 void	initialize_game(t_game *game)
 {
     game->mlx = mlx_init();
@@ -130,7 +136,7 @@ void	initialize_game(t_game *game)
 	// generate_textures();
 	// XPMファイルからテクスチャ画像を読み込む
 	char *texture_path = "./textures/test.xpm";
-	game->texture_n.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->texture_n.width, &game->texture_n.height);
+	game->texture_n.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->texture_width, &game->texture_height);
     game->texture_n.addr = mlx_get_data_addr(game->texture_n.img, &game->texture_n.bits_per_pixel, &game->texture_n.line_length, &game->texture_n.endian);
 
 	// プレイヤーの初期座標
@@ -277,13 +283,15 @@ void	lodev_loop(t_game *game)
 		  // テクスチャの現在のy座標(double型)を整数型に変換する.
 		  int texture_y = (int)texture_pos_y & (TEXTURE_HEIGHT - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
 		  texture_pos_y += step;
-		  uint32_t color = textures[texture_num][TEXTURE_HEIGHT * texture_y + texture_x];
+		  // uint32_t color = textures[texture_num][TEXTURE_HEIGHT * texture_y + texture_x];
+		  uint32_t color = get_color_from_img(game->texture_n, texture_x, texture_y);
+		  if (texture_x == 0 && texture_y == 0)
+			printf("pikachu[0][0]: rgb(%u, %u, %u)\n", ( color & 0xFF0000 ) >> 16, ( color & 0x00FF00 ) >> 8, color & 0x0000FF);
 		  // 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
 		  if (side == 1)
 			color = (color >> 1) & 0x7f7f7f;
 		  my_mlx_pixel_put(game, x, y, color);
 		}
-
 
 		/*
 		printf("ray_dir\t");
