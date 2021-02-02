@@ -119,12 +119,6 @@ void	draw_player(t_game *game)
 }
 */
 
-void	load_textures(t_game *game)
-{
-  char *texture_path = "./textures/test.xpm";
-
-}
-
 void	initialize_game(t_game *game)
 {
     game->mlx = mlx_init();
@@ -133,7 +127,7 @@ void	initialize_game(t_game *game)
     game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 	game->map = MAP;
 
-	// generate_textures();
+	generate_textures();
 	// XPMファイルからテクスチャ画像を読み込む
 	char *texture_path = "./textures/test.xpm";
 	game->texture_n.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->texture_width, &game->texture_height);
@@ -285,8 +279,6 @@ void	lodev_loop(t_game *game)
 		  texture_pos_y += step;
 		  // uint32_t color = textures[texture_num][TEXTURE_HEIGHT * texture_y + texture_x];
 		  uint32_t color = get_color_from_img(game->texture_n, texture_x, texture_y);
-		  if (texture_x == 0 && texture_y == 0)
-			printf("pikachu[0][0]: rgb(%u, %u, %u)\n", ( color & 0xFF0000 ) >> 16, ( color & 0x00FF00 ) >> 8, color & 0x0000FF);
 		  // 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
 		  if (side == 1)
 			color = (color >> 1) & 0x7f7f7f;
