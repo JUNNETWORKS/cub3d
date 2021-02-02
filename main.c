@@ -3,14 +3,14 @@
 char *MAP[] = {
 	"1111111111111111111111111",
 	"1000000000110000000000001",
-	"1000000001110000002000001",
+	"1000000001110000001000001",
 	"100100000000000000000000111111111",
-	"112345678011000001110000000000001",
+	"111111111011000001110000000000001",
 	"100000000011000001110111110111111",
 	"11110111111111011100000010001",
 	"11110111111111011101010010001",
 	"11000000110101011100000010001",
-	"10002000000000001100000010001",
+	"10001000000000001100000010001",
 	"10000000000000001101010010001",
 	"1100000111010101110101101000111",
 	"11110111 1110101 101111010001",
@@ -126,7 +126,12 @@ void	initialize_game(t_game *game)
     game->img.img = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
     game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 	game->map = MAP;
-	generate_textures();
+
+	// generate_textures();
+	// XPMファイルからテクスチャ画像を読み込む
+	char *texture_path = "./textures/test.xpm";
+	game->texture_n.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->texture_n.width, &game->texture_n.height);
+    game->texture_n.addr = mlx_get_data_addr(game->texture_n.img, &game->texture_n.bits_per_pixel, &game->texture_n.line_length, &game->texture_n.endian);
 
 	// プレイヤーの初期座標
 	game->player.pos.x = 2;
@@ -309,6 +314,7 @@ int		main_loop(t_game *game)
 	move_player(game);
 	print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
+	mlx_put_image_to_window(game->mlx, game->win, game->texture_n.img, 0, 0);
 	return (0);
 }
 

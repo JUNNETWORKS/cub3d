@@ -61,6 +61,24 @@ typedef struct	s_player {
 	int			is_rotating; // 動くキーが押されているか (D=1, A=-1, None=0)
 }				t_player;
 
+// texture
+typedef struct	s_texture {
+	void		*img;
+	int			width;
+	int			height;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+}				t_texture;
+
+enum e_nswe {
+  NORTH,
+  SOUTH,
+  WEST,
+  EAST,
+};
+
 // mlxのポインタやウィンドウのポインタを保持
 typedef struct  s_game {
 	void		*mlx;
@@ -68,6 +86,7 @@ typedef struct  s_game {
 	t_img		img;
 	t_player	player;
 	char		**map;
+	t_texture	texture_n; // 北
 }               t_game;
 
 // MLX Utils

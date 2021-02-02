@@ -9,3 +9,8 @@ void            my_mlx_pixel_put(t_game *game, int x, int y, int color)
     dst = game->img.addr + (y * game->img.line_length + x * (game->img.bits_per_pixel / 8));
     *(unsigned int*)dst = color;
 }
+
+unsigned int	get_color(t_img img, int x, int y)
+{
+	return *(img.addr + (y * img.line_length + x * (img.bits_per_pixel / 8)));
+}
