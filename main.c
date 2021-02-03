@@ -134,8 +134,8 @@ void	initialize_game(t_game *game)
     game->texture_n.addr = mlx_get_data_addr(game->texture_n.img, &game->texture_n.bits_per_pixel, &game->texture_n.line_length, &game->texture_n.endian);
 
 	// プレイヤーの初期座標
-	game->player.pos.x = 2;
-	game->player.pos.y = 2;
+	game->player.pos.x = 2.0;
+	game->player.pos.y = 1.5;
 	// プレイヤーの初期方向  (長さが1の正規化されたベクトルにする必要がある)
 	game->player.dir.x = -1;
 	game->player.dir.y = 0;
@@ -227,9 +227,13 @@ void	lodev_loop(t_game *game)
 			perp_wall_dist = (map_x - game->player.pos.x + (1 - step_x) / 2) / ray_dir.x;
 		else
 			perp_wall_dist = (map_y - game->player.pos.y + (1 - step_y) / 2) / ray_dir.y;
+		// printf("perp_wall_dist: %f\n", perp_wall_dist);
 
 		// スクリーンに描画する必要のある縦線の長さを求める
-		int line_height = (int)(SCREEN_HEIGHT / perp_wall_dist);
+		int line_height = (int)((double)SCREEN_WIDTH * 3 / 4 / perp_wall_dist);
+		// int line_height = (int)(SCREEN_HEIGHT / perp_wall_dist);
+		// int line_height = (int)(SCREEN_WIDTH * tan(deg2rad(33)) / perp_wall_dist);
+		// int line_height = (SCREEN_WIDTH / 2)  / tan(deg2rad(33)) * (TEXTURE_WIDTH / perp_wall_dist);
 		// 実際に描画すべき場所の開始位置と終了位置を計算
 		int draw_start = -line_height / 2 + SCREEN_HEIGHT / 2;
 		if (draw_start < 0)
