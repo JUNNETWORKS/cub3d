@@ -154,7 +154,7 @@ void	initialize_game(t_game *game)
 void	lodev_loop(t_game *game)
 {
 	// planeベクトルの大きさを計算
-	double	plane_length = sqrt(game->player.plane.x * game->player.plane.x + game->player.plane.y * game->player.plane.y);
+	double	plane_length = vec2_length(game->player.plane);
 	// 基準となる壁の高さ. 視野角に応じて横幅が変わってしまうので, 視野角の逆数を掛けて1に戻す
 	double	wall_height_base = (double)SCREEN_WIDTH * (1 / (2 * plane_length));
 	// スクリーンの全てのxについて計算する
