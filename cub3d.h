@@ -104,7 +104,8 @@ void	draw_line_angle_length(t_game *game, t_vec2 position, double angle, int len
 // Vector
 double	vec2_length(t_vec2 vec);         // ベクトルの長さを求める
 void	vec2_add(t_vec2 *a, t_vec2 b);   // ベクトルの足し算
-void	vec2_mult(t_vec2 vec, int num);  // ベクトルを定数倍する
+void	vec2_mult(t_vec2 *vec, int num);  // ベクトルを定数倍する
+void	vec2_rotate(t_vec2 *vec, double rad);  // 回転行列を掛ける
 // Utils
 double	deg2rad(int x);
 int		rad2deg(double x);
