@@ -107,6 +107,7 @@ void	vec2_add(t_vec2 *a, t_vec2 b);   // ベクトルの足し算
 void	vec2_mult(t_vec2 vec, int num);  // ベクトルを定数倍する
 // Utils
 double	deg2rad(int x);
+int		rad2deg(double x);
 // Debug
 void			print_game(t_game *game);
 void			print_vec2(t_vec2 vec);

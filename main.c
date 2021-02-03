@@ -141,7 +141,8 @@ void	initialize_game(t_game *game)
 	game->player.dir.y = 0;
 	// 方向ベクトルに垂直になるようにカメラの平面ベクトルを初期化
 	game->player.plane.x = 0;
-	game->player.plane.y = 0.66;
+	// game->player.plane.y = 0.66;
+	game->player.plane.y = tan(deg2rad(66 / 2));
 	// 状態の初期化
 	game->player.is_moving = 0;
 	game->player.is_rotating = 0;
@@ -152,10 +153,14 @@ void	initialize_game(t_game *game)
 
 void	lodev_loop(t_game *game)
 {
+	// planeベクトルの大きさを計算
+	double	plane_length = sqrt(game->player.plane.x * game->player.plane.x + game->player.plane.y * game->player.plane.y);
+	// 基準となる壁の高さ. 視野角に応じて横幅が変わってしまうので, 視野角の逆数を掛けて1に戻す
+	double	wall_height_base = (double)SCREEN_WIDTH * (1 / (2 * plane_length));
 	// スクリーンの全てのxについて計算する
 	for (int x = 0; x < SCREEN_WIDTH; x++)
 	{
-		// カメラ平面上のx座標 (3D表示時の画面のx座標)
+		// カメラ平面上のx座標 (3D表示時の画面のx座標)  -1.0~1.0
 		double camera_x = 2 * x / (double)SCREEN_WIDTH - 1;
 		t_vec2 ray_dir;
 		ray_dir.x = game->player.dir.x + game->player.plane.x * camera_x;
@@ -227,13 +232,9 @@ void	lodev_loop(t_game *game)
 			perp_wall_dist = (map_x - game->player.pos.x + (1 - step_x) / 2) / ray_dir.x;
 		else
 			perp_wall_dist = (map_y - game->player.pos.y + (1 - step_y) / 2) / ray_dir.y;
-		// printf("perp_wall_dist: %f\n", perp_wall_dist);
 
 		// スクリーンに描画する必要のある縦線の長さを求める
-		int line_height = (int)((double)SCREEN_WIDTH * 3 / 4 / perp_wall_dist);
-		// int line_height = (int)(SCREEN_HEIGHT / perp_wall_dist);
-		// int line_height = (int)(SCREEN_WIDTH * tan(deg2rad(33)) / perp_wall_dist);
-		// int line_height = (SCREEN_WIDTH / 2)  / tan(deg2rad(33)) * (TEXTURE_WIDTH / perp_wall_dist);
+		int line_height = (int)(wall_height_base / perp_wall_dist);
 		// 実際に描画すべき場所の開始位置と終了位置を計算
 		int draw_start = -line_height / 2 + SCREEN_HEIGHT / 2;
 		if (draw_start < 0)
