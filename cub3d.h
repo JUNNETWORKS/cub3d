@@ -86,6 +86,13 @@ typedef struct  s_game {
 	t_img		texture_n; // 北
 	int			texture_width;
 	int			texture_height;
+
+	int			sprite_num;  // スプライトの数
+	t_vec2		*sprites;    // スプライトの座標
+	int			sprite_width;  // スプライトの描画する時の幅
+	int			sprite_height; // スプライトの描画する時の高さ
+	t_img		texture_sprite;  // スプライトのテクスチャ
+	int			*z_buffer;  // z_buffer[screenWidth]  // スクリーンのxにおける壁までの距離
 }               t_game;
 
 // MLX Utils

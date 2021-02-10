@@ -132,6 +132,8 @@ void	initialize_game(t_game *game)
 	char *texture_path = "./textures/test.xpm";
 	game->texture_n.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->texture_width, &game->texture_height);
     game->texture_n.addr = mlx_get_data_addr(game->texture_n.img, &game->texture_n.bits_per_pixel, &game->texture_n.line_length, &game->texture_n.endian);
+	game->texture_sprite.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->sprite_width, &game->sprite_height);
+    game->texture_sprite.addr = mlx_get_data_addr(game->texture_sprite.img, &game->texture_sprite.bits_per_pixel, &game->texture_sprite.line_length, &game->texture_sprite.endian);
 
 	// プレイヤーの初期座標
 	game->player.pos.x = 2.0;
@@ -147,8 +149,52 @@ void	initialize_game(t_game *game)
 	game->player.is_moving = 0;
 	game->player.is_rotating = 0;
 
+	// スプライト用
+	game->z_buffer = ft_calloc(SCREEN_WIDTH, sizeof(double));
+	game->sprite_num = 2;
+	game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
+	game->sprites[0].x = 1.5;
+	game->sprites[0].y = 1.5;
+	game->sprites[1].x = 3.5;
+	game->sprites[1].y = 3.5;
+	
 	// Game Settings
 	mlx_do_key_autorepeaton(game->mlx);
+}
+
+void	sort_sprites(t_game *game, size_t sprite_num)
+{
+	// スプライトのソートで使う(スプライト番号)
+	// int sprite_order[SPRITES_NUM];
+	
+	// スプライトのソートで使う(スプライトまでの距離)
+	double *sprite_distances = ft_calloc(game->sprite_num, sizeof(double));
+
+	// スプライトを遠い順にソートするために距離を求める
+	for (int i = 0; i < sprite_num; i++){
+	  sprite_distances[i] = ((game->player.pos.x - game->sprites[i].x) * (game->player.pos.x - game->sprites[i].x) + (game->player.pos.y - game->sprites[i].y) * (game->player.pos.y - game->sprites[i].y));
+	}
+
+	// 遠い順にスプライトが並ぶようにソート
+	// バブルソート
+	int flag = 1;
+	while (flag){
+		flag = 0;
+		for (int i = sprite_num - 1; i > 0; i--){
+			if (sprite_distances[i] > sprite_distances[i-1]){
+				double tmp = sprite_distances[i];
+				sprite_distances[i] = sprite_distances[i-1];
+				sprite_distances[i-1] = tmp;
+
+				t_vec2 tmpvec2 = game->sprites[i];
+				game->sprites[i] = game->sprites[i-1];
+				game->sprites[i-1] = tmpvec2;
+
+				flag = 1;
+			}
+		}
+	}
+	free(sprite_distances);
 }
 
 void	lodev_loop(t_game *game)
@@ -290,6 +336,8 @@ void	lodev_loop(t_game *game)
 		  my_mlx_pixel_put(game, x, y, color);
 		}
 
+		game->z_buffer[x] = perp_wall_dist;
+
 		/*
 		printf("ray_dir\t");
 		print_vec2(ray_dir);
@@ -305,7 +353,64 @@ void	lodev_loop(t_game *game)
 		printf("v_end:\n\tx: %lf\n\ty: %lf\n", v_end.x, v_end.y);
 		*/
 	}
+
+	/*  スプライトの描画  */
+
+	// スプライトを遠い順にソートする(遠いスプライトから描画するから)
+	sort_sprites(game, game->sprite_num);
+
+	// スプライトのソートが完了したら遠いスプライトから描画していく
+	for (int i = 0; i < game->sprite_num; i++){
+		t_vec2 sprite;
+		// スプライトの位置をカメラからの相対位置にする
+		sprite.x = game->sprites[i].x - game->player.pos.x;
+		sprite.y = game->sprites[i].y - game->player.pos.y;
+
+		// カメラ行列の逆行列を掛けてスクリーン上の座標を算出する
+		double inv_det = 1.0 / (game->player.plane.x * game->player.dir.y - game->player.dir.x * game->player.plane.y);
+		double transform_x = inv_det * (game->player.dir.y * sprite.x - game->player.dir.x * sprite.y);
+		double transform_y = inv_det * (-game->player.plane.y * sprite.x + game->player.plane.x * sprite.y);  // スプライトまでの深度となる
+
+		// スクリーン上でのスプライトの座標
+		int sprite_screen_x = (int)((SCREEN_WIDTH / 2) * (1 + transform_x / transform_y));
+
+		// スクリーン上でのスプライトの高さ
+		int sprite_height = ABS((int)(SCREEN_HEIGHT / transform_y));
+
+		// スプライト描画の一番下と一番上を計算する
+		int draw_start_y = -game->sprite_height / 2 + SCREEN_HEIGHT / 2;
+		if (draw_start_y < 0) draw_start_y = 0;
+		int draw_end_y = game->sprite_height / 2 + SCREEN_HEIGHT / 2;
+		if (draw_end_y >= SCREEN_WIDTH) draw_end_y = SCREEN_WIDTH - 1;
+
+		// スプライトの横幅を計算する
+		int sprite_width = ABS((int)(SCREEN_HEIGHT / transform_y));
+		int draw_start_x = -game->sprite_width / 2 + sprite_screen_x;
+		if (draw_start_x < 0) draw_start_x = 0;
+		int draw_end_x = game->sprite_width / 2 + sprite_screen_x;
+		if (draw_end_x >= SCREEN_WIDTH) draw_end_x = SCREEN_WIDTH - 1;
+
+		// スプライトの各縦線について描画
+		for (int stripe = draw_start_x; stripe < draw_end_x; stripe++){
+			// テクスチャのx座標
+			int tex_x = (int)(256 * (stripe - (-game->sprite_width / 2 + sprite_screen_x)) * game->sprite_width / game->sprite_width) / 256;
+			/* 以下の条件の時描画を行う
+			 * 1. カメラの平面の前にいるか　(カメラ平面の後ろにあるスプライトは描画しない)
+			 * 2. スクリーン上にある (left)
+			 * 3. スクリーン上にある (right)
+			 * 4. zBufferに記録された壁までの距離より近い
+			 */
+			if (transform_y > 0 && stripe > 0 && stripe < SCREEN_WIDTH && transform_y < game->z_buffer[stripe])
+				for (int y = draw_start_y; y < draw_end_y; y++){
+					int d = (y) * 256 - SCREEN_HEIGHT * 128 + game->sprite_height * 128;
+					int tex_y = ((d * game->texture_height) / game->texture_height) / 256;
+					uint32_t color = get_color_from_img(game->texture_sprite, tex_x, tex_y);
+					my_mlx_pixel_put(game, stripe, y, color);
+				}
+		}
+	}
 }
+
 
 int		main_loop(t_game *game)
 {
