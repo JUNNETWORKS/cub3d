@@ -10,15 +10,15 @@
 
 // display definitions
 // 640 * 480 以外だと壁が縦長や横長になる
-# define SCREEN_WIDTH 400
-# define SCREEN_HEIGHT 800
+# define SCREEN_WIDTH 640
+# define SCREEN_HEIGHT 480
 # define TEXTURE_WIDTH 64
 # define TEXTURE_HEIGHT 64
 # define BLOCK_SIZE 64
 
 // Game Settings
-# define PLAYER_MOVE_PX (0.05)
-# define PLAYER_ROTATE_RAD (M_PI / 250)
+# define PLAYER_MOVE_PX (0.025)
+# define PLAYER_ROTATE_RAD (M_PI / 300)
 
 // Key definitions
 # define KEY_q 113
