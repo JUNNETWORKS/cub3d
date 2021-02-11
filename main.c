@@ -20,6 +20,7 @@ char *MAP[] = {
 // テクスチャデータ  textures[i][TEXTURE_HEIGHT * y + x] って感じ
 uint32_t textures[8][TEXTURE_HEIGHT * TEXTURE_WIDTH];
 
+
 // テクスチャデータを生成する
 void generate_textures(void){
   //generate some textures  
@@ -132,8 +133,6 @@ void	initialize_game(t_game *game)
 	char *texture_path = "./textures/test.xpm";
 	game->texture_n.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->texture_width, &game->texture_height);
     game->texture_n.addr = mlx_get_data_addr(game->texture_n.img, &game->texture_n.bits_per_pixel, &game->texture_n.line_length, &game->texture_n.endian);
-	game->texture_sprite.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->sprite_width, &game->sprite_height);
-    game->texture_sprite.addr = mlx_get_data_addr(game->texture_sprite.img, &game->texture_sprite.bits_per_pixel, &game->texture_sprite.line_length, &game->texture_sprite.endian);
 
 	// プレイヤーの初期座標
 	game->player.pos.x = 2.0;
@@ -150,6 +149,9 @@ void	initialize_game(t_game *game)
 	game->player.is_rotating = 0;
 
 	// スプライト用
+	char *sprite_texture_path = "./textures/sprite.xpm";
+	game->texture_sprite.img = mlx_xpm_file_to_image(game->mlx, sprite_texture_path, &game->sprite_width, &game->sprite_height);
+    game->texture_sprite.addr = mlx_get_data_addr(game->texture_sprite.img, &game->texture_sprite.bits_per_pixel, &game->texture_sprite.line_length, &game->texture_sprite.endian);
 	game->z_buffer = ft_calloc(SCREEN_WIDTH, sizeof(double));
 	game->sprite_num = 2;
 	game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
@@ -381,7 +383,7 @@ void	lodev_loop(t_game *game)
 		int draw_start_y = -game->sprite_height / 2 + SCREEN_HEIGHT / 2;
 		if (draw_start_y < 0) draw_start_y = 0;
 		int draw_end_y = game->sprite_height / 2 + SCREEN_HEIGHT / 2;
-		if (draw_end_y >= SCREEN_WIDTH) draw_end_y = SCREEN_WIDTH - 1;
+		if (draw_end_y >= SCREEN_HEIGHT) draw_end_y = SCREEN_HEIGHT - 1;
 
 		// スプライトの横幅を計算する
 		int sprite_width = ABS((int)(SCREEN_HEIGHT / transform_y));
