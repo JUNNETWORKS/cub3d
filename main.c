@@ -157,8 +157,8 @@ void	initialize_game(t_game *game)
 	game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
 	game->sprites[0].x = 1.5;
 	game->sprites[0].y = 1.5;
-	game->sprites[1].x = 3.5;
-	game->sprites[1].y = 3.5;
+	game->sprites[1].x = 2.5;
+	game->sprites[1].y = 2.5;
 	
 	// Game Settings
 	mlx_do_key_autorepeaton(game->mlx);
@@ -325,17 +325,24 @@ void	lodev_loop(t_game *game)
 		double step = 1.0 * TEXTURE_HEIGHT / (double)line_height;
 		// テクスチャの現在のy座標
 		double texture_pos_y = (draw_start - SCREEN_HEIGHT / 2 + line_height / 2) * step;
-		for (int y = draw_start; y < draw_end; y++)
+		for (int y = 0; y < SCREEN_HEIGHT; y++)
 		{
-		  // テクスチャの現在のy座標(double型)を整数型に変換する.
-		  int texture_y = (int)texture_pos_y & (TEXTURE_HEIGHT - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
-		  texture_pos_y += step;
-		  // uint32_t color = textures[texture_num][TEXTURE_HEIGHT * texture_y + texture_x];
-		  uint32_t color = get_color_from_img(game->texture_n, texture_x, texture_y);
-		  // 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
-		  if (side == 1)
-			color = (color >> 1) & 0x7f7f7f;
-		  my_mlx_pixel_put(game, x, y, color);
+			if (y <= SCREEN_HEIGHT / 2)
+				my_mlx_pixel_put(game, x, y, 0x87ceeb);  // draw sky
+			else
+				my_mlx_pixel_put(game, x, y, 0x9d6e5e);  // draw ground
+			if (y >= draw_start && y < draw_end)
+			{
+				// テクスチャの現在のy座標(double型)を整数型に変換する.
+				int texture_y = (int)texture_pos_y & (TEXTURE_HEIGHT - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
+				texture_pos_y += step;
+				// uint32_t color = textures[texture_num][TEXTURE_HEIGHT * texture_y + texture_x];
+				uint32_t color = get_color_from_img(game->texture_n, texture_x, texture_y);
+				// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
+				if (side == 1)
+					color = (color >> 1) & 0x7f7f7f;
+				my_mlx_pixel_put(game, x, y, color);
+			}
 		}
 
 		game->z_buffer[x] = perp_wall_dist;
@@ -363,6 +370,7 @@ void	lodev_loop(t_game *game)
 
 	// スプライトのソートが完了したら遠いスプライトから描画していく
 	for (int i = 0; i < game->sprite_num; i++){
+		printf("---------sprite%d---------\n", i);
 		t_vec2 sprite;
 		// スプライトの位置をカメラからの相対位置にする
 		sprite.x = game->sprites[i].x - game->player.pos.x;
@@ -372,6 +380,7 @@ void	lodev_loop(t_game *game)
 		double inv_det = 1.0 / (game->player.plane.x * game->player.dir.y - game->player.dir.x * game->player.plane.y);
 		double transform_x = inv_det * (game->player.dir.y * sprite.x - game->player.dir.x * sprite.y);
 		double transform_y = inv_det * (-game->player.plane.y * sprite.x + game->player.plane.x * sprite.y);  // スプライトまでの深度となる
+		printf("transform_x: %lf\ntransform_y: %lf\n", transform_x, transform_y);
 
 		// スクリーン上でのスプライトの座標
 		int sprite_screen_x = (int)((SCREEN_WIDTH / 2) * (1.0 + transform_x / transform_y));
