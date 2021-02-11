@@ -92,7 +92,7 @@ typedef struct  s_game {
 	int			sprite_width;  // スプライトの描画する時の幅
 	int			sprite_height; // スプライトの描画する時の高さ
 	t_img		texture_sprite;  // スプライトのテクスチャ
-	int			*z_buffer;  // z_buffer[screenWidth]  // スクリーンのxにおける壁までの距離
+	double		*z_buffer;  // z_buffer[screenWidth]  // スクリーンのxにおける壁までの距離
 }               t_game;
 
 // MLX Utils

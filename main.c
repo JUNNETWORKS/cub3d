@@ -401,17 +401,18 @@ void	lodev_loop(t_game *game)
 		// スプライトの各縦線について描画
 		for (int stripe = draw_start_x; stripe < draw_end_x; stripe++){
 			// テクスチャのx座標
-			int tex_x = (int)(256 * (stripe - (-sprite_width_screen / 2 + sprite_screen_x)) * game->sprite_width / sprite_width_screen) / 256;
+			// (stripe - (-sprite_width_screen / 2 + sprite_screen_x)) で現在何ピクセル目かを取得
+			int tex_x = (int)((stripe - (-sprite_width_screen / 2 + sprite_screen_x)) * game->sprite_width / sprite_width_screen);
 			/* 以下の条件の時描画を行う
 			 * 1. カメラの平面の前にいるか　(カメラ平面の後ろにあるスプライトは描画しない)
 			 * 2. スクリーン上にある (left)
 			 * 3. スクリーン上にある (right)
 			 * 4. zBufferに記録された壁までの距離より近い
 			 */
+			printf("stripe: %d\nzBuffer[%d]: %lf\n", stripe, stripe, game->z_buffer[stripe]);
 			if (transform_y > 0 && stripe >= 0 && stripe < SCREEN_WIDTH && transform_y < game->z_buffer[stripe])
 				for (int y = draw_start_y; y < draw_end_y; y++){
-					int d = (y) * 256 - SCREEN_HEIGHT * 128 + sprite_height_screen * 128;
-					int tex_y = ((d * game->texture_height) / sprite_height_screen) / 256;
+					int tex_y = (int)((y - (-sprite_height_screen / 2 + SCREEN_HEIGHT / 2)) * game->texture_height / sprite_height_screen);
 					uint32_t color = get_color_from_img(game->texture_sprite, tex_x, tex_y);
 					my_mlx_pixel_put(game, stripe, y, color);
 				}
