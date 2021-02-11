@@ -17,33 +17,6 @@ char *MAP[] = {
 	"11111111 1111111 111111111111",
 };
 
-// テクスチャデータ  textures[i][TEXTURE_HEIGHT * y + x] って感じ
-uint32_t textures[8][TEXTURE_HEIGHT * TEXTURE_WIDTH];
-
-
-// テクスチャデータを生成する
-void generate_textures(void){
-  //generate some textures  
-  for(int y = 0; y < TEXTURE_WIDTH; y++)
-  {
-	for(int x = 0; x < TEXTURE_HEIGHT; x++)
-	{
-	  int xorcolor = (x * 256 / TEXTURE_WIDTH) ^ (y * 256 / TEXTURE_HEIGHT);
-	  //int xcolor = x * 256 / TEXTURE_WIDTH;
-	  int ycolor = y * 256 / TEXTURE_HEIGHT;
-	  int xycolor = y * 128 / TEXTURE_HEIGHT + x * 128 / TEXTURE_WIDTH;
-	  textures[0][TEXTURE_WIDTH * y + x] = 0x10001 * 254 * (x != y && x != TEXTURE_WIDTH - y); //flat red texture with black cross
-	  textures[1][TEXTURE_WIDTH * y + x] = xycolor + 256 * xycolor + 0x10001 * xycolor; //sloped greyscale
-	  textures[2][TEXTURE_WIDTH * y + x] = 256 * xycolor + 0x10001 * xycolor; //sloped yellow gradient
-	  textures[3][TEXTURE_WIDTH * y + x] = xorcolor + 256 * xorcolor + 0x10001 * xorcolor; //xor greyscale
-	  textures[4][TEXTURE_WIDTH * y + x] = 256 * xorcolor; //xor green
-	  textures[5][TEXTURE_WIDTH * y + x] = 0x10001 * 192 * (x % 16 && y % 16); //red bricks
-	  textures[6][TEXTURE_WIDTH * y + x] = 0x10001 * ycolor; //red gradient
-	  textures[7][TEXTURE_WIDTH * y + x] = 128 + 256 * 128 + 0x10001 * 128; //flat grey texture
-	}
-  }
-}
-
 void	move_player(t_game *game)
 {
 	if (game->player.is_rotating)
@@ -128,7 +101,6 @@ void	initialize_game(t_game *game)
     game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 	game->map = MAP;
 
-	generate_textures();
 	// XPMファイルからテクスチャ画像を読み込む
 	char *texture_path = "./textures/test.xpm";
 	game->texture_n.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->texture_width, &game->texture_height);
@@ -316,13 +288,13 @@ void	lodev_loop(t_game *game)
 		wall_x -= floor(wall_x);  // 正方形のどの部分にヒットしたのか0.0~1.0で表す
 
 		// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
-		int texture_x = (int)(wall_x * TEXTURE_WIDTH);
+		int texture_x = (int)(wall_x * game->texture_width);
 		if ((side == 0 && ray_dir.x > 0) || (side == 1 && ray_dir.y < 0))
-		  texture_x = TEXTURE_WIDTH - texture_x - 1;
+		  texture_x = game->texture_width - texture_x - 1;
 
 		/* 各ピクセルにどのテクスチャのピクセルを描画するか計算する */
 		// y方向の1ピクセルごとにテクスチャのy座標が動く量
-		double step = 1.0 * TEXTURE_HEIGHT / (double)line_height;
+		double step = 1.0 * game->texture_height / (double)line_height;
 		// テクスチャの現在のy座標
 		double texture_pos_y = (draw_start - SCREEN_HEIGHT / 2 + line_height / 2) * step;
 		for (int y = 0; y < SCREEN_HEIGHT; y++)
@@ -334,9 +306,8 @@ void	lodev_loop(t_game *game)
 			if (y >= draw_start && y < draw_end)
 			{
 				// テクスチャの現在のy座標(double型)を整数型に変換する.
-				int texture_y = (int)texture_pos_y & (TEXTURE_HEIGHT - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
+				int texture_y = (int)texture_pos_y & (game->texture_height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
 				texture_pos_y += step;
-				// uint32_t color = textures[texture_num][TEXTURE_HEIGHT * texture_y + texture_x];
 				uint32_t color = get_color_from_img(game->texture_n, texture_x, texture_y);
 				// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
 				if (side == 1)

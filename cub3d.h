@@ -15,8 +15,6 @@
 // 640 * 480 以外だと壁が縦長や横長になる
 # define SCREEN_WIDTH 640
 # define SCREEN_HEIGHT 480
-# define TEXTURE_WIDTH 64
-# define TEXTURE_HEIGHT 64
 # define BLOCK_SIZE 64
 
 // Game Settings
