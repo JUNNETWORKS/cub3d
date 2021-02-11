@@ -13,8 +13,6 @@
 
 // display definitions
 // 640 * 480 以外だと壁が縦長や横長になる
-# define SCREEN_WIDTH 640
-# define SCREEN_HEIGHT 480
 # define BLOCK_SIZE 64
 
 // Game Settings
@@ -82,6 +80,8 @@ typedef struct  s_game {
 	void		*mlx;
 	void		*win;
 	t_img		img;
+	int			screen_width;
+	int			screen_height;
 	t_player	player;
 	char		**map;
 	t_img		texture_n; // 北

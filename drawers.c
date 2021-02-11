@@ -2,8 +2,8 @@
 
 void	clear_img(t_game *game)
 {
-	for (int x = 0; x < SCREEN_WIDTH; x++)
-	  for (int y = 0; y < SCREEN_HEIGHT; y++)
+	for (int x = 0; x < game->screen_width; x++)
+	  for (int y = 0; y < game->screen_height; y++)
 		my_mlx_pixel_put(game, x, y, 0x00000000);
 }
 
@@ -39,7 +39,7 @@ void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color)
 	if (dy <= dx) {
 		int E = -dx;
 		for (int i = 0; i <= dx; i++) {
-			if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT)
+			if (x >= 0 && x < game->screen_width && y >= 0 && y < game->screen_height)
 				my_mlx_pixel_put(game, x, y, color);
 			x += sx;
 			E += dy2;
@@ -51,7 +51,7 @@ void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color)
 	} else {
 		int E = -dy;
 		for (int i = 0; i <= dy; i++) {
-			if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT)
+			if (x >= 0 && x < game->screen_width && y >= 0 && y < game->screen_height)
 				my_mlx_pixel_put(game, x, y, color);
 			y += sy;
 			E += dx2;
@@ -73,7 +73,7 @@ void	draw_line_angle_length(t_game *game, t_vec2 position, double angle, int len
 		/* x座標とy座標を計算 */
 		int x = position.x + l * cos(angle);
 		int y = position.y + l * sin(angle);
-		if (x < 0 || x >= SCREEN_WIDTH || y < 0 || y >= SCREEN_HEIGHT)
+		if (x < 0 || x >= game->screen_width || y < 0 || y >= game->screen_height)
 			continue;
 		my_mlx_pixel_put(game, x, y, color);
 	}

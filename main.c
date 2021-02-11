@@ -83,7 +83,7 @@ void	draw_player(t_game *game)
 	draw_2vec2(game, v3, player_pos, 0x00FF00FF);
 
 	// 光線(Ray)を作成,描画
-	const double ray_length = SCREEN_WIDTH;
+	const double ray_length = game->screen_width;
 	for (double ray_angle = -M_PI / 2.0; ray_angle <= M_PI / 2.0; ray_angle += M_PI / 1000.0){
 		t_vec2 ray_end = {ray_length * cos(angle + ray_angle), -ray_length * sin(angle + ray_angle)};
 		vec2_add(&ray_end, player_pos);
@@ -96,8 +96,11 @@ void	draw_player(t_game *game)
 void	initialize_game(t_game *game)
 {
     game->mlx = mlx_init();
-    game->win = mlx_new_window(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "Hello world!");
-    game->img.img = mlx_new_image(game->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
+	// 640 * 480 以外だと壁が縦長や横長になる
+	game->screen_width = 640;
+	game->screen_height = 480;
+    game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
+    game->img.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
     game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 	game->map = MAP;
 
@@ -124,7 +127,7 @@ void	initialize_game(t_game *game)
 	char *sprite_texture_path = "./textures/sprite.xpm";
 	game->texture_sprite.img = mlx_xpm_file_to_image(game->mlx, sprite_texture_path, &game->sprite_width, &game->sprite_height);
     game->texture_sprite.addr = mlx_get_data_addr(game->texture_sprite.img, &game->texture_sprite.bits_per_pixel, &game->texture_sprite.line_length, &game->texture_sprite.endian);
-	game->z_buffer = ft_calloc(SCREEN_WIDTH, sizeof(double));
+	game->z_buffer = ft_calloc(game->screen_width, sizeof(double));
 	game->sprite_num = 2;
 	game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
 	game->sprites[0].x = 1.5;
@@ -176,12 +179,12 @@ void	lodev_loop(t_game *game)
 	// planeベクトルの大きさを計算
 	double	plane_length = vec2_length(game->player.plane);
 	// 基準となる壁の高さ. 視野角に応じて横幅が変わってしまうので, 視野角の逆数を掛けて1に戻す
-	double	wall_height_base = (double)SCREEN_WIDTH * (1 / (2 * plane_length));
+	double	wall_height_base = (double)game->screen_width * (1 / (2 * plane_length));
 	// スクリーンの全てのxについて計算する
-	for (int x = 0; x < SCREEN_WIDTH; x++)
+	for (int x = 0; x < game->screen_width; x++)
 	{
 		// カメラ平面上のx座標 (3D表示時の画面のx座標)  -1.0~1.0
-		double camera_x = 2 * x / (double)SCREEN_WIDTH - 1;
+		double camera_x = 2 * x / (double)game->screen_width - 1;
 		t_vec2 ray_dir;
 		ray_dir.x = game->player.dir.x + game->player.plane.x * camera_x;
 		ray_dir.y = game->player.dir.y + game->player.plane.y * camera_x;
@@ -256,12 +259,12 @@ void	lodev_loop(t_game *game)
 		// スクリーンに描画する必要のある縦線の長さを求める
 		int line_height = (int)(wall_height_base / perp_wall_dist);
 		// 実際に描画すべき場所の開始位置と終了位置を計算
-		int draw_start = -line_height / 2 + SCREEN_HEIGHT / 2;
+		int draw_start = -line_height / 2 + game->screen_height / 2;
 		if (draw_start < 0)
 			draw_start = 0;
-		int draw_end = line_height / 2 + SCREEN_HEIGHT / 2;
-		if (draw_end >= SCREEN_HEIGHT)
-			draw_end = SCREEN_HEIGHT - 1;
+		int draw_end = line_height / 2 + game->screen_height / 2;
+		if (draw_end >= game->screen_height)
+			draw_end = game->screen_height - 1;
 
 		/* テクスチャ無しバージョン
 		int color;
@@ -296,10 +299,10 @@ void	lodev_loop(t_game *game)
 		// y方向の1ピクセルごとにテクスチャのy座標が動く量
 		double step = 1.0 * game->texture_height / (double)line_height;
 		// テクスチャの現在のy座標
-		double texture_pos_y = (draw_start - SCREEN_HEIGHT / 2 + line_height / 2) * step;
-		for (int y = 0; y < SCREEN_HEIGHT; y++)
+		double texture_pos_y = (draw_start - game->screen_height / 2 + line_height / 2) * step;
+		for (int y = 0; y < game->screen_height; y++)
 		{
-			if (y <= SCREEN_HEIGHT / 2)
+			if (y <= game->screen_height / 2)
 				my_mlx_pixel_put(game, x, y, 0x87ceeb);  // draw sky
 			else
 				my_mlx_pixel_put(game, x, y, 0x9d6e5e);  // draw ground
@@ -354,23 +357,23 @@ void	lodev_loop(t_game *game)
 		printf("transform_x: %lf\ntransform_y: %lf\n", transform_x, transform_y);
 
 		// スクリーン上でのスプライトの座標
-		int sprite_screen_x = (int)((SCREEN_WIDTH / 2) * (1.0 + transform_x / transform_y));
+		int sprite_screen_x = (int)((game->screen_width / 2) * (1.0 + transform_x / transform_y));
 
 		// スクリーン上でのスプライトの高さ
-		int sprite_height_screen = ABS((int)(SCREEN_HEIGHT / transform_y));
+		int sprite_height_screen = ABS((int)(game->screen_height / transform_y));
 
 		// スプライト描画の一番下と一番上を計算する
-		int draw_start_y = -sprite_height_screen / 2 + SCREEN_HEIGHT / 2;
+		int draw_start_y = -sprite_height_screen / 2 + game->screen_height / 2;
 		if (draw_start_y < 0) draw_start_y = 0;
-		int draw_end_y = sprite_height_screen / 2 + SCREEN_HEIGHT / 2;
-		if (draw_end_y >= SCREEN_HEIGHT) draw_end_y = SCREEN_HEIGHT - 1;
+		int draw_end_y = sprite_height_screen / 2 + game->screen_height / 2;
+		if (draw_end_y >= game->screen_height) draw_end_y = game->screen_height - 1;
 
 		// スプライトの横幅を計算する
-		int sprite_width_screen = ABS((int)(SCREEN_HEIGHT / transform_y));
+		int sprite_width_screen = ABS((int)(game->screen_height / transform_y));
 		int draw_start_x = -sprite_width_screen / 2 + sprite_screen_x;
 		if (draw_start_x < 0) draw_start_x = 0;
 		int draw_end_x = sprite_width_screen / 2 + sprite_screen_x;
-		if (draw_end_x >= SCREEN_WIDTH) draw_end_x = SCREEN_WIDTH - 1;
+		if (draw_end_x >= game->screen_width) draw_end_x = game->screen_width - 1;
 
 		// スプライトの各縦線について描画
 		for (int stripe = draw_start_x; stripe < draw_end_x; stripe++){
@@ -383,9 +386,9 @@ void	lodev_loop(t_game *game)
 			 * 3. スクリーン上にある (right)
 			 * 4. zBufferに記録された壁までの距離より近い
 			 */
-			if (transform_y > 0 && stripe >= 0 && stripe < SCREEN_WIDTH && transform_y < game->z_buffer[stripe])
+			if (transform_y > 0 && stripe >= 0 && stripe < game->screen_width && transform_y < game->z_buffer[stripe])
 				for (int y = draw_start_y; y < draw_end_y; y++){
-					int tex_y = (int)((y - (-sprite_height_screen / 2 + SCREEN_HEIGHT / 2)) * game->texture_height / sprite_height_screen);
+					int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->texture_height / sprite_height_screen);
 					uint32_t color = get_color_from_img(game->texture_sprite, tex_x, tex_y);
 					my_mlx_pixel_put(game, stripe, y, color);
 				}
