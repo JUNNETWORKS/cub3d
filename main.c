@@ -153,20 +153,18 @@ void	initialize_game(t_game *game)
 	game->texture_sprite.img = mlx_xpm_file_to_image(game->mlx, sprite_texture_path, &game->sprite_width, &game->sprite_height);
     game->texture_sprite.addr = mlx_get_data_addr(game->texture_sprite.img, &game->texture_sprite.bits_per_pixel, &game->texture_sprite.line_length, &game->texture_sprite.endian);
 	game->z_buffer = ft_calloc(SCREEN_WIDTH, sizeof(double));
-	game->sprite_num = 1;
+	game->sprite_num = 2;
 	game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
 	game->sprites[0].x = 1.5;
 	game->sprites[0].y = 1.5;
-	/*
 	game->sprites[1].x = 3.5;
 	game->sprites[1].y = 3.5;
-	*/
 	
 	// Game Settings
 	mlx_do_key_autorepeaton(game->mlx);
 }
 
-void	sort_sprites(t_game *game, size_t sprite_num)
+void	sort_sprites(t_game *game)
 {
 	// スプライトのソートで使う(スプライト番号)
 	// int sprite_order[SPRITES_NUM];
@@ -175,7 +173,7 @@ void	sort_sprites(t_game *game, size_t sprite_num)
 	double *sprite_distances = ft_calloc(game->sprite_num, sizeof(double));
 
 	// スプライトを遠い順にソートするために距離を求める
-	for (int i = 0; i < sprite_num; i++){
+	for (int i = 0; i < game->sprite_num; i++){
 	  sprite_distances[i] = ((game->player.pos.x - game->sprites[i].x) * (game->player.pos.x - game->sprites[i].x) + (game->player.pos.y - game->sprites[i].y) * (game->player.pos.y - game->sprites[i].y));
 	}
 
@@ -184,7 +182,7 @@ void	sort_sprites(t_game *game, size_t sprite_num)
 	int flag = 1;
 	while (flag){
 		flag = 0;
-		for (int i = sprite_num - 1; i > 0; i--){
+		for (int i = game->sprite_num - 1; i > 0; i--){
 			if (sprite_distances[i] > sprite_distances[i-1]){
 				double tmp = sprite_distances[i];
 				sprite_distances[i] = sprite_distances[i-1];
@@ -361,7 +359,7 @@ void	lodev_loop(t_game *game)
 	/*  スプライトの描画  */
 
 	// スプライトを遠い順にソートする(遠いスプライトから描画するから)
-	sort_sprites(game, game->sprite_num);
+	sort_sprites(game);
 
 	// スプライトのソートが完了したら遠いスプライトから描画していく
 	for (int i = 0; i < game->sprite_num; i++){
@@ -374,21 +372,18 @@ void	lodev_loop(t_game *game)
 		double inv_det = 1.0 / (game->player.plane.x * game->player.dir.y - game->player.dir.x * game->player.plane.y);
 		double transform_x = inv_det * (game->player.dir.y * sprite.x - game->player.dir.x * sprite.y);
 		double transform_y = inv_det * (-game->player.plane.y * sprite.x + game->player.plane.x * sprite.y);  // スプライトまでの深度となる
-		printf("transform_x: %lf\ntransform_y: %lf\n", transform_x, transform_y);
 
 		// スクリーン上でのスプライトの座標
 		int sprite_screen_x = (int)((SCREEN_WIDTH / 2) * (1.0 + transform_x / transform_y));
 
 		// スクリーン上でのスプライトの高さ
 		int sprite_height_screen = ABS((int)(SCREEN_HEIGHT / transform_y));
-		printf("x_pos_on_screen: %d\nheight_on_screen: %d\n", sprite_screen_x, sprite_height_screen);
 
 		// スプライト描画の一番下と一番上を計算する
 		int draw_start_y = -sprite_height_screen / 2 + SCREEN_HEIGHT / 2;
 		if (draw_start_y < 0) draw_start_y = 0;
 		int draw_end_y = sprite_height_screen / 2 + SCREEN_HEIGHT / 2;
 		if (draw_end_y >= SCREEN_HEIGHT) draw_end_y = SCREEN_HEIGHT - 1;
-		printf("draw_start_y: %d\ndraw_end_y: %d\n", draw_start_y, draw_end_y);
 
 		// スプライトの横幅を計算する
 		int sprite_width_screen = ABS((int)(SCREEN_HEIGHT / transform_y));
@@ -396,7 +391,6 @@ void	lodev_loop(t_game *game)
 		if (draw_start_x < 0) draw_start_x = 0;
 		int draw_end_x = sprite_width_screen / 2 + sprite_screen_x;
 		if (draw_end_x >= SCREEN_WIDTH) draw_end_x = SCREEN_WIDTH - 1;
-		printf("draw_start_x: %d\ndraw_end_x: %d\n", draw_start_x, draw_end_x);
 
 		// スプライトの各縦線について描画
 		for (int stripe = draw_start_x; stripe < draw_end_x; stripe++){
@@ -409,7 +403,6 @@ void	lodev_loop(t_game *game)
 			 * 3. スクリーン上にある (right)
 			 * 4. zBufferに記録された壁までの距離より近い
 			 */
-			printf("stripe: %d\nzBuffer[%d]: %lf\n", stripe, stripe, game->z_buffer[stripe]);
 			if (transform_y > 0 && stripe >= 0 && stripe < SCREEN_WIDTH && transform_y < game->z_buffer[stripe])
 				for (int y = draw_start_y; y < draw_end_y; y++){
 					int tex_y = (int)((y - (-sprite_height_screen / 2 + SCREEN_HEIGHT / 2)) * game->texture_height / sprite_height_screen);
