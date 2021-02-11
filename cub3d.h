@@ -3,6 +3,9 @@
 # include "./minilibx-linux/mlx.h"
 # include "./libft/libft.h"
 # include <X11/X.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 # include <stdio.h>
 # include <stdint.h>
 # include <stdlib.h>
