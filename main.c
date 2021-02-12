@@ -24,8 +24,8 @@ void	move_player(t_game *game)
 		double rot_speed = game->player.is_rotating * PLAYER_ROTATE_RAD;
 
 		t_vec2 old_dir = game->player.dir;
-		game->player.dir.x = game->player.dir.x * cos(rot_speed) - game->player.dir.y * sin(rot_speed);
-		game->player.dir.y = old_dir.x * sin(rot_speed) + game->player.dir.y * cos(rot_speed);
+		game->player.dir.x = old_dir.x * cos(rot_speed) - old_dir.y * sin(rot_speed);
+		game->player.dir.y = old_dir.x * sin(rot_speed) + old_dir.y * cos(rot_speed);
 
 		t_vec2 old_plane = game->player.plane;
 		game->player.plane.x = game->player.plane.x * cos(rot_speed) - game->player.plane.y * sin(rot_speed);
@@ -44,6 +44,21 @@ void	move_player(t_game *game)
 		if (game->map[(int)new_pos_y][(int)(game->player.pos.x)] == '0')
 			game->player.pos.y = new_pos_y;
 			// game->player.pos.y += game->player.is_moving * game->player.dir.y * PLAYER_MOVE_PX;
+	}
+	if (game->player.is_sidling)
+	{
+		t_vec2 perpendicular;
+		perpendicular.x = game->player.dir.x * cos(M_PI/2) - game->player.dir.y * sin(M_PI/2);
+		perpendicular.y = game->player.dir.x * sin(M_PI/2) + game->player.dir.y * cos(M_PI/2);
+		double new_pos_x = game->player.pos.x + game->player.is_sidling * perpendicular.x * PLAYER_MOVE_PX;
+		new_pos_x = new_pos_x < 0 ? 0 : new_pos_x;
+		if (game->map[(int)(game->player.pos.y)][(int)new_pos_x] == '0')
+			game->player.pos.x = new_pos_x;
+
+		double new_pos_y = game->player.pos.y + game->player.is_sidling * perpendicular.y * PLAYER_MOVE_PX;
+		new_pos_y = new_pos_y < 0 ? 0 : new_pos_y;
+		if (game->map[(int)new_pos_y][(int)(game->player.pos.x)] == '0')
+			game->player.pos.y = new_pos_y;
 	}
 }
 
@@ -121,6 +136,7 @@ void	initialize_game(t_game *game)
 	game->player.plane.y = tan(deg2rad(66 / 2));
 	// 状態の初期化
 	game->player.is_moving = 0;
+	game->player.is_sidling = 0;
 	game->player.is_rotating = 0;
 
 	// スプライト用
@@ -128,12 +144,12 @@ void	initialize_game(t_game *game)
 	game->texture_sprite.img = mlx_xpm_file_to_image(game->mlx, sprite_texture_path, &game->sprite_width, &game->sprite_height);
     game->texture_sprite.addr = mlx_get_data_addr(game->texture_sprite.img, &game->texture_sprite.bits_per_pixel, &game->texture_sprite.line_length, &game->texture_sprite.endian);
 	game->z_buffer = ft_calloc(game->screen_width, sizeof(double));
-	game->sprite_num = 2;
+	game->sprite_num = 1;
 	game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
 	game->sprites[0].x = 1.5;
 	game->sprites[0].y = 1.5;
-	game->sprites[1].x = 2.5;
-	game->sprites[1].y = 2.5;
+	// game->sprites[1].x = 2.5;
+	// game->sprites[1].y = 2.5;
 	
 	// Game Settings
 	mlx_do_key_autorepeaton(game->mlx);
@@ -357,7 +373,17 @@ void	lodev_loop(t_game *game)
 		printf("transform_x: %lf\ntransform_y: %lf\n", transform_x, transform_y);
 
 		// スクリーン上でのスプライトの座標
+		/* (1.0 + transform_x / transform_y) の説明
+		 * この式はによって算出される値は,
+		 * スプライトの中心が画面左端にある時は0,
+		 * スプライトの中心が画面中央にある時は1,
+		 * スプライトの中心が画面左端にある時は2,
+		 * となる.
+		 * これに画面サイズの半分を掛けることで画面上でのスプライトのx座標がわかる
+		 */
 		int sprite_screen_x = (int)((game->screen_width / 2) * (1.0 + transform_x / transform_y));
+		printf("(1.0 + transform_x / transform_y): %lf\n", (1.0 + transform_x / transform_y));
+		printf("((game->screen_width / 2) * (1.0 + transform_x / transform_y)): %d\n", sprite_screen_x);
 
 		// スクリーン上でのスプライトの高さ
 		int sprite_height_screen = ABS((int)(game->screen_height / transform_y));
@@ -386,12 +412,15 @@ void	lodev_loop(t_game *game)
 			 * 3. スクリーン上にある (right)
 			 * 4. zBufferに記録された壁までの距離より近い
 			 */
-			if (transform_y > 0 && stripe >= 0 && stripe < game->screen_width && transform_y < game->z_buffer[stripe])
+			if (transform_y > 0 && stripe >= 0 && stripe < game->screen_width && transform_y < game->z_buffer[stripe]){
 				for (int y = draw_start_y; y < draw_end_y; y++){
 					int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->texture_height / sprite_height_screen);
 					uint32_t color = get_color_from_img(game->texture_sprite, tex_x, tex_y);
 					my_mlx_pixel_put(game, stripe, y, color);
+					if (tex_x == (game->sprite_width) / 2)
+						my_mlx_pixel_put(game, stripe, y, 0xff0000);
 				}
+			}
 		}
 	}
 }

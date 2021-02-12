@@ -12,7 +12,6 @@
 # include <math.h>
 
 // display definitions
-// 640 * 480 以外だと壁が縦長や横長になる
 # define BLOCK_SIZE 64
 
 // Game Settings
@@ -26,6 +25,8 @@
 # define KEY_a 97
 # define KEY_s 115
 # define KEY_d 100
+# define KEY_rallow 65363
+# define KEY_lallow 65361
 
 // utils
 # define ABS(x) ((x) < 0 ? -1 * (x) : (x))
@@ -58,7 +59,8 @@ typedef struct	s_player {
 	t_vec2		dir;       // 現在向いている方向のベクトル
 	t_vec2		plane;     // 2Dレイキャスティング用のカメラ平面
 	int			is_moving; // 動くキーが押されているか (W=1, S=-1, None=0)
-	int			is_rotating; // 動くキーが押されているか (D=1, A=-1, None=0)
+	int			is_sidling;  // 動くキーが押されているか (D=1, A=-1, None=0)
+	int			is_rotating; // 動くキーが押されているか (左矢印=1, 右矢印=-1, None=0)
 }				t_player;
 
 // texture
