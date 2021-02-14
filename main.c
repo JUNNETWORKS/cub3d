@@ -130,6 +130,7 @@ void	initialize_game(t_game *game)
 	// プレイヤーの初期座標
 	game->player.pos.x = 2.0;
 	game->player.pos.y = 1.5;
+	/* dirベクトルの初期値を変更する場合にはplaneベクトルも変更する必要あり */
 	// プレイヤーの初期方向  (長さが1の正規化されたベクトルにする必要がある)
 	game->player.dir.x = -1;
 	game->player.dir.y = 0;
