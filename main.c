@@ -48,7 +48,7 @@ void	initialize_game(t_game *game)
 	load_image(game, &(game->tex_w), "./textures/wall_w.xpm");
 	load_image(game, &(game->tex_e), "./textures/wall_e.xpm");
 
-	/* dirベクトルの初期値を変更する場合にはplaneベクトルも変更する必要あり */
+	// プレイヤーの初期化
 	initialize_player(&(game->player), 2.0, 1.5, 'N');
 
 	// スプライト用
