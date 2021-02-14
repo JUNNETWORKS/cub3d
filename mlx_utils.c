@@ -14,3 +14,8 @@ uint32_t	get_color_from_img(t_img img, int x, int y)
 {
 	return *(uint32_t*)(img.addr + (y * img.line_length + x * (img.bits_per_pixel / 8)));
 }
+
+void	load_image(t_game *game, t_img *img, char *filepath){
+	(*img).img = mlx_xpm_file_to_image(game->mlx, filepath, &((*img).width), &((*img).height));
+    (*img).addr = mlx_get_data_addr((*img).img, &((*img).bits_per_pixel), &((*img).line_length), &((*img).endian));
+}

@@ -120,9 +120,12 @@ void	initialize_game(t_game *game)
 	game->map = MAP;
 
 	// XPMファイルからテクスチャ画像を読み込む
-	char *texture_path = "./textures/test.xpm";
-	game->texture_n.img = mlx_xpm_file_to_image(game->mlx, texture_path, &game->texture_width, &game->texture_height);
-    game->texture_n.addr = mlx_get_data_addr(game->texture_n.img, &game->texture_n.bits_per_pixel, &game->texture_n.line_length, &game->texture_n.endian);
+	load_image(game, &(game->tex_n), "./textures/sprite_n.xpm");
+	game->tex_width = game->tex_n.width;
+	game->tex_height = game->tex_n.height;
+	load_image(game, &(game->tex_s), "./textures/sprite_s.xpm");
+	load_image(game, &(game->tex_w), "./textures/sprite_w.xpm");
+	load_image(game, &(game->tex_e), "./textures/sprite_e.xpm");
 
 	// プレイヤーの初期座標
 	game->player.pos.x = 2.0;
@@ -272,6 +275,20 @@ void	lodev_loop(t_game *game)
 		else
 			perp_wall_dist = (map_y - game->player.pos.y + (1 - step_y) / 2) / ray_dir.y;
 
+		// 壁の当たった方角によってテクスチャを変更する
+		t_img *tex;
+		if (side == 0){
+		  if (step_x > 0)
+			tex = &(game->tex_w);
+		  else
+			tex = &(game->tex_e);
+		}else{
+		  if (step_y > 0)
+			tex = &(game->tex_n);
+		  else
+			tex = &(game->tex_s);
+		}
+
 		// スクリーンに描画する必要のある縦線の長さを求める
 		int line_height = (int)(wall_height_base / perp_wall_dist);
 		// 実際に描画すべき場所の開始位置と終了位置を計算
@@ -281,21 +298,6 @@ void	lodev_loop(t_game *game)
 		int draw_end = line_height / 2 + game->screen_height / 2;
 		if (draw_end >= game->screen_height)
 			draw_end = game->screen_height - 1;
-
-		/* テクスチャ無しバージョン
-		int color;
-		if (side == 0)
-			color = 0x00FFFFFF;
-		else
-			color = 0x00888888;
-
-		t_vec2 v_start = {x, draw_start};
-		t_vec2 v_end = {x, draw_end};
-		draw_2vec2(game, v_start, v_end, color);
-		*/
-
-		// テクスチャの番号をマップから取得
-		int texture_num = game->map[map_y][map_x] - '0' - 1;
 
 		/* 当たった壁上の正確なx座標を求める */
 		// 正確なx座標 (整数型ではない)
@@ -307,13 +309,13 @@ void	lodev_loop(t_game *game)
 		wall_x -= floor(wall_x);  // 正方形のどの部分にヒットしたのか0.0~1.0で表す
 
 		// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
-		int texture_x = (int)(wall_x * game->texture_width);
+		int texture_x = (int)(wall_x * game->tex_width);
 		if ((side == 0 && ray_dir.x > 0) || (side == 1 && ray_dir.y < 0))
-		  texture_x = game->texture_width - texture_x - 1;
+		  texture_x = game->tex_width - texture_x - 1;
 
 		/* 各ピクセルにどのテクスチャのピクセルを描画するか計算する */
 		// y方向の1ピクセルごとにテクスチャのy座標が動く量
-		double step = 1.0 * game->texture_height / (double)line_height;
+		double step = 1.0 * game->tex_height / (double)line_height;
 		// テクスチャの現在のy座標
 		double texture_pos_y = (draw_start - game->screen_height / 2 + line_height / 2) * step;
 		for (int y = 0; y < game->screen_height; y++)
@@ -325,9 +327,9 @@ void	lodev_loop(t_game *game)
 			if (y >= draw_start && y < draw_end)
 			{
 				// テクスチャの現在のy座標(double型)を整数型に変換する.
-				int texture_y = (int)texture_pos_y & (game->texture_height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
+				int texture_y = (int)texture_pos_y & (game->tex_height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
 				texture_pos_y += step;
-				uint32_t color = get_color_from_img(game->texture_n, texture_x, texture_y);
+				uint32_t color = get_color_from_img(*tex, texture_x, texture_y);
 				// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
 				if (side == 1)
 					color = (color >> 1) & 0x7f7f7f;
@@ -363,13 +365,15 @@ void	lodev_loop(t_game *game)
 		printf("---------sprite%d---------\n", i);
 		t_vec2 sprite;
 		// スプライトの位置をカメラからの相対位置にする
+		// 透視投影変換における原点調整
 		sprite.x = game->sprites[i].x - game->player.pos.x;
 		sprite.y = game->sprites[i].y - game->player.pos.y;
 
 		// カメラ行列の逆行列を掛けてスクリーン上の座標を算出する
 		double inv_det = 1.0 / (game->player.plane.x * game->player.dir.y - game->player.dir.x * game->player.plane.y);
-		double transform_x = inv_det * (game->player.dir.y * sprite.x - game->player.dir.x * sprite.y);
+		double transform_x = inv_det * (game->player.dir.y * sprite.x - game->player.dir.x * sprite.y);       // カメラ平面(中心を0とする)とスプライトのx座標を比較した時の差
 		double transform_y = inv_det * (-game->player.plane.y * sprite.x + game->player.plane.x * sprite.y);  // スプライトまでの深度となる
+		printf("sprite_x: %lf\nsprite_y: %lf\n", sprite.x, sprite.y);
 		printf("transform_x: %lf\ntransform_y: %lf\n", transform_x, transform_y);
 
 		// スクリーン上でのスプライトの座標
@@ -414,7 +418,7 @@ void	lodev_loop(t_game *game)
 			 */
 			if (transform_y > 0 && stripe >= 0 && stripe < game->screen_width && transform_y < game->z_buffer[stripe]){
 				for (int y = draw_start_y; y < draw_end_y; y++){
-					int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->texture_height / sprite_height_screen);
+					int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->tex_height / sprite_height_screen);
 					uint32_t color = get_color_from_img(game->texture_sprite, tex_x, tex_y);
 					my_mlx_pixel_put(game, stripe, y, color);
 					if (tex_x == (game->sprite_width) / 2)
@@ -438,7 +442,7 @@ int		main_loop(t_game *game)
 	move_player(game);
 	print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
-	mlx_put_image_to_window(game->mlx, game->win, game->texture_n.img, 0, 0);
+	mlx_put_image_to_window(game->mlx, game->win, game->tex_n.img, 0, 0);
 	return (0);
 }
 

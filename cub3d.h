@@ -38,6 +38,8 @@ typedef struct	s_img {
 	int			bits_per_pixel;
 	int			line_length;
 	int			endian;
+	int			width;
+	int			height;
 }				t_img;
 
 // Vector2D
@@ -86,9 +88,12 @@ typedef struct  s_game {
 	int			screen_height;
 	t_player	player;
 	char		**map;
-	t_img		texture_n; // 北
-	int			texture_width;
-	int			texture_height;
+	t_img		tex_n; // 北
+	t_img		tex_s; // 南
+	t_img		tex_w; // 西
+	t_img		tex_e; // 東
+	int			tex_width;
+	int			tex_height;
 
 	int			sprite_num;  // スプライトの数
 	t_vec2		*sprites;    // スプライトの座標
@@ -101,6 +106,7 @@ typedef struct  s_game {
 // MLX Utils
 void			my_mlx_pixel_put(t_game *game, int x, int y, int color);
 uint32_t		get_color_from_img(t_img img, int x, int y);
+void			load_image(t_game *game, t_img *img, char *filepath);
 // Game functions
 void			initialize_game(t_game *game);
 // Hooks
