@@ -442,7 +442,6 @@ int		main_loop(t_game *game)
 	move_player(game);
 	print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
-	mlx_put_image_to_window(game->mlx, game->win, game->tex_n.img, 0, 0);
 	return (0);
 }
 
