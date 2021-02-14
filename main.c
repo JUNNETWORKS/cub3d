@@ -144,8 +144,8 @@ void	initialize_game(t_game *game)
 
 	// スプライト用
 	char *sprite_texture_path = "./textures/barrel.xpm";
-	game->texture_sprite.img = mlx_xpm_file_to_image(game->mlx, sprite_texture_path, &game->sprite_width, &game->sprite_height);
-    game->texture_sprite.addr = mlx_get_data_addr(game->texture_sprite.img, &game->texture_sprite.bits_per_pixel, &game->texture_sprite.line_length, &game->texture_sprite.endian);
+	game->tex_sprite.img = mlx_xpm_file_to_image(game->mlx, sprite_texture_path, &game->sprite_width, &game->sprite_height);
+    game->tex_sprite.addr = mlx_get_data_addr(game->tex_sprite.img, &game->tex_sprite.bits_per_pixel, &game->tex_sprite.line_length, &game->tex_sprite.endian);
 	game->z_buffer = ft_calloc(game->screen_width, sizeof(double));
 	game->sprite_num = 1;
 	game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
@@ -419,7 +419,7 @@ void	lodev_loop(t_game *game)
 			if (transform_y > 0 && stripe >= 0 && stripe < game->screen_width && transform_y < game->z_buffer[stripe]){
 				for (int y = draw_start_y; y < draw_end_y; y++){
 					int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->tex_height / sprite_height_screen);
-					uint32_t color = get_color_from_img(game->texture_sprite, tex_x, tex_y);
+					uint32_t color = get_color_from_img(game->tex_sprite, tex_x, tex_y);
 					my_mlx_pixel_put(game, stripe, y, color);
 					if (tex_x == (game->sprite_width) / 2)
 						my_mlx_pixel_put(game, stripe, y, 0xff0000);

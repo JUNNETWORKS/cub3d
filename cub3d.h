@@ -99,7 +99,7 @@ typedef struct  s_game {
 	t_vec2		*sprites;    // スプライトの座標
 	int			sprite_width;  // スプライトの描画する時の幅
 	int			sprite_height; // スプライトの描画する時の高さ
-	t_img		texture_sprite;  // スプライトのテクスチャ
+	t_img		tex_sprite;  // スプライトのテクスチャ
 	double		*z_buffer;  // z_buffer[screenWidth]  // スクリーンのxにおける壁までの距離
 }               t_game;
 
