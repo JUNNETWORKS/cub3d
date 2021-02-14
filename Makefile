@@ -14,6 +14,7 @@ SRCS = main.c \
 	   drawers.c \
 	   utils.c \
 	   vector_utils.c \
+	   player.c \
 	   debug_utils.c
 OBJS = $(SRCS:.c=.o)
 

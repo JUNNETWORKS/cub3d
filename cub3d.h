@@ -122,6 +122,9 @@ double	vec2_length(t_vec2 vec);         // ベクトルの長さを求める
 void	vec2_add(t_vec2 *a, t_vec2 b);   // ベクトルの足し算
 void	vec2_mult(t_vec2 *vec, int num);  // ベクトルを定数倍する
 void	vec2_rotate(t_vec2 *vec, double rad);  // 回転行列を掛ける
+// Player
+void	move_player(t_game *game);
+void	initialize_player(t_player *player, double x, double y, char direction);
 // Utils
 double	deg2rad(int x);
 int		rad2deg(double x);
