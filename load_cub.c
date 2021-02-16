@@ -28,24 +28,44 @@ int	load_cubfile(t_game *game, char *filepath)
 		params = ft_split(line, ' ');
 		free(line);
 
-		if (ft_strnstr(params[0], "R", ft_strlen(params[0])) == 0){
+		printf("params[0]: |%s|\n", params[0]);
+		if (params[0] == NULL)
+			continue;
+		printf("params[1]: |%s|\n", params[1]);
+		if (ft_strnstr(params[0], "R", ft_strlen(params[0]))){
 			game->screen_width = ft_atoi(params[1]);
 			game->screen_height = ft_atoi(params[2]);
-		}else if (ft_strnstr(params[0], "NO", ft_strlen(params[0])) == 0){
-			load_image(game, &(game->tex_n), params[1]);
-		}else if (ft_strnstr(params[0], "SO", ft_strlen(params[0])) == 0){
-			load_image(game, &(game->tex_s), params[1]);
-		}else if (ft_strnstr(params[0], "WE", ft_strlen(params[0])) == 0){
-			load_image(game, &(game->tex_w), params[1]);
-		}else if (ft_strnstr(params[0], "EA", ft_strlen(params[0])) == 0){
-			load_image(game, &(game->tex_e), params[1]);
-		}else if (ft_strnstr(params[0], "S", ft_strlen(params[0])) == 0){
-			load_image(game, &(game->tex_sprite), params[1]);
-		}else if (ft_strnstr(params[0], "F", ft_strlen(params[0])) == 0){
+			printf("screen_width: %d, screen_height: %d\n",game->screen_width, game->screen_height);
+		}else if (ft_strnstr(params[0], "NO", ft_strlen(params[0]))){
+			if(load_image(game, &(game->tex_n), params[1]) == -1){
+				printf("load error %s\n", params[1]);
+				return (-1);
+			}
+		}else if (ft_strnstr(params[0], "SO", ft_strlen(params[0]))){
+			if(load_image(game, &(game->tex_s), params[1]) == -1){
+				printf("load error %s\n", params[1]);
+				return (-1);
+			}
+		}else if (ft_strnstr(params[0], "WE", ft_strlen(params[0]))){
+			if(load_image(game, &(game->tex_w), params[1]) == -1){
+				printf("load error %s\n", params[1]);
+				return (-1);
+			}
+		}else if (ft_strnstr(params[0], "EA", ft_strlen(params[0]))){
+			if(load_image(game, &(game->tex_e), params[1]) == -1){
+				printf("load error %s\n", params[1]);
+				return (-1);
+			}
+		}else if (ft_strnstr(params[0], "S", ft_strlen(params[0]))){
+			if(load_image(game, &(game->tex_sprite), params[1]) == -1){
+				printf("load error %s\n", params[1]);
+				return (-1);
+			}
+		}else if (ft_strnstr(params[0], "F", ft_strlen(params[0]))){
 			params2 = ft_split(params[1], ',');
 			game->ground_color = rgb2hex(ft_atoi(params2[0]), ft_atoi(params2[1]), ft_atoi(params2[2]));
 			free_ptrarr((void**)params2);
-		}else if (ft_strnstr(params[0], "C", ft_strlen(params[0])) == 0){
+		}else if (ft_strnstr(params[0], "C", ft_strlen(params[0]))){
 			params2 = ft_split(params[1], ',');
 			game->sky_color = rgb2hex(ft_atoi(params2[0]), ft_atoi(params2[1]), ft_atoi(params2[2]));
 			free_ptrarr((void**)params2);

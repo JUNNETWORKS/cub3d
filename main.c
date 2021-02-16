@@ -19,7 +19,6 @@ char *MAP[] = {
 
 void	initialize_game(t_game *game)
 {
-    game->mlx = mlx_init();
 	// game->screen_width = 640;
 	// game->screen_height = 480;
     game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
@@ -335,6 +334,7 @@ void	lodev_loop(t_game *game)
 int		main_loop(t_game *game)
 {
 	clear_img(&(game->img));
+	mlx_put_image_to_window(game->mlx, game->win, game->tex_n.img, 0, 0);
 	lodev_loop(game);
 	// draw_wall(game);
 	/*
@@ -349,12 +349,12 @@ int		main_loop(t_game *game)
 
 int main(int argc, char **argv){
 	t_game	game;
+    game.mlx = mlx_init();
 	if ((load_cubfile(&game, argv[1])) == -1){
 		printf("Error is occured when load cub file\n");
 		exit(1);
 	}
 	initialize_game(&game);
-
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
 	mlx_hook(game.win, KeyRelease, KeyReleaseMask, key_release_hook, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);
