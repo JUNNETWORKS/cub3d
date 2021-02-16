@@ -23,7 +23,7 @@ void	draw_wall(t_game *game)
 	for(int i = 0; i < sizeof(MAP) / sizeof(MAP[0]); i++){
 	  for (int j = 0; j < ft_strlen(MAP[i]); j++){
 		if (MAP[i][j] == '1'){
-			draw_block(game, j * BLOCK_SIZE, i * BLOCK_SIZE, 0x00FFFFFF);
+			draw_block(&(game->img), j * BLOCK_SIZE, i * BLOCK_SIZE, 0x00FFFFFF);
 		}
 	  }
 	}
@@ -230,9 +230,9 @@ void	lodev_loop(t_game *game)
 		for (int y = 0; y < game->screen_height; y++)
 		{
 			if (y <= game->screen_height / 2)
-				my_mlx_pixel_put(game, x, y, 0x87ceeb);  // draw sky
+				my_mlx_pixel_put(&(game->img), x, y, 0x87ceeb);  // draw sky
 			else
-				my_mlx_pixel_put(game, x, y, 0x9d6e5e);  // draw ground
+				my_mlx_pixel_put(&(game->img), x, y, 0x9d6e5e);  // draw ground
 			if (y >= draw_start && y < draw_end)
 			{
 				// テクスチャの現在のy座標(double型)を整数型に変換する.
@@ -242,7 +242,7 @@ void	lodev_loop(t_game *game)
 				// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
 				if (side == 1)
 					color = (color >> 1) & 0x7f7f7f;
-				my_mlx_pixel_put(game, x, y, color);
+				my_mlx_pixel_put(&(game->img), x, y, color);
 			}
 		}
 
@@ -331,9 +331,9 @@ void	lodev_loop(t_game *game)
 					uint32_t color = get_color_from_img(game->tex_sprite, tex_x, tex_y);
 					if (color & 0xff000000)
 					  continue;
-					my_mlx_pixel_put(game, stripe, y, color);
+					my_mlx_pixel_put(&(game->img), stripe, y, color);
 					if (tex_x == (game->sprite_width) / 2)
-						my_mlx_pixel_put(game, stripe, y, 0xff0000);
+						my_mlx_pixel_put(&(game->img), stripe, y, 0xff0000);
 				}
 			}
 		}

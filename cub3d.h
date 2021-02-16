@@ -106,7 +106,7 @@ typedef struct  s_game {
 }               t_game;
 
 // MLX Utils
-void			my_mlx_pixel_put(t_game *game, int x, int y, int color);
+void			my_mlx_pixel_put(t_img *img, int x, int y, int color);
 uint32_t		get_color_from_img(t_img img, int x, int y);
 void			load_image(t_game *game, t_img *img, char *filepath);
 // Game functions
@@ -115,21 +115,22 @@ void			initialize_game(t_game *game);
 int 			key_press_hook(int keycode, t_game *game);
 int 			key_release_hook(int keycode, t_game *game);
 // Drawers
-void	clear_img(t_game *game);
-void	draw_block(t_game *game, int x, int y, int color);
-void	draw_2vec2(t_game *game, t_vec2 v1, t_vec2 v2, int color);
-void	draw_line_angle_length(t_game *game, t_vec2 position, double angle, int length, int color);
+void			clear_img(t_img *img);
+void			draw_block(t_img *img, int x, int y, int color);
+void			draw_2vec2(t_img *img, t_vec2 v1, t_vec2 v2, int color);
+void			draw_line_angle_length(t_img *img, t_vec2 position, double angle, int length, int color);
 // Vector
-double	vec2_length(t_vec2 vec);         // ベクトルの長さを求める
-void	vec2_add(t_vec2 *a, t_vec2 b);   // ベクトルの足し算
-void	vec2_mult(t_vec2 *vec, int num);  // ベクトルを定数倍する
-void	vec2_rotate(t_vec2 *vec, double rad);  // 回転行列を掛ける
+double			vec2_length(t_vec2 vec);         // ベクトルの長さを求める
+void			vec2_add(t_vec2 *a, t_vec2 b);   // ベクトルの足し算
+void			vec2_mult(t_vec2 *vec, int num);  // ベクトルを定数倍する
+void			vec2_rotate(t_vec2 *vec, double rad);  // 回転行列を掛ける
 // Player
-void	move_player(t_game *game);
-void	initialize_player(t_player *player, double x, double y, char direction);
+void			move_player(t_game *game);
+void			initialize_player(t_player *player, double x, double y, char direction);
 // Utils
-double	deg2rad(int x);
-int		rad2deg(double x);
+double			deg2rad(int x);
+int				rad2deg(double x);
+uint32_t		rgb2hex(char r, char g, char b);
 // Debug
 void			print_game(t_game *game);
 void			print_vec2(t_vec2 vec);
