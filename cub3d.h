@@ -131,7 +131,7 @@ void			initialize_player(t_player *player, double x, double y, char direction);
 // Utils
 double			deg2rad(int x);
 int				rad2deg(double x);
-uint32_t		rgb2hex(char r, char g, char b);
+uint32_t		rgb2hex(int r, int g, int b);
 uint32_t		alpha_blend(uint32_t dst, uint32_t src);
 // Debug
 void			print_game(t_game *game);

@@ -334,7 +334,6 @@ void	lodev_loop(t_game *game)
 int		main_loop(t_game *game)
 {
 	clear_img(&(game->img));
-	mlx_put_image_to_window(game->mlx, game->win, game->tex_n.img, 0, 0);
 	lodev_loop(game);
 	// draw_wall(game);
 	/*
