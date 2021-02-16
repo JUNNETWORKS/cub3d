@@ -20,9 +20,8 @@ char *MAP[] = {
 void	initialize_game(t_game *game)
 {
     game->mlx = mlx_init();
-	// 640 * 480 以外だと壁が縦長や横長になる
-	game->screen_width = 640;
-	game->screen_height = 480;
+	// game->screen_width = 640;
+	// game->screen_height = 480;
     game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
 
     game->img.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
@@ -33,20 +32,20 @@ void	initialize_game(t_game *game)
 	game->map = MAP;
 
 	// XPMファイルからテクスチャ画像を読み込む
-	load_image(game, &(game->tex_n), "./textures/wall_n.xpm");
+	// load_image(game, &(game->tex_n), "./textures/wall_n.xpm");
 	game->tex_width = game->tex_n.width;
 	game->tex_height = game->tex_n.height;
-	load_image(game, &(game->tex_s), "./textures/wall_s.xpm");
-	load_image(game, &(game->tex_w), "./textures/wall_w.xpm");
-	load_image(game, &(game->tex_e), "./textures/wall_e.xpm");
+	// load_image(game, &(game->tex_s), "./textures/wall_s.xpm");
+	// load_image(game, &(game->tex_w), "./textures/wall_w.xpm");
+	// load_image(game, &(game->tex_e), "./textures/wall_e.xpm");
+	// game->sky_color = 0x87ceeb;
+	// game->ground_color = 0x9d6e5e;
 
 	// プレイヤーの初期化
 	initialize_player(&(game->player), 2.0, 1.5, 'N');
 
 	// スプライト用
-	char *sprite_texture_path = "./textures/barrel.xpm";
-	game->tex_sprite.img = mlx_xpm_file_to_image(game->mlx, sprite_texture_path, &game->sprite_width, &game->sprite_height);
-    game->tex_sprite.addr = mlx_get_data_addr(game->tex_sprite.img, &game->tex_sprite.bits_per_pixel, &game->tex_sprite.line_length, &game->tex_sprite.endian);
+	// load_image(game, &game->tex_sprite, "./textures/barrel.xpm");
 	game->z_buffer = ft_calloc(game->screen_width, sizeof(double));
 	game->sprite_num = 1;
 	game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
