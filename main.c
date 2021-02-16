@@ -17,18 +17,6 @@ char *MAP[] = {
 	"11111111 1111111 111111111111",
 };
 
-void	draw_wall(t_game *game)
-{
-	// 各壁ごとに縦横10pxのブロックを描画
-	for(int i = 0; i < sizeof(MAP) / sizeof(MAP[0]); i++){
-	  for (int j = 0; j < ft_strlen(MAP[i]); j++){
-		if (MAP[i][j] == '1'){
-			draw_block(&(game->img), j * BLOCK_SIZE, i * BLOCK_SIZE, 0x00FFFFFF);
-		}
-	  }
-	}
-}
-
 void	initialize_game(t_game *game)
 {
     game->mlx = mlx_init();
