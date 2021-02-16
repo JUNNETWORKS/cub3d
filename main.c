@@ -32,11 +32,11 @@ void	initialize_game(t_game *game)
 
 	// XPMファイルからテクスチャ画像を読み込む
 	// load_image(game, &(game->tex_n), "./textures/wall_n.xpm");
-	game->tex_width = game->tex_n.width;
-	game->tex_height = game->tex_n.height;
 	// load_image(game, &(game->tex_s), "./textures/wall_s.xpm");
 	// load_image(game, &(game->tex_w), "./textures/wall_w.xpm");
 	// load_image(game, &(game->tex_e), "./textures/wall_e.xpm");
+	game->tex_width = game->tex_n.width;
+	game->tex_height = game->tex_n.height;
 	// game->sky_color = 0x87ceeb;
 	// game->ground_color = 0x9d6e5e;
 
@@ -308,7 +308,7 @@ void	lodev_loop(t_game *game)
 		for (int stripe = draw_start_x; stripe < draw_end_x; stripe++){
 			// テクスチャのx座標
 			// (stripe - (-sprite_width_screen / 2 + sprite_screen_x)) で現在何ピクセル目かを取得
-			int tex_x = (int)((stripe - (-sprite_width_screen / 2 + sprite_screen_x)) * game->sprite_width / sprite_width_screen);
+			int tex_x = (int)((stripe - (-sprite_width_screen / 2 + sprite_screen_x)) * game->tex_sprite.width / sprite_width_screen);
 			/* 以下の条件の時描画を行う
 			 * 1. カメラの平面の前にいるか　(カメラ平面の後ろにあるスプライトは描画しない)
 			 * 2. スクリーン上にある (left)
@@ -322,7 +322,7 @@ void	lodev_loop(t_game *game)
 					if (color & 0xff000000)
 					  continue;
 					my_mlx_pixel_put(&(game->img), stripe, y, color);
-					if (tex_x == (game->sprite_width) / 2)
+					if (tex_x == (game->tex_sprite.width) / 2)
 						my_mlx_pixel_put(&(game->img), stripe, y, 0xff0000);
 				}
 			}
