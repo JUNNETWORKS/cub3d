@@ -356,43 +356,6 @@ int		main_loop(t_game *game)
 	return (0);
 }
 
-int	load_cubfile(char *filepath)
-{
-	int		fd;
-	char	*line;
-	int		status;
-	char	**param;
-
-	if ((fd = open(filepath, O_RDONLY)) == -1)
-		return (-1);
-	while ((status = get_next_line(fd, &line)) == 1)
-	{
-		param = ft_split(line, ' ');
-		free(line);
-
-		if (ft_strncmp(param[0], "R", 1) == 0){
-
-		}else if (ft_strncmp(param[0], "NO", 2) == 0){
-
-		}else if (ft_strncmp(param[0], "SO", 2) == 0){
-
-		}else if (ft_strncmp(param[0], "WE", 2) == 0){
-
-		}else if (ft_strncmp(param[0], "EA", 2) == 0){
-
-		}else if (ft_strncmp(param[0], "S", 1) == 0){
-
-		}else if (ft_strncmp(param[0], "F", 1) == 0){
-
-		}else if (ft_strncmp(param[0], "C", 1) == 0){
-
-		}else{
-			// マップの読み込み
-		}
-	}
-	return (status);
-}
-
 int main(int argc, char **argv){
 	t_game	game;
 	/*
