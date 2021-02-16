@@ -1,10 +1,10 @@
 R 1920 1080
 
-NO ./path_to_the_north_texture
-SO ./path_to_the_south_texture
-WE ./path_to_the_west_texture
-EA ./path_to_the_east_texture
-S ./path_to_the_sprite_texture
+NO ./../textures/wall_n.xpm
+SO ./../textures/wall_s.xpm
+WE ./../textures/wall_w.xpm
+EA ./../textures/wall_e.xpm
+S  ./../textures/barrel.xpm
 
 F 220,100,0
 C 225,30,0
@@ -12,7 +12,7 @@ C 225,30,0
 1111111111111111111111111
 1000000000110000000000001
 1011000001110000002000001
-1001000000000000000000001
+100100000000000000000000111111111
 111111111011000001110000000000001
 100000000011000001110111111111111
 11110111111111011100000010001
