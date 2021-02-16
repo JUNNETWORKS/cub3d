@@ -4,7 +4,7 @@ void	clear_img(t_img *img)
 {
 	for (int x = 0; x < img->width; x++)
 	  for (int y = 0; y < img->height; y++)
-		my_mlx_pixel_put(img, x, y, 0x00000000);
+		my_mlx_pixel_put(img, x, y, 0xff000000);
 }
 
 void	draw_block(t_img *img, int x, int y, int color)
