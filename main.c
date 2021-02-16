@@ -36,8 +36,19 @@ void	initialize_game(t_game *game)
 	game->screen_width = 640;
 	game->screen_height = 480;
     game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
+
+	// 壁,空,地面を描画する用
     game->img.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
+	game->img.width = game->screen_width;
+	game->img.height = game->screen_height;
     game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
+
+	// スプライトを描画する用
+    game->img_for_sprite.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
+    game->img_for_sprite.addr = mlx_get_data_addr(game->img_for_sprite.img, &game->img_for_sprite.bits_per_pixel, &game->img_for_sprite.line_length, &game->img_for_sprite.endian);
+	game->img_for_sprite.width = game->screen_width;
+	game->img_for_sprite.height = game->screen_height;
+
 	game->map = MAP;
 
 	// XPMファイルからテクスチャ画像を読み込む
@@ -343,7 +354,8 @@ void	lodev_loop(t_game *game)
 
 int		main_loop(t_game *game)
 {
-	clear_img(game);
+	clear_img(&(game->img));
+	clear_img(&(game->img_for_sprite));
 	lodev_loop(game);
 	// draw_wall(game);
 	/*

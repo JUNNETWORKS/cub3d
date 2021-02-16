@@ -84,6 +84,7 @@ typedef struct  s_game {
 	void		*mlx;
 	void		*win;
 	t_img		img;
+	t_img		img_for_sprite;
 	int			screen_width;
 	int			screen_height;
 	t_player	player;
