@@ -111,6 +111,7 @@ uint32_t		get_color_from_img(t_img img, int x, int y);
 void			load_image(t_game *game, t_img *img, char *filepath);
 // Game functions
 void			initialize_game(t_game *game);
+int				load_cubfile(t_game *game, char *filepath);
 // Hooks
 int 			key_press_hook(int keycode, t_game *game);
 int 			key_release_hook(int keycode, t_game *game);

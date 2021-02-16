@@ -222,9 +222,9 @@ void	lodev_loop(t_game *game)
 		for (int y = 0; y < game->screen_height; y++)
 		{
 			if (y <= game->screen_height / 2)
-				my_mlx_pixel_put(&(game->img), x, y, 0x87ceeb);  // draw sky
+				my_mlx_pixel_put(&(game->img), x, y, game->sky_color);  // draw sky
 			else
-				my_mlx_pixel_put(&(game->img), x, y, 0x9d6e5e);  // draw ground
+				my_mlx_pixel_put(&(game->img), x, y, game->ground_color);  // draw ground
 			if (y >= draw_start && y < draw_end)
 			{
 				// テクスチャの現在のy座標(double型)を整数型に変換する.
@@ -350,12 +350,10 @@ int		main_loop(t_game *game)
 
 int main(int argc, char **argv){
 	t_game	game;
-	/*
-	if ((load_cubfile(argv[1])) == -1){
+	if ((load_cubfile(&game, argv[1])) == -1){
 		printf("Error is occured when load cub file\n");
 		exit(1);
 	}
-	*/
 	initialize_game(&game);
 
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
