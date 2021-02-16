@@ -26,8 +26,8 @@ uint32_t	alpha_blend(uint32_t dst, uint32_t src)
 	// 透明: 0.0, 不透明: 1.0
 	double alpha = -((double)(src >> 24) / (double)0xff - 1.0);
 	uint32_t color = 0x00000000;
-	color |= (int)((src & 0x000000ff) * alpha) + (int)((dst & 0x000000ff) * (1 - alpha));
-	color |= (int)((src & 0x0000ff00) * alpha) + (int)((dst & 0x0000ff00) * (1 - alpha));
-	color |= (int)((src & 0x00ff0000) * alpha) + (int)((dst & 0x00ff0000) * (1 - alpha));
+	color |= (int)((src & 0xff) * alpha) + (int)((dst & 0x000000ff) * (1 - alpha));
+	color |= ((int)((src >> 8 & 0xff) * alpha) + (int)((dst >> 8 & 0xff) * (1 - alpha))) << 8;
+	color |= ((int)((src >> 16 & 0xff) * alpha) + (int)((dst >> 16 & 0xff) * (1 - alpha))) << 16;
 	return (color);
 }
