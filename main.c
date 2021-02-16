@@ -321,8 +321,11 @@ void	lodev_loop(t_game *game)
 				for (int y = draw_start_y; y < draw_end_y; y++){
 					int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->tex_height / sprite_height_screen);
 					uint32_t color = get_color_from_img(game->tex_sprite, tex_x, tex_y);
-					if (color & 0xff000000)
-					  continue;
+					if (color & 0xff000000){
+					  color = 0x0f585858;
+					}
+					uint32_t screen_color = get_color_from_img(game->img, stripe, y);
+					color = alpha_blend(screen_color, color);
 					my_mlx_pixel_put(&(game->img), stripe, y, color);
 					if (tex_x == (game->sprite_width) / 2)
 						my_mlx_pixel_put(&(game->img), stripe, y, 0xff0000);
