@@ -21,6 +21,7 @@ int	load_cubfile(t_game *game, char *filepath)
 	char	**params;
 	char	**params2;
 	int		map_row = 0;
+	int		map_col = 0;
 	game->map = ft_calloc(MAX_MAP_HEIGHT, sizeof(char*));  // 200 * 200が最大MAPサイズ
 
 	if ((fd = open(filepath, O_RDONLY)) == -1)
@@ -80,11 +81,14 @@ int	load_cubfile(t_game *game, char *filepath)
 			if (!game->map[map_row])
 				printf("error strdup()\n");
 			map_row++;
+			map_col = ft_strlen(line) > map_col ? ft_strlen(line) : map_col;
 		}
 		free(line);
 		free_ptrarr((void**)params);
 	}
 	free(line);
+	game->map_row = map_row;
+
 	return (status);
 }
 

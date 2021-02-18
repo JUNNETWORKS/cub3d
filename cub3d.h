@@ -90,6 +90,8 @@ typedef struct  s_game {
 	int			screen_height;
 	t_player	player;
 	char		**map;
+	int			map_row;
+	int			map_col;
 	t_img		tex_n; // 北
 	t_img		tex_s; // 南
 	t_img		tex_w; // 西
