@@ -344,8 +344,8 @@ void	draw_minimap(t_game *game)
 	  }
 	}
 	// プレイヤーの描画
-	for (int x = game->player.pos.x * BLOCK_SIZE; x < game->player.pos.x * BLOCK_SIZE + BLOCK_SIZE / 2; x++){
-		for (int y = game->player.pos.y * BLOCK_SIZE; y < game->player.pos.y * BLOCK_SIZE + BLOCK_SIZE / 2; y++){
+	for (int x = game->player.pos.x * BLOCK_SIZE - BLOCK_SIZE / 2; x < game->player.pos.x * BLOCK_SIZE + BLOCK_SIZE / 2; x++){
+		for (int y = game->player.pos.y * BLOCK_SIZE - BLOCK_SIZE / 2; y < game->player.pos.y * BLOCK_SIZE + BLOCK_SIZE / 2; y++){
 			if (x < 0 || x >= game->map_col * BLOCK_SIZE || y < 0 || y >= game->map_row * BLOCK_SIZE)
 				continue;
 			my_mlx_pixel_put(&game->img, x, y, 0xff0000);
