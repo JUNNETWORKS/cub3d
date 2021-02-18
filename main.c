@@ -352,23 +352,36 @@ void	draw_minimap(t_game *game)
 		}
 	}
 	// visualize what direction player is seeing
-	t_vec2 pos_on_minimap;
-	pos_on_minimap.x = game->player.pos.x * BLOCK_SIZE;
-	pos_on_minimap.y = game->player.pos.y * BLOCK_SIZE;
-	t_vec2 dir_line_on_minimap;
-	dir_line_on_minimap.x = pos_on_minimap.x + game->player.dir.x * BLOCK_SIZE;
-	dir_line_on_minimap.y = pos_on_minimap.y + game->player.dir.y * BLOCK_SIZE;
-	draw_2vec2(&game->img, pos_on_minimap, dir_line_on_minimap, 0x0000ff, 3);
+	t_vec2 pos;
+	pos.x = game->player.pos.x * BLOCK_SIZE;
+	pos.y = game->player.pos.y * BLOCK_SIZE;
+	t_vec2 dir_line;
+	dir_line.x = pos.x + game->player.dir.x * BLOCK_SIZE;
+	dir_line.y = pos.y + game->player.dir.y * BLOCK_SIZE;
+	draw_2vec2(&game->img, pos, dir_line, 0x0000ff, 3);
 	// visualize plane
-	t_vec2 plane_on_minimap_left;
-	plane_on_minimap_left.x = dir_line_on_minimap.x - game->player.plane.x * BLOCK_SIZE;
-	plane_on_minimap_left.y = dir_line_on_minimap.y - game->player.plane.y * BLOCK_SIZE;
-	t_vec2 plane_on_minimap_right;
-	plane_on_minimap_right.x = dir_line_on_minimap.x + game->player.plane.x * BLOCK_SIZE;
-	plane_on_minimap_right.y = dir_line_on_minimap.y + game->player.plane.y * BLOCK_SIZE;
-	draw_2vec2(&game->img, pos_on_minimap, plane_on_minimap_left, 0x00ff00, 3);
-	draw_2vec2(&game->img, pos_on_minimap, plane_on_minimap_right, 0x00ff00, 3);
-	draw_2vec2(&game->img, plane_on_minimap_left, plane_on_minimap_right, 0x00ff00, 3);
+	t_vec2 plane_left;
+	plane_left.x = dir_line.x - game->player.plane.x * BLOCK_SIZE;
+	plane_left.y = dir_line.y - game->player.plane.y * BLOCK_SIZE;
+	t_vec2 plane_right;
+	plane_right.x = dir_line.x + game->player.plane.x * BLOCK_SIZE;
+	plane_right.y = dir_line.y + game->player.plane.y * BLOCK_SIZE;
+	draw_2vec2(&game->img, pos, plane_left, 0x00ff00, 3);
+	draw_2vec2(&game->img, pos, plane_right, 0x00ff00, 3);
+	draw_2vec2(&game->img, plane_left, plane_right, 0x00ff00, 3);
+	// lengthen left and right plane vector
+	double lengthen_power = BLOCK_SIZE * 200;
+	t_vec2 long_dir_line;
+	long_dir_line.x = pos.x + game->player.dir.x * lengthen_power;
+	long_dir_line.y = pos.y + game->player.dir.y * lengthen_power;
+	t_vec2 long_plane_left;
+	long_plane_left.x = long_dir_line.x - game->player.plane.x * lengthen_power;
+	long_plane_left.y = long_dir_line.y - game->player.plane.y * lengthen_power;
+	t_vec2 long_plane_right;
+	long_plane_right.x = long_dir_line.x + game->player.plane.x * lengthen_power;
+	long_plane_right.y = long_dir_line.y + game->player.plane.y * lengthen_power;
+	draw_2vec2(&game->img, pos, long_plane_left, 0xffff00, 3);
+	draw_2vec2(&game->img, pos, long_plane_right, 0xffff00, 3);
 }
 
 
