@@ -12,7 +12,7 @@
 # include <math.h>
 
 // display definitions
-# define BLOCK_SIZE 64
+# define BLOCK_SIZE 10
 
 // Game Settings
 # define PLAYER_MOVE_PX (0.025)

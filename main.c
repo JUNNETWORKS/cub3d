@@ -330,16 +330,36 @@ void	lodev_loop(t_game *game)
 	}
 }
 
+void	draw_minimap(t_game *game)
+{
+	// マップの描画
+	for (int i = 0; i < game->map_row; i++){
+	  for (int j = 0; j < game->map_col; j++){
+		// まずマスの端を描画して, 壁ならば中を塗りつぶす
+		// for (int x = TILE_SIZE * j; x < TILE_SIZE * (j + 1); x++)
+		if (game->map[i][j] == '1')
+			draw_block(&game->img, BLOCK_SIZE * j, BLOCK_SIZE * i, 0x000000);
+		else
+			draw_block(&game->img, BLOCK_SIZE * j, BLOCK_SIZE * i, 0xffffff);
+	  }
+	}
+	// プレイヤーの描画
+	for (int x = game->player.pos.x * BLOCK_SIZE; x < game->player.pos.x * BLOCK_SIZE + BLOCK_SIZE / 2; x++){
+		for (int y = game->player.pos.y * BLOCK_SIZE; y < game->player.pos.y * BLOCK_SIZE + BLOCK_SIZE / 2; y++){
+			if (x < 0 || x >= game->map_col * BLOCK_SIZE || y < 0 || y >= game->map_row * BLOCK_SIZE)
+				continue;
+			my_mlx_pixel_put(&game->img, x, y, 0xff0000);
+		}
+	}
+	// プレイヤーのrayの描画
+}
+
 
 int		main_loop(t_game *game)
 {
-	clear_img(&(game->img));
+	clear_img(&game->img);
 	lodev_loop(game);
-	// draw_wall(game);
-	/*
-	draw_player(game);
-	print_game(game);
-	*/
+	draw_minimap(game);
 	move_player(game);
 	print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
