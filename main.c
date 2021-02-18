@@ -355,11 +355,20 @@ void	draw_minimap(t_game *game)
 	t_vec2 pos_on_minimap;
 	pos_on_minimap.x = game->player.pos.x * BLOCK_SIZE;
 	pos_on_minimap.y = game->player.pos.y * BLOCK_SIZE;
-	t_vec2 dir_on_minimap;
-	dir_on_minimap.x = pos_on_minimap.x + game->player.dir.x * BLOCK_SIZE;
-	dir_on_minimap.y = pos_on_minimap.y + game->player.dir.y * BLOCK_SIZE;
-	draw_2vec2(&game->img, pos_on_minimap, dir_on_minimap, 0x0000ff, 3);
+	t_vec2 dir_line_on_minimap;
+	dir_line_on_minimap.x = pos_on_minimap.x + game->player.dir.x * BLOCK_SIZE;
+	dir_line_on_minimap.y = pos_on_minimap.y + game->player.dir.y * BLOCK_SIZE;
+	draw_2vec2(&game->img, pos_on_minimap, dir_line_on_minimap, 0x0000ff, 3);
 	// visualize plane
+	t_vec2 plane_on_minimap_left;
+	plane_on_minimap_left.x = dir_line_on_minimap.x - game->player.plane.x * BLOCK_SIZE;
+	plane_on_minimap_left.y = dir_line_on_minimap.y - game->player.plane.y * BLOCK_SIZE;
+	t_vec2 plane_on_minimap_right;
+	plane_on_minimap_right.x = dir_line_on_minimap.x + game->player.plane.x * BLOCK_SIZE;
+	plane_on_minimap_right.y = dir_line_on_minimap.y + game->player.plane.y * BLOCK_SIZE;
+	draw_2vec2(&game->img, pos_on_minimap, plane_on_minimap_left, 0x00ff00, 3);
+	draw_2vec2(&game->img, pos_on_minimap, plane_on_minimap_right, 0x00ff00, 3);
+	draw_2vec2(&game->img, plane_on_minimap_left, plane_on_minimap_right, 0x00ff00, 3);
 }
 
 
