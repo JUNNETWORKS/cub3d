@@ -77,7 +77,7 @@ int	load_cubfile(t_game *game, char *filepath)
 				continue;
 			}
 			game->map[map_row] = ft_calloc(MAX_MAP_WIDTH, sizeof(char));
-			ft_strlcpy(game->map[map_row], line, ft_strlen(line));
+			ft_strlcpy(game->map[map_row], line, ft_strlen(line) + 1);
 			if (!game->map[map_row])
 				printf("error strdup()\n");
 			map_row++;
