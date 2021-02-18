@@ -28,7 +28,7 @@ void	initialize_game(t_game *game)
 	game->img.width = game->screen_width;
 	game->img.height = game->screen_height;
 
-	game->map = MAP;
+	// game->map = MAP;
 
 	// XPMファイルからテクスチャ画像を読み込む
 	// load_image(game, &(game->tex_n), "./textures/wall_n.xpm");

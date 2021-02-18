@@ -20,13 +20,14 @@ int	load_cubfile(t_game *game, char *filepath)
 	int		status;
 	char	**params;
 	char	**params2;
+	int		map_row = 0;
+	game->map = ft_calloc(MAX_MAP_HEIGHT, sizeof(char*));  // 200 * 200が最大MAPサイズ
 
 	if ((fd = open(filepath, O_RDONLY)) == -1)
 		return (-1);
 	while ((status = get_next_line(fd, &line)) == 1)
 	{
 		params = ft_split(line, ' ');
-		free(line);
 
 		printf("params[0]: |%s|\n", params[0]);
 		if (params[0] == NULL)
@@ -70,8 +71,17 @@ int	load_cubfile(t_game *game, char *filepath)
 			game->sky_color = rgb2hex(ft_atoi(params2[0]), ft_atoi(params2[1]), ft_atoi(params2[2]));
 			free_ptrarr((void**)params2);
 		}else{
-			// マップの読み込み
+			if (!line || ft_strlen(line) >= MAX_MAP_WIDTH || map_row >= MAX_MAP_WIDTH){
+				printf("error occured during load map\n");
+				continue;
+			}
+			game->map[map_row] = ft_calloc(MAX_MAP_WIDTH, sizeof(char));
+			ft_strlcpy(game->map[map_row], line, ft_strlen(line));
+			if (!game->map[map_row])
+				printf("error strdup()\n");
+			map_row++;
 		}
+		free(line);
 		free_ptrarr((void**)params);
 	}
 	free(line);
