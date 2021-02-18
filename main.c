@@ -351,7 +351,7 @@ void	draw_minimap(t_game *game)
 			my_mlx_pixel_put(&game->img, x, y, 0xff0000);
 		}
 	}
-	// プレイヤーのrayの描画
+	// visualize what direction player is seeing
 	t_vec2 pos_on_minimap;
 	pos_on_minimap.x = game->player.pos.x * BLOCK_SIZE;
 	pos_on_minimap.y = game->player.pos.y * BLOCK_SIZE;
