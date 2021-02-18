@@ -88,6 +88,7 @@ int	load_cubfile(t_game *game, char *filepath)
 	}
 	free(line);
 	game->map_row = map_row;
+	game->map_col = map_col;
 
 	return (status);
 }
