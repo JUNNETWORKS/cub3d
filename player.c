@@ -89,37 +89,3 @@ void initialize_player(t_player *player, double x, double y, char direction)
 	player->is_rotating = 0;
 }
 
-/*
-void	draw_player(t_game *game)
-{
-	draw_line_angle_length(game, game->player.position, game->player.angle, 20, 0x00FF0000);
-
-	// ブレゼンハムのアルゴリズムのテスト
-	t_vec2 v1_ = {100, 0};
-	t_vec2 v2_ = {0, 100};
-	draw_2vec2(game, v1_, v2_, 0x000000FF);
-	t_vec2 v3_ = {0, 0};
-	t_vec2 v4_ = {100, 100};
-	draw_2vec2(game, v3_, v4_, 0x0000FFFF);
-
-	// Playerを三角形で描画
-	double angle = -1 * game->player.angle;
-	t_vec2 player_pos = game->player.pos;
-	double length = 20;
-	t_vec2 v2 = {player_pos.x + length * cos(angle + 5.0 / 6.0 * M_PI), player_pos.y - length * sin(angle + 5.0 / 6.0 * M_PI)};
-	t_vec2 v3 = {player_pos.x + length * cos(angle - 5.0 / 6.0 * M_PI), player_pos.y - length * sin(angle - 5.0 / 6.0 * M_PI)};
-	draw_2vec2(game, player_pos, v2, 0x000000FF);
-	draw_2vec2(game, v2, v3, 0x0000FF00);
-	draw_2vec2(game, v3, player_pos, 0x00FF00FF);
-
-	// 光線(Ray)を作成,描画
-	const double ray_length = game->screen_width;
-	for (double ray_angle = -M_PI / 2.0; ray_angle <= M_PI / 2.0; ray_angle += M_PI / 1000.0){
-		t_vec2 ray_end = {ray_length * cos(angle + ray_angle), -ray_length * sin(angle + ray_angle)};
-		vec2_add(&ray_end, player_pos);
-		// t_vec2 ray_end = {player_pos.x + ray_length * cos(angle + ray_angle), player_pos.y - ray_length * sin(angle + ray_angle)};
-		draw_2vec2(game, player_pos, ray_end, 0x00FFFF00);
-	}
-}
-*/
-
