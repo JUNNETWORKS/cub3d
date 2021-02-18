@@ -358,7 +358,7 @@ void	draw_minimap(t_game *game)
 	t_vec2 dir_on_minimap;
 	dir_on_minimap.x = pos_on_minimap.x + game->player.dir.x * BLOCK_SIZE;
 	dir_on_minimap.y = pos_on_minimap.y + game->player.dir.y * BLOCK_SIZE;
-	draw_2vec2(&game->img, pos_on_minimap, dir_on_minimap, 0x0000ff);
+	draw_2vec2(&game->img, pos_on_minimap, dir_on_minimap, 0x0000ff, 3);
 	// visualize plane
 }
 

@@ -19,7 +19,7 @@ void	draw_block(t_img *img, int x, int y, int color)
 
 // 2つのベクトル間に直線を引く
 // ブレゼンハムのアルゴリズム
-void	draw_2vec2(t_img *img, t_vec2 v1, t_vec2 v2, int color)
+void	draw_2vec2(t_img *img, t_vec2 v1, t_vec2 v2, int color, int thickness)
 {
 	int v1x = (int)v1.x;
 	int v1y = (int)v1.y;
@@ -39,8 +39,10 @@ void	draw_2vec2(t_img *img, t_vec2 v1, t_vec2 v2, int color)
 	if (dy <= dx) {
 		int E = -dx;
 		for (int i = 0; i <= dx; i++) {
-			if (x >= 0 && x < img->width && y >= 0 && y < img->height)
-				my_mlx_pixel_put(img, x, y, color);
+			for (int t = -thickness / 2; t < thickness / 2; t++){
+				if (x >= 0 && x < img->width && y+t >= 0 && y+t < img->height)
+					my_mlx_pixel_put(img, x, y+t, color);
+			}
 			x += sx;
 			E += dy2;
 			if (0 <= E) {
@@ -51,8 +53,10 @@ void	draw_2vec2(t_img *img, t_vec2 v1, t_vec2 v2, int color)
 	} else {
 		int E = -dy;
 		for (int i = 0; i <= dy; i++) {
-			if (x >= 0 && x < img->width && y >= 0 && y < img->height)
-				my_mlx_pixel_put(img, x, y, color);
+			for (int t = -thickness / 2; t < thickness / 2; t++){
+				if (x+t >= 0 && x+t < img->width && y >= 0 && y < img->height)
+					my_mlx_pixel_put(img, x+t, y, color);
+			}
 			y += sy;
 			E += dx2;
 			if (0 <= E) {
