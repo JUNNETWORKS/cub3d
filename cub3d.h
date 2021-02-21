@@ -10,6 +10,7 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <math.h>
+# include <stdbool.h>
 
 // display definitions
 # define BLOCK_SIZE 10

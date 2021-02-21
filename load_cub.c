@@ -13,9 +13,49 @@ void	free_ptrarr(void **ptrarr)
 	}
 }
 
+// returun value is false if floodfill hit outside of map
+bool floodfill(t_game *game, bool **filled_map, int i, int j)
+{
+	if (i < 0 || i >= MAX_MAP_HEIGHT || j < 0 || j >= MAX_MAP_WIDTH)
+		return (false);
+	if (game->map[i][j] == '1')
+		return (true);
+	else
+		filled_map[i][j] = true;
+	bool is_surrounded = true;
+	is_surrounded &= floodfill(game, filled_map, i - 1, j);
+	is_surrounded &= floodfill(game, filled_map, i + 1, j);
+	is_surrounded &= floodfill(game, filled_map, i, j - 1);
+	is_surrounded &= floodfill(game, filled_map, i, j + 1);
+	return (is_surrounded);
+}
+
 // determine whether the map is surrounded or not by floodfill algorithm
 int	check_map_surrounded(t_game *game)
 {
+	int	x;
+	int	y;
+
+	x = game->player.pos.x;
+	y = game->player.pos.y;
+
+	bool	**is_filled = ft_calloc(game->map_row, sizeof(bool*));
+	for (int i = 0; i < game->map_row; i++)
+	  is_filled[i] = ft_calloc(game->map_col, sizeof(bool));
+
+	// floodfill
+	bool is_surrounded = floodfill(game, is_filled, y, x);
+
+	// print floodfill result
+	printf("------------------floodfill result--------------------\n");
+	printf("result: %s\n", is_surrounded ? "is_surrounded" : "is_not_surrounded");
+	for (int i = 0; i < game->map_row; i++){
+	  for (int j = 0; i < game->map_col; j++){
+		printf("%c ", is_filled[i][j] ? 'X' : ' ');
+	  }
+	  printf("\n");
+	}
+
 	return (0);
 }
 
@@ -151,6 +191,8 @@ int	load_cubfile(t_game *game, char *filepath)
 		printf("%s\n", game->map[i]);
 
 	get_pos_from_map(game);
+
+	check_map_surrounded(game);
 
 	return (status);
 }
