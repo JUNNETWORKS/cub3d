@@ -40,19 +40,19 @@ int	check_map_surrounded(t_game *game)
 	x = game->player.pos.x;
 	y = game->player.pos.y;
 
-	bool	**is_filled = ft_calloc(game->map_row, sizeof(bool*));
+	bool	**filled_map = ft_calloc(game->map_row, sizeof(bool*));
 	for (int i = 0; i < game->map_row; i++)
-	  is_filled[i] = ft_calloc(game->map_col, sizeof(bool));
+	  filled_map[i] = ft_calloc(game->map_col, sizeof(bool));
 
 	// floodfill
-	bool is_surrounded = floodfill(game, is_filled, y, x);
+	bool is_surrounded = floodfill(game, filled_map, y, x);
 
 	// print floodfill result
 	printf("------------------floodfill result--------------------\n");
 	printf("result: %s\n", is_surrounded ? "is_surrounded" : "is_not_surrounded");
 	for (int i = 0; i < game->map_row; i++){
 	  for (int j = 0; i < game->map_col; j++){
-		printf("%c ", is_filled[i][j] ? 'X' : ' ');
+		printf("%c ", filled_map[i][j] ? 'X' : ' ');
 	  }
 	  printf("\n");
 	}
