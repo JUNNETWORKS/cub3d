@@ -41,15 +41,15 @@ void	initialize_game(t_game *game)
 	// game->ground_color = 0x9d6e5e;
 
 	// プレイヤーの初期化
-	initialize_player(&(game->player), 2.0, 1.5, 'N');
+	// initialize_player(&(game->player), 2.0, 1.5, 'N');
 
 	// スプライト用
 	// load_image(game, &game->tex_sprite, "./textures/barrel.xpm");
 	game->z_buffer = ft_calloc(game->screen_width, sizeof(double));
-	game->sprite_num = 1;
-	game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
-	game->sprites[0].x = 1.5;
-	game->sprites[0].y = 1.5;
+	// game->sprite_num = 1;
+	// game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
+	// game->sprites[0].x = 1.5;
+	// game->sprites[0].y = 1.5;
 	// game->sprites[1].x = 2.5;
 	// game->sprites[1].y = 2.5;
 	
@@ -164,7 +164,7 @@ void	lodev_loop(t_game *game)
 				side = 1;
 			}
 			// 光線が壁にぶつかったか確認する
-			if (game->map[map_y][map_x] > '0')
+			if (game->map[map_y][map_x] == '1')
 				hit = 1;
 		}
 
@@ -339,6 +339,8 @@ void	draw_minimap(t_game *game)
 		// for (int x = TILE_SIZE * j; x < TILE_SIZE * (j + 1); x++)
 		if (game->map[i][j] == '1')
 			draw_block(&game->img, BLOCK_SIZE * j, BLOCK_SIZE * i, 0x000000);
+		else if (game->map[i][j] == '2')
+			draw_block(&game->img, BLOCK_SIZE * j, BLOCK_SIZE * i, 0x00ff00);
 		else
 			draw_block(&game->img, BLOCK_SIZE * j, BLOCK_SIZE * i, 0xffffff);
 	  }

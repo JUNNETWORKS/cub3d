@@ -13,6 +13,61 @@ void	free_ptrarr(void **ptrarr)
 	}
 }
 
+// determine whether the map is surrounded or not by floodfill algorithm
+int	check_map_surrounded(t_game *game)
+{
+	return (0);
+}
+
+void add_sprite(t_game *game, t_vec2 new)
+{
+	t_vec2 *new_sprites = malloc(sizeof(t_vec2) * (game->sprite_num + 1));
+	if (game->sprites)
+		ft_memcpy(new_sprites, game->sprites, sizeof(t_vec2) * game->sprite_num);
+	free(game->sprites);
+	new_sprites[game->sprite_num++] = new;
+	game->sprites = new_sprites;
+}
+
+// get player and sprite positions from map
+int	get_pos_from_map(t_game *game)
+{
+	// この辺の初期化は別の場所でやるべき
+	game->sprite_num = 0;
+	game->sprites = NULL;
+	game->player.pos.x = -1;
+	game->player.pos.y = -1;
+
+	for (int i = 0; i < game->map_row; i++){
+		for (int j = 0; j < game->map_col; j++){
+			if (game->map[i][j] == '\0')
+				continue;
+			if (game->map[i][j] == '2'){
+				t_vec2 sprite;
+				sprite.x = j + 0.5;
+				sprite.y = i + 0.5;
+				printf("add sprite {x: %lf, y: %lf}\n", sprite.x, sprite.y);
+				add_sprite(game, sprite);
+			}
+			else if (ft_strchr("NSWE", game->map[i][j])){
+				if (game->player.pos.x >= 0 && game->player.pos.y >= 0){
+					printf("プレイヤー2人目なんですけどww?\n");
+					printf("map[%d]: %s\n", i, game->map[i]);
+					printf("map[%d][%d]: %c (%#x)\n", i, j, game->map[i][j], game->map[i][j]);
+					return (-1);
+				}
+				initialize_player(&game->player, j + 0.5, i + 0.5, game->map[i][j]);
+			}
+		}
+	}
+	// print sprites
+	printf("-----------------------SPRITES--------------------\n");
+	for (int i = 0; i < game->sprite_num; i++)
+	  printf("sprites[%d] = {x: %lf, y: %lf}\n", i, game->sprites[i].x, game->sprites[i].y);
+	return (0);
+}
+
+
 int	load_cubfile(t_game *game, char *filepath)
 {
 	int		fd;
@@ -89,6 +144,13 @@ int	load_cubfile(t_game *game, char *filepath)
 	free(line);
 	game->map_row = map_row;
 	game->map_col = map_col;
+
+	// print map
+	printf("----------------------INPUT MAP---------------------\n");
+	for (int i = 0; i < game->map_row; i++)
+		printf("%s\n", game->map[i]);
+
+	get_pos_from_map(game);
 
 	return (status);
 }
