@@ -16,9 +16,10 @@ void	free_ptrarr(void **ptrarr)
 // returun value is false if floodfill hit outside of map
 bool floodfill(t_game *game, bool **filled_map, int i, int j)
 {
+	printf("i: %d, j: %d\n", i, j);
 	if (i < 0 || i >= MAX_MAP_HEIGHT || j < 0 || j >= MAX_MAP_WIDTH)
 		return (false);
-	if (game->map[i][j] == '1')
+	if (game->map[i][j] == '1' || filled_map[i][j] == true)
 		return (true);
 	else
 		filled_map[i][j] = true;
