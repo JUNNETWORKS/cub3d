@@ -1,26 +1,7 @@
 #include "cub3d.h"
 
-char *MAP[] = {
-	"1111111111111111111111111",
-	"1000000000110000000000001",
-	"1000000001110000001000001",
-	"100100000000000000000000111111111",
-	"111111111011000001110000000000001",
-	"100000000011000001110111110111111",
-	"11110111111111011100000010001",
-	"11110111111111011101010010001",
-	"11000000110101011100000010001",
-	"10001000000000001100000010001",
-	"10000000000000001101010010001",
-	"1100000111010101110101101000111",
-	"11110111 1110101 101111010001",
-	"11111111 1111111 111111111111",
-};
-
 void	initialize_game(t_game *game)
 {
-	// game->screen_width = 640;
-	// game->screen_height = 480;
     game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
 
     game->img.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
@@ -28,31 +9,12 @@ void	initialize_game(t_game *game)
 	game->img.width = game->screen_width;
 	game->img.height = game->screen_height;
 
-	// game->map = MAP;
-
-	// XPMファイルからテクスチャ画像を読み込む
-	// load_image(game, &(game->tex_n), "./textures/wall_n.xpm");
-	// load_image(game, &(game->tex_s), "./textures/wall_s.xpm");
-	// load_image(game, &(game->tex_w), "./textures/wall_w.xpm");
-	// load_image(game, &(game->tex_e), "./textures/wall_e.xpm");
 	game->tex_width = game->tex_n.width;
 	game->tex_height = game->tex_n.height;
-	// game->sky_color = 0x87ceeb;
-	// game->ground_color = 0x9d6e5e;
-
-	// プレイヤーの初期化
-	// initialize_player(&(game->player), 2.0, 1.5, 'N');
 
 	// スプライト用
-	// load_image(game, &game->tex_sprite, "./textures/barrel.xpm");
 	game->z_buffer = ft_calloc(game->screen_width, sizeof(double));
-	// game->sprite_num = 1;
-	// game->sprites = ft_calloc(game->sprite_num, sizeof(t_vec2));
-	// game->sprites[0].x = 1.5;
-	// game->sprites[0].y = 1.5;
-	// game->sprites[1].x = 2.5;
-	// game->sprites[1].y = 2.5;
-	
+
 	// Game Settings
 	mlx_do_key_autorepeaton(game->mlx);
 }
