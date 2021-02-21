@@ -140,14 +140,14 @@ void	lodev_loop(t_game *game)
 		t_img *tex;
 		if (side == 0){
 		  if (step_x > 0)
-			tex = &(game->tex_n);
+			tex = &game->tex_n;
 		  else
-			tex = &(game->tex_s);
+			tex = &game->tex_s;
 		}else{
 		  if (step_y > 0)
-			tex = &(game->tex_w);
+			tex = &game->tex_w;
 		  else
-			tex = &(game->tex_e);
+			tex = &game->tex_e;
 		}
 
 		// スクリーンに描画する必要のある縦線の長さを求める
