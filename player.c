@@ -62,26 +62,26 @@ void initialize_player(t_player *player, double x, double y, char direction)
 	if (direction == 'N'){
 	  player->dir.x = 0;
 	  player->dir.y = -1;
-	  player->plane.x = -1 * tan(deg2rad(66 / 2));
+	  player->plane.x = 1 * tan(deg2rad(66 / 2));
 	  player->plane.y = 0;
 	}
 	if (direction == 'S'){
 	  player->dir.x = 0;
 	  player->dir.y = 1;
-	  player->plane.x = tan(deg2rad(66 / 2));
+	  player->plane.x = -1 * tan(deg2rad(66 / 2));
 	  player->plane.y = 0;
 	}
 	if (direction == 'E'){
 	  player->dir.x = 1;
 	  player->dir.y = 0;
 	  player->plane.x = 0;
-	  player->plane.y = -1 * tan(deg2rad(66 / 2));
+	  player->plane.y = 1 * tan(deg2rad(66 / 2));
 	}
 	if (direction == 'W'){
 	  player->dir.x = -1;
 	  player->dir.y = 0;
 	  player->plane.x = 0;
-	  player->plane.y = tan(deg2rad(66 / 2));
+	  player->plane.y = -1 * tan(deg2rad(66 / 2));
 	}
 	// 状態の初期化
 	player->is_moving = 0;

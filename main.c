@@ -171,7 +171,7 @@ void	lodev_loop(t_game *game)
 
 		// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
 		int texture_x = (int)(wall_x * game->tex_width);
-		if ((side == 0 && ray_dir.x > 0) || (side == 1 && ray_dir.y < 0))
+		if ((side == 0 && ray_dir.x < 0) || (side == 1 && ray_dir.y > 0))
 		  texture_x = game->tex_width - texture_x - 1;
 
 		/* 各ピクセルにどのテクスチャのピクセルを描画するか計算する */
