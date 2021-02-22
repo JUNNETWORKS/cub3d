@@ -16,7 +16,7 @@
 # define BLOCK_SIZE 10
 
 // Game Settings
-# define PLAYER_MOVE_PX (0.025)
+# define PLAYER_MOVE_PX (0.033)
 # define PLAYER_ROTATE_RAD (M_PI / 300)
 # define MAX_MAP_WIDTH 200
 # define MAX_MAP_HEIGHT 200
