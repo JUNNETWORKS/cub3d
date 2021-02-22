@@ -1,9 +1,9 @@
 R 640 480
 
-NO textures/wall_n.xpm
-SO textures/wall_s.xpm
-WE textures/wall_w.xpm
-EA textures/wall_e.xpm
+NO textures/N.xpm
+SO textures/S.xpm
+WE textures/W.xpm
+EA textures/E.xpm
 S  textures/barrel.xpm
 
 F 155,118,83
