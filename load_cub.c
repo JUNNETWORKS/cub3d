@@ -154,16 +154,16 @@ int	load_cubfile(t_game *game, char *filepath)
 				printf("load error %s\n", params[1]);
 				return (-1);
 			}
-		}else if (ft_strnstr(params[0], "S", ft_strlen(params[0]))){
+		}else if (params[0][0] == 'S'){
 			if(load_image(game, &(game->tex_sprite), params[1]) == -1){
 				printf("load error %s\n", params[1]);
 				return (-1);
 			}
-		}else if (ft_strnstr(params[0], "F", ft_strlen(params[0]))){
+		}else if (params[0][0] == 'F'){
 			params2 = ft_split(params[1], ',');
 			game->ground_color = rgb2hex(ft_atoi(params2[0]), ft_atoi(params2[1]), ft_atoi(params2[2]));
 			free_ptrarr((void**)params2);
-		}else if (ft_strnstr(params[0], "C", ft_strlen(params[0]))){
+		}else if (params[0][0] == 'C'){
 			params2 = ft_split(params[1], ',');
 			game->sky_color = rgb2hex(ft_atoi(params2[0]), ft_atoi(params2[1]), ft_atoi(params2[2]));
 			free_ptrarr((void**)params2);
