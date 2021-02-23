@@ -251,7 +251,7 @@ void	lodev_loop(t_game *game)
 		printf("((game->screen_width / 2) * (1.0 + transform_x / transform_y)): %d\n", sprite_screen_x);
 
 		// スクリーン上でのスプライトの高さ
-		int sprite_height_screen = ABS((int)(game->screen_height / transform_y));
+		int sprite_height_screen = ABS((int)(wall_height_base / transform_y));
 
 		// スプライト描画の一番下と一番上を計算する
 		int draw_start_y = -sprite_height_screen / 2 + game->screen_height / 2;
@@ -260,11 +260,13 @@ void	lodev_loop(t_game *game)
 		if (draw_end_y >= game->screen_height) draw_end_y = game->screen_height - 1;
 
 		// スプライトの横幅を計算する
-		int sprite_width_screen = ABS((int)(game->screen_height / transform_y));
+		int sprite_width_screen = ABS((int)(wall_height_base / transform_y));
 		int draw_start_x = -sprite_width_screen / 2 + sprite_screen_x;
 		if (draw_start_x < 0) draw_start_x = 0;
 		int draw_end_x = sprite_width_screen / 2 + sprite_screen_x;
 		if (draw_end_x >= game->screen_width) draw_end_x = game->screen_width - 1;
+
+		printf("sprite:\n\twidth: %d\n\theight: %d\n", sprite_width_screen, sprite_height_screen);
 
 		// スプライトの各縦線について描画
 		for (int stripe = draw_start_x; stripe < draw_end_x; stripe++){
