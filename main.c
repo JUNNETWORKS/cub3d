@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-void	initialize_game(t_game *game)
+void	initialize_game(t_game *game, bool has_window)
 {
 	int screen_width, screen_height;
 	mlx_get_screen_size(game->mlx, &screen_width, &screen_height);
@@ -8,7 +8,8 @@ void	initialize_game(t_game *game)
 	game->screen_width = game->screen_width > screen_width ? screen_width : game->screen_width;
 	game->screen_height = game->screen_height > screen_height ? screen_height : game->screen_height;
 
-	game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
+	if (has_window)
+		game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
 
 	game->img.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
 	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
@@ -379,16 +380,17 @@ int main(int argc, char **argv){
 		printf("Error is occured when load cub file\n");
 		exit(1);
 	}
-	initialize_game(&game);
 	if (argc == 3){
 		if (ft_strncmp(argv[2], "--save", ft_strlen("--save") + 1)){
 			printf("argv is not \"--save\"\n");
 			exit(1);
 		}
+		initialize_game(&game, false);
 		lodev_loop(&game);
 		write_game2bmp(&game, "output.bmp");
 		exit(0);
 	}
+	initialize_game(&game, true);
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
 	mlx_hook(game.win, KeyRelease, KeyReleaseMask, key_release_hook, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);

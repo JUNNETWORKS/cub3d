@@ -115,7 +115,7 @@ void			my_mlx_pixel_put(t_img *img, int x, int y, int color);
 uint32_t		get_color_from_img(t_img img, int x, int y);
 int				load_image(t_game *game, t_img *img, char *filepath);
 // Game functions
-void			initialize_game(t_game *game);
+void			initialize_game(t_game *game, bool has_window);
 int				load_cubfile(t_game *game, char *filepath);
 // Hooks
 int 			key_press_hook(int keycode, t_game *game);
