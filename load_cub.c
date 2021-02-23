@@ -190,9 +190,11 @@ int	load_cubfile(t_game *game, char *filepath)
 	int		status;
 	char	**params;
 
-	// TODO: cubfileの名前が正しいかチェックする(*.cubか)
+	// cubfileの名前が正しいかチェックする(*.cubか)
+	if (ft_strlen(filepath) < 4 && ft_strncmp(filepath + ft_strlen(filepath) - 4, ".cub", 4))
+		return (put_and_return_err("File extension is not .cub"));
 	if ((fd = open(filepath, O_RDONLY)) == -1)
-		return (-1);
+		return (put_and_return_err("Failed to open file"));
 	status = 0;
 	while (status >= 0 && (status = get_next_line(fd, &line)) == 1)
 	{
@@ -200,8 +202,7 @@ int	load_cubfile(t_game *game, char *filepath)
 
 		printf("params[0]: |%s|\n", params[0]);
 		if (params[0] == NULL){
-			free(line);
-			free_ptrarr((void**)params);
+			free(line); free_ptrarr((void**)params);
 			continue;
 		}
 		printf("params[1]: |%s|\n", params[1]);
