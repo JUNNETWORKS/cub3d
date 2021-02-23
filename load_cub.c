@@ -166,13 +166,29 @@ int	set_color(t_game *game, char name, char *rgbstr)
 	return (0);
 }
 
+int	load_map(t_game *game, char *line)
+{
+	if (!line || ft_strlen(line) >= MAX_MAP_WIDTH || game->map_row >= MAX_MAP_WIDTH){
+		put_error_msg("map is too large");
+		return (-1);
+	}
+	game->map[game->map_row] = ft_calloc(MAX_MAP_WIDTH, sizeof(char));
+	ft_strlcpy(game->map[game->map_row], line, ft_strlen(line) + 1);
+	if (!game->map[game->map_row]){
+		put_error_msg("error strdup()");
+		return (-1);
+	}
+	game->map_row++;
+	game->map_col = ft_strlen(line) > game->map_col ? ft_strlen(line) : game->map_col;
+	return (0);
+}
+
 int	load_cubfile(t_game *game, char *filepath)
 {
 	int		fd;
 	char	*line;
 	int		status;
 	char	**params;
-	char	**params2;
 	game->map = ft_calloc(MAX_MAP_HEIGHT, sizeof(char*));  // 200 * 200が最大MAPサイズ
 	game->map_row = 0;
 	game->map_col = 0;
@@ -195,24 +211,13 @@ int	load_cubfile(t_game *game, char *filepath)
 			game->screen_height = ft_atoi(params[2]);
 			printf("screen_width: %d, screen_height: %d\n",game->screen_width, game->screen_height);
 		}else if (params[0][0] == 'F' || params[0][0] == 'C'){
-			if (set_color(game, params[0][0], params[1]))
-				return (-1);
+			status = set_color(game, params[0][0], params[1]);
 		}else if (params[0][0] == 'S' || !ft_strncmp(params[0], "NO", 3)
 			|| !ft_strncmp(params[0], "SO", 3) || !ft_strncmp(params[0], "WE", 3)
 			|| !ft_strncmp(params[0], "EA", 3)){
-			if (load_texture(game, params[0], params[1]))
-				return (-1);
+			status = load_texture(game, params[0], params[1]);
 		}else{
-			if (!line || ft_strlen(line) >= MAX_MAP_WIDTH || game->map_row >= MAX_MAP_WIDTH){
-				put_error_msg("map is too large");
-				continue;
-			}
-			game->map[game->map_row] = ft_calloc(MAX_MAP_WIDTH, sizeof(char));
-			ft_strlcpy(game->map[game->map_row], line, ft_strlen(line) + 1);
-			if (!game->map[game->map_row])
-				put_error_msg("error strdup()");
-			game->map_row++;
-			game->map_col = ft_strlen(line) > game->map_col ? ft_strlen(line) : game->map_col;
+			load_map(game, line);
 		}
 		free(line);
 		free_ptrarr((void**)params);
