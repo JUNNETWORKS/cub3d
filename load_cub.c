@@ -197,8 +197,6 @@ int	load_cubfile(t_game *game, char *filepath)
 		}else if (params[0][0] == 'F' || params[0][0] == 'C'){
 			if (set_color(game, params[0][0], params[1]))
 				return (-1);
-			params2 = ft_split(params[1], ',');
-			free_ptrarr((void**)params2);
 		}else if (params[0][0] == 'S' || !ft_strncmp(params[0], "NO", 3)
 			|| !ft_strncmp(params[0], "SO", 3) || !ft_strncmp(params[0], "WE", 3)
 			|| !ft_strncmp(params[0], "EA", 3)){
