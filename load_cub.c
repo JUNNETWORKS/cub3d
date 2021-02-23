@@ -70,7 +70,7 @@ int	check_map_surrounded(t_game *game)
 	}
 	free_ptrarr((void**)filled_map);
 	if (!is_surrounded)
-		return (put_and_return_err("Map must be surrounded by wall"));
+		return (put_and_return_err("Map isn't surrounded by wall"));
 	return (0);
 }
 
