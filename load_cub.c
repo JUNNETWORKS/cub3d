@@ -57,6 +57,9 @@ int	check_map_surrounded(t_game *game)
 	  }
 	  printf("|\n");
 	}
+	for (int i = 0; i < game->map_row; i++)
+	  free(filled_map[i]);
+	free(filled_map);
 
 	return (0);
 }
