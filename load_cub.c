@@ -105,12 +105,8 @@ int	get_pos_from_map(t_game *game)
 				add_sprite(game, sprite);
 			}
 			else if (ft_strchr("NSWE", game->map[i][j])){
-				if (game->player.pos.x >= 0 && game->player.pos.y >= 0){
-					printf("プレイヤー2人目なんですけどww?\n");
-					printf("map[%d]: %s\n", i, game->map[i]);
-					printf("map[%d][%d]: %c (%#x)\n", i, j, game->map[i][j], game->map[i][j]);
-					return (-1);
-				}
+				if (game->player.pos.x >= 0 && game->player.pos.y >= 0)
+					return (put_and_return_err("Player's position must be unique"));
 				initialize_player(&game->player, j + 0.5, i + 0.5, game->map[i][j]);
 			}
 		}
