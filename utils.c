@@ -39,8 +39,38 @@ void		put_error_msg(char *str)
 	ft_putendl_fd(str, STDERR_FILENO);
 }
 
-int		put_and_return_err(char *str)
+int			put_and_return_err(char *str)
 {
 	put_error_msg(str);
 	return (ERROR);
+}
+
+bool		str_all_true(char *str, int(*f)(int))
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!f(str[i]))
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+size_t		str_c_count(char *str, char c)
+{
+	int i;
+	int count;
+
+	i = 0;
+	count = 0;
+	while(str[i])
+	{
+		if (str[i] == c)
+			count++;
+		i++;
+	}
+	return (count);
 }
