@@ -91,6 +91,8 @@ int	get_pos_from_map(t_game *game)
 		for (int j = 0; j < game->map_col; j++){
 			if (game->map[i][j] == '\0')
 				continue;
+			if (ft_strchr("012", game->map[i][j]))
+				return (put_and_return_err("The map is invalid"));
 			if (game->map[i][j] == '2'){
 				t_vec2 sprite;
 				sprite.x = j + 0.5;
@@ -163,13 +165,13 @@ int	load_map(t_game *game, char *line)
 {
 	if (!line || ft_strlen(line) >= MAX_MAP_WIDTH || game->map_row >= MAX_MAP_WIDTH){
 		put_error_msg("map is too large");
-		return (-1);
+		return (ERROR);
 	}
 	game->map[game->map_row] = ft_calloc(MAX_MAP_WIDTH, sizeof(char));
 	ft_strlcpy(game->map[game->map_row], line, ft_strlen(line) + 1);
 	if (!game->map[game->map_row]){
 		put_error_msg("error strdup()");
-		return (-1);
+		return (ERROR);
 	}
 	game->map_row++;
 	game->map_col = ft_strlen(line) > game->map_col ? ft_strlen(line) : game->map_col;
