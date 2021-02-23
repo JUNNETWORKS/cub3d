@@ -122,21 +122,18 @@ int	load_texture(t_game *game, char *name, char *texture_path)
 {
 	t_img *tex;
 	printf("name: %s, texture_path: %s\n", name, texture_path);
-	if (ft_strnstr(name, "NO", ft_strlen(name))){
+	if (ft_strnstr(name, "NO", ft_strlen(name)))
 		tex = &game->tex_n;
-	}else if (ft_strnstr(name, "SO", ft_strlen(name))){
+	else if (ft_strnstr(name, "SO", ft_strlen(name)))
 		tex = &game->tex_s;
-	}else if (ft_strnstr(name, "WE", ft_strlen(name))){
+	else if (ft_strnstr(name, "WE", ft_strlen(name)))
 		tex = &game->tex_w;
-	}else if (ft_strnstr(name, "EA", ft_strlen(name))){
+	else if (ft_strnstr(name, "EA", ft_strlen(name)))
 		tex = &game->tex_e;
-	}else if (name[0] == 'S'){
+	else if (name[0] == 'S')
 		tex = &game->tex_sprite;
-	}
-	if(load_image(game, tex, texture_path) == -1){
-		put_error_msg("Failed to load texture");
-		return (-1);
-	}
+	if(load_image(game, tex, texture_path) == -1)
+		return (put_and_return_err("Failed to load texture"));
 	return (0);
 }
 
