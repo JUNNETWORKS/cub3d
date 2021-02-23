@@ -1,5 +1,5 @@
 *.o
 *.a
-/cub3d
+/cub3D
 /cub3D_tester/
 /lodev/
