@@ -2,10 +2,16 @@
 
 void	initialize_game(t_game *game)
 {
-    game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
+	int screen_width, screen_height;
+	mlx_get_screen_size(game->mlx, &screen_width, &screen_height);
+	printf("Display size\n\twidth: %d\n\theight: %d\n", screen_width, screen_height);
+	game->screen_width = game->screen_width > screen_width ? screen_width : game->screen_width;
+	game->screen_height = game->screen_height > screen_height ? screen_height : game->screen_height;
 
-    game->img.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
-    game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
+	game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
+
+	game->img.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
+	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 	game->img.width = game->screen_width;
 	game->img.height = game->screen_height;
 
