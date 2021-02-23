@@ -151,13 +151,13 @@ void	lodev_loop(t_game *game)
 		wall_x -= floor(wall_x);  // 正方形のどの部分にヒットしたのか0.0~1.0で表す
 
 		// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
-		int texture_x = (int)(wall_x * game->tex_width);
+		int texture_x = (int)(wall_x * tex->width);
 		if ((side == 0 && ray_dir.x < 0) || (side == 1 && ray_dir.y > 0))
-		  texture_x = game->tex_width - texture_x - 1;
+		  texture_x = tex->width - texture_x - 1;
 
 		/* 各ピクセルにどのテクスチャのピクセルを描画するか計算する */
 		// y方向の1ピクセルごとにテクスチャのy座標が動く量
-		double step = 1.0 * game->tex_height / (double)line_height;
+		double step = 1.0 * tex->height / (double)line_height;
 		// テクスチャの現在のy座標
 		double texture_pos_y = (draw_start - game->screen_height / 2 + line_height / 2) * step;
 		for (int y = 0; y < game->screen_height; y++)
@@ -169,7 +169,7 @@ void	lodev_loop(t_game *game)
 			if (y >= draw_start && y < draw_end)
 			{
 				// テクスチャの現在のy座標(double型)を整数型に変換する.
-				int texture_y = (int)texture_pos_y & (game->tex_height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
+				int texture_y = (int)texture_pos_y & (tex->height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
 				texture_pos_y += step;
 				uint32_t color = get_color_from_img(*tex, texture_x, texture_y);
 				// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
@@ -262,7 +262,7 @@ void	lodev_loop(t_game *game)
 			 */
 			if (transform_y > 0 && stripe >= 0 && stripe < game->screen_width && transform_y < game->z_buffer[stripe]){
 				for (int y = draw_start_y; y < draw_end_y; y++){
-					int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->tex_height / sprite_height_screen);
+					int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->tex_sprite.height / sprite_height_screen);
 					uint32_t color = get_color_from_img(game->tex_sprite, tex_x, tex_y);
 					if (color & 0xff000000)
 					  continue;
