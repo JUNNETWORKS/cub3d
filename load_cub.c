@@ -183,6 +183,13 @@ int	load_map(t_game *game, char *line)
 	return (0);
 }
 
+int	set_resolution(t_game *game, int width, int height)
+{
+	game->screen_width = width;
+	game->screen_height = height;
+	return (0);
+}
+
 int	load_cubfile(t_game *game, char *filepath)
 {
 	int		fd;
@@ -195,7 +202,8 @@ int	load_cubfile(t_game *game, char *filepath)
 
 	if ((fd = open(filepath, O_RDONLY)) == -1)
 		return (-1);
-	while ((status = get_next_line(fd, &line)) == 1)
+	status = 1;
+	while (status >= 0 && (status = get_next_line(fd, &line)) == 1)
 	{
 		params = ft_split(line, ' ');
 
@@ -207,8 +215,7 @@ int	load_cubfile(t_game *game, char *filepath)
 		}
 		printf("params[1]: |%s|\n", params[1]);
 		if (ft_strnstr(params[0], "R", ft_strlen(params[0]))){
-			game->screen_width = ft_atoi(params[1]);
-			game->screen_height = ft_atoi(params[2]);
+			set_resolution(game, ft_atoi(params[1]), ft_atoi(params[2]));
 			printf("screen_width: %d, screen_height: %d\n",game->screen_width, game->screen_height);
 		}else if (params[0][0] == 'F' || params[0][0] == 'C'){
 			status = set_color(game, params[0][0], params[1]);
@@ -221,6 +228,7 @@ int	load_cubfile(t_game *game, char *filepath)
 		}
 		free(line);
 		free_ptrarr((void**)params);
+		params = NULL;
 	}
 	free(line);
 
