@@ -132,7 +132,7 @@ int	load_texture(t_game *game, char *name, char *texture_path)
 		tex = &game->tex_e;
 	else if (name[0] == 'S')
 		tex = &game->tex_sprite;
-	if(load_image(game, tex, texture_path) == -1)
+	if(load_image(game, tex, texture_path) == ERROR)
 		return (put_and_return_err("Failed to load texture"));
 	return (0);
 }
