@@ -131,8 +131,10 @@ int	load_cubfile(t_game *game, char *filepath)
 		params = ft_split(line, ' ');
 
 		printf("params[0]: |%s|\n", params[0]);
-		if (params[0] == NULL)
+		if (params[0] == NULL){
+			free_ptrarr((void**)params);
 			continue;
+		}
 		printf("params[1]: |%s|\n", params[1]);
 		if (ft_strnstr(params[0], "R", ft_strlen(params[0]))){
 			game->screen_width = ft_atoi(params[1]);
