@@ -91,8 +91,8 @@ int	get_pos_from_map(t_game *game)
 		for (int j = 0; j < game->map_col; j++){
 			if (game->map[i][j] == '\0')
 				continue;
-			if (ft_strchr("012", game->map[i][j]))
-				return (put_and_return_err("The map is invalid"));
+			if (!ft_strchr(" 012NSWE", game->map[i][j]))
+				return (put_and_return_err("The map has invalid character"));
 			if (game->map[i][j] == '2'){
 				t_vec2 sprite;
 				sprite.x = j + 0.5;
@@ -101,7 +101,8 @@ int	get_pos_from_map(t_game *game)
 				add_sprite(game, sprite);
 			}
 			else if (ft_strchr("NSWE", game->map[i][j])){
-				if (game->player.pos.x >= 0 && game->player.pos.y >= 0)
+				if (game->player.pos.x != PLAYER_INIT_POS_X &&
+					game->player.pos.y != PLAYER_INIT_POS_Y)
 					return (put_and_return_err("Player's position must be unique"));
 				initialize_player(&game->player, j + 0.5, i + 0.5, game->map[i][j]);
 			}
