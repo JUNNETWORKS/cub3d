@@ -132,6 +132,7 @@ int	load_cubfile(t_game *game, char *filepath)
 
 		printf("params[0]: |%s|\n", params[0]);
 		if (params[0] == NULL){
+			free(line);
 			free_ptrarr((void**)params);
 			continue;
 		}
