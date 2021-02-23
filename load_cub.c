@@ -11,6 +11,7 @@ void	free_ptrarr(void **ptrarr)
 		ptrarr[i] = NULL;
 		i++;
 	}
+	free(ptrarr);
 }
 
 // returun value is false if floodfill hit outside of map
