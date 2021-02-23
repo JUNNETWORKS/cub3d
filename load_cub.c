@@ -198,7 +198,7 @@ int	load_cubfile(t_game *game, char *filepath)
 
 	if ((fd = open(filepath, O_RDONLY)) == -1)
 		return (-1);
-	status = 1;
+	status = 0;
 	while (status >= 0 && (status = get_next_line(fd, &line)) == 1)
 	{
 		params = ft_split(line, ' ');
@@ -233,10 +233,8 @@ int	load_cubfile(t_game *game, char *filepath)
 	for (int i = 0; i < game->map_row; i++)
 		printf("%s\n", game->map[i]);
 
-	get_pos_from_map(game);
-
-	check_map_surrounded(game);
-
+	status |= get_pos_from_map(game);
+	status |= check_map_surrounded(game);
 	return (status);
 }
 
