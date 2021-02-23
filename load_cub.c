@@ -50,7 +50,8 @@ int	check_map_surrounded(t_game *game)
 	x = game->player.pos.x;
 	y = game->player.pos.y;
 
-	bool	**filled_map = ft_calloc(game->map_row, sizeof(bool*));
+	// +1 はNULL終端用
+	bool	**filled_map = ft_calloc(game->map_row + 1, sizeof(bool*));
 	for (int i = 0; i < game->map_row; i++)
 	  filled_map[i] = ft_calloc(game->map_col, sizeof(bool));
 
@@ -67,10 +68,9 @@ int	check_map_surrounded(t_game *game)
 	  }
 	  printf("|\n");
 	}
-	for (int i = 0; i < game->map_row; i++)
-	  free(filled_map[i]);
-	free(filled_map);
-
+	free_ptrarr((void**)filled_map);
+	if (!is_surrounded)
+		return (put_and_return_err("Map must be surrounded by wall"));
 	return (0);
 }
 
