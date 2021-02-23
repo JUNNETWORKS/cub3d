@@ -180,6 +180,7 @@ int	set_resolution(t_game *game, int width, int height)
 {
 	game->screen_width = width;
 	game->screen_height = height;
+	printf("screen_width: %d, screen_height: %d\n",game->screen_width, game->screen_height);
 	return (0);
 }
 
@@ -201,23 +202,22 @@ int	load_cubfile(t_game *game, char *filepath)
 		params = ft_split(line, ' ');
 
 		printf("params[0]: |%s|\n", params[0]);
-		if (params[0] == NULL){
+		if (params[0] == NULL)
+		{
 			free(line); free_ptrarr((void**)params);
 			continue;
 		}
 		printf("params[1]: |%s|\n", params[1]);
-		if (ft_strnstr(params[0], "R", ft_strlen(params[0]))){
+		if (ft_strnstr(params[0], "R", ft_strlen(params[0])))
 			set_resolution(game, ft_atoi(params[1]), ft_atoi(params[2]));
-			printf("screen_width: %d, screen_height: %d\n",game->screen_width, game->screen_height);
-		}else if (params[0][0] == 'F' || params[0][0] == 'C'){
+		else if (params[0][0] == 'F' || params[0][0] == 'C')
 			status = set_color(game, params[0][0], params[1]);
-		}else if (params[0][0] == 'S' || !ft_strncmp(params[0], "NO", 3)
+		else if (params[0][0] == 'S' || !ft_strncmp(params[0], "NO", 3)
 			|| !ft_strncmp(params[0], "SO", 3) || !ft_strncmp(params[0], "WE", 3)
-			|| !ft_strncmp(params[0], "EA", 3)){
+			|| !ft_strncmp(params[0], "EA", 3))
 			status = load_texture(game, params[0], params[1]);
-		}else{
+		else
 			load_map(game, line);
-		}
 		free(line);
 		free_ptrarr((void**)params);
 		params = NULL;
@@ -229,8 +229,8 @@ int	load_cubfile(t_game *game, char *filepath)
 	for (int i = 0; i < game->map_row; i++)
 		printf("%s\n", game->map[i]);
 
-	status |= get_pos_from_map(game);
-	status |= check_map_surrounded(game);
-	return (status);
+	if (status == ERROR || get_pos_from_map(game) || check_map_surrounded(game))
+		return (put_and_return_err("Error occured during load cubfile"));
+	return (0);
 }
 

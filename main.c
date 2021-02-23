@@ -350,14 +350,14 @@ int main(int argc, char **argv){
 	}
 	t_game	game;
 	initialize_game(&game);
-	if ((load_cubfile(&game, argv[1])) == -1){
+	if ((load_cubfile(&game, argv[1])) == ERROR){
 		put_error_msg("Error is occured when load cub file");
 		exit(EXIT_FAILURE);
 	}
 	if (argc == 3){
 		if (ft_strncmp(argv[2], "--save", ft_strlen("--save") + 1)){
 			put_error_msg("argv is not \"--save\"\n");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 		configure_screen(&game, false);
 		lodev_loop(&game);

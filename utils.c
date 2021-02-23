@@ -42,5 +42,5 @@ void		put_error_msg(char *str)
 int		put_and_return_err(char *str)
 {
 	put_error_msg(str);
-	return (-1);
+	return (ERROR);
 }
