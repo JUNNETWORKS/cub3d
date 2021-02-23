@@ -228,18 +228,18 @@ int	load_cubfile(t_game *game, char *path)
 		else
 			load_map(game, line);
 		free(line);
+		line = NULL;
 		free_ptrarr((void**)params);
 		params = NULL;
 	}
 	free(line);
-
+	if (status == ERROR || get_pos_from_map(game) || check_map_surrounded(game))
+		return (put_and_return_err("Error occured during load cubfile"));
 	// print map
 	printf("----------------------INPUT MAP---------------------\n");
 	for (int i = 0; i < game->map_row; i++)
 		printf("%s\n", game->map[i]);
 
-	if (status == ERROR || get_pos_from_map(game) || check_map_surrounded(game))
-		return (put_and_return_err("Error occured during load cubfile"));
 	return (0);
 }
 
