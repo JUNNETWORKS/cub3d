@@ -16,9 +16,9 @@ uint32_t	get_color_from_img(t_img img, int x, int y)
 }
 
 int			load_image(t_game *game, t_img *img, char *filepath){
-	(*img).img = mlx_xpm_file_to_image(game->mlx, filepath, &((*img).width), &((*img).height));
-	if ((*img).img == NULL)
+	img->img = mlx_xpm_file_to_image(game->mlx, filepath, &img->width, &img->height);
+	if (img->img == NULL)
 		return (ERROR);
-    (*img).addr = mlx_get_data_addr((*img).img, &((*img).bits_per_pixel), &((*img).line_length), &((*img).endian));
+    img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length, &img->endian);
 	return (0);
 }
