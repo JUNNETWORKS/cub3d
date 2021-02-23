@@ -1,5 +1,15 @@
 #include "./cub3d.h"
 
+size_t	ptrarr_len(void **ptrarr)
+{
+	size_t i;
+
+	i = 0;
+	while (ptrarr[i])
+		i++;
+	return (i);
+}
+
 void	free_ptrarr(void **ptrarr)
 {
 	size_t i;
@@ -112,6 +122,49 @@ int	get_pos_from_map(t_game *game)
 	return (0);
 }
 
+int	load_texture(t_game *game, char *name, char *texture_path)
+{
+	t_img *tex;
+	printf("name: %s, texture_path: %s\n", name, texture_path);
+	if (ft_strnstr(name, "NO", ft_strlen(name))){
+		tex = &game->tex_n;
+	}else if (ft_strnstr(name, "SO", ft_strlen(name))){
+		tex = &game->tex_s;
+	}else if (ft_strnstr(name, "WE", ft_strlen(name))){
+		tex = &game->tex_w;
+	}else if (ft_strnstr(name, "EA", ft_strlen(name))){
+		tex = &game->tex_e;
+	}else if (name[0] == 'S'){
+		tex = &game->tex_sprite;
+	}
+	if(load_image(game, tex, texture_path) == -1){
+		put_error_msg("Failed to load texture");
+		return (-1);
+	}
+	return (0);
+}
+
+int	set_color(t_game *game, char name, char *rgbstr)
+{
+	char **rgb = ft_split(rgbstr, ',');
+	if (ptrarr_len((void**)rgb) != 3){
+		free_ptrarr((void**)rgb);
+		return (-1);
+	}
+	int r = ft_atoi(rgb[0]);
+	int g = ft_atoi(rgb[1]);
+	int b = ft_atoi(rgb[2]);
+	free_ptrarr((void**)rgb);
+	if (name == 'F'){
+		game->ground_color = rgb2hex(r, g, b);
+	}else if (name == 'C'){
+		game->sky_color = rgb2hex(r, g, b);
+	}else{
+		put_error_msg("Unknow key is provided");
+		return (-1);
+	}
+	return (0);
+}
 
 int	load_cubfile(t_game *game, char *filepath)
 {
@@ -120,9 +173,9 @@ int	load_cubfile(t_game *game, char *filepath)
 	int		status;
 	char	**params;
 	char	**params2;
-	int		map_row = 0;
-	int		map_col = 0;
 	game->map = ft_calloc(MAX_MAP_HEIGHT, sizeof(char*));  // 200 * 200が最大MAPサイズ
+	game->map_row = 0;
+	game->map_col = 0;
 
 	if ((fd = open(filepath, O_RDONLY)) == -1)
 		return (-1);
@@ -141,57 +194,30 @@ int	load_cubfile(t_game *game, char *filepath)
 			game->screen_width = ft_atoi(params[1]);
 			game->screen_height = ft_atoi(params[2]);
 			printf("screen_width: %d, screen_height: %d\n",game->screen_width, game->screen_height);
-		}else if (ft_strnstr(params[0], "NO", ft_strlen(params[0]))){
-			if(load_image(game, &(game->tex_n), params[1]) == -1){
-				printf("load error %s\n", params[1]);
+		}else if (params[0][0] == 'F' || params[0][0] == 'C'){
+			if (set_color(game, params[0][0], params[1]))
 				return (-1);
-			}
-		}else if (ft_strnstr(params[0], "SO", ft_strlen(params[0]))){
-			if(load_image(game, &(game->tex_s), params[1]) == -1){
-				printf("load error %s\n", params[1]);
-				return (-1);
-			}
-		}else if (ft_strnstr(params[0], "WE", ft_strlen(params[0]))){
-			if(load_image(game, &(game->tex_w), params[1]) == -1){
-				printf("load error %s\n", params[1]);
-				return (-1);
-			}
-		}else if (ft_strnstr(params[0], "EA", ft_strlen(params[0]))){
-			if(load_image(game, &(game->tex_e), params[1]) == -1){
-				printf("load error %s\n", params[1]);
-				return (-1);
-			}
-		}else if (params[0][0] == 'S'){
-			if(load_image(game, &(game->tex_sprite), params[1]) == -1){
-				printf("load error %s\n", params[1]);
-				return (-1);
-			}
-		}else if (params[0][0] == 'F'){
 			params2 = ft_split(params[1], ',');
-			game->ground_color = rgb2hex(ft_atoi(params2[0]), ft_atoi(params2[1]), ft_atoi(params2[2]));
 			free_ptrarr((void**)params2);
-		}else if (params[0][0] == 'C'){
-			params2 = ft_split(params[1], ',');
-			game->sky_color = rgb2hex(ft_atoi(params2[0]), ft_atoi(params2[1]), ft_atoi(params2[2]));
-			free_ptrarr((void**)params2);
+		}else if (params[0][0] == 'S' || ft_strlen(params[0]) == 2){
+			if (load_texture(game, params[0], params[1]))
+				return (-1);
 		}else{
-			if (!line || ft_strlen(line) >= MAX_MAP_WIDTH || map_row >= MAX_MAP_WIDTH){
-				printf("error occured during load map\n");
+			if (!line || ft_strlen(line) >= MAX_MAP_WIDTH || game->map_row >= MAX_MAP_WIDTH){
+				put_error_msg("map is too large");
 				continue;
 			}
-			game->map[map_row] = ft_calloc(MAX_MAP_WIDTH, sizeof(char));
-			ft_strlcpy(game->map[map_row], line, ft_strlen(line) + 1);
-			if (!game->map[map_row])
-				printf("error strdup()\n");
-			map_row++;
-			map_col = ft_strlen(line) > map_col ? ft_strlen(line) : map_col;
+			game->map[game->map_row] = ft_calloc(MAX_MAP_WIDTH, sizeof(char));
+			ft_strlcpy(game->map[game->map_row], line, ft_strlen(line) + 1);
+			if (!game->map[game->map_row])
+				put_error_msg("error strdup()");
+			game->map_row++;
+			game->map_col = ft_strlen(line) > game->map_col ? ft_strlen(line) : game->map_col;
 		}
 		free(line);
 		free_ptrarr((void**)params);
 	}
 	free(line);
-	game->map_row = map_row;
-	game->map_col = map_col;
 
 	// print map
 	printf("----------------------INPUT MAP---------------------\n");
