@@ -6,7 +6,7 @@ MLX_MAKE = $(MAKE) -C $(MLX_PATH)
 LIBFT_MAKE = $(MAKE) -C $(LIBFT_PATH)
 LIBFT_LIB = ./libft/libft.a
 
-NAME = cub3d
+NAME = cub3D
 CC = gcc
 HEADER_FILE = cub3d.h
 SRCS = main.c \
