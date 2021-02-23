@@ -11,6 +11,8 @@
 # include <stdlib.h>
 # include <math.h>
 # include <stdbool.h>
+# include <errno.h>
+# include <string.h>
 
 // display definitions
 # define BLOCK_SIZE 10
@@ -140,6 +142,7 @@ double			deg2rad(int x);
 int				rad2deg(double x);
 uint32_t		rgb2hex(int r, int g, int b);
 uint32_t		alpha_blend(uint32_t dst, uint32_t src);
+void			put_error_msg(char *str);
 // Debug
 void			print_game(t_game *game);
 void			print_vec2(t_vec2 vec);

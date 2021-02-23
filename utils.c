@@ -32,3 +32,9 @@ uint32_t	alpha_blend(uint32_t dst, uint32_t src)
 	color |= ((int)((src >> 16 & 0xff) * alpha) + (int)((dst >> 16 & 0xff) * (1 - alpha))) << 16;
 	return (color);
 }
+
+void		put_error_msg(char *str)
+{
+	ft_putstr_fd("Error: ", STDERR_FILENO);
+	ft_putendl_fd(str, STDERR_FILENO);
+}
