@@ -371,24 +371,24 @@ int		main_loop(t_game *game)
 
 int main(int argc, char **argv){
 	if (argc < 2 || argc > 3){  // ./cub3D *.cub --save
-		printf("args count is incorrect!\n");
-		exit(1);
+		put_error_msg("args count is incorrect!");
+		exit(EXIT_FAILURE);
 	}
 	t_game	game;
     game.mlx = mlx_init();
 	if ((load_cubfile(&game, argv[1])) == -1){
-		printf("Error is occured when load cub file\n");
-		exit(1);
+		put_error_msg("Error is occured when load cub file");
+		exit(EXIT_FAILURE);
 	}
 	if (argc == 3){
 		if (ft_strncmp(argv[2], "--save", ft_strlen("--save") + 1)){
-			printf("argv is not \"--save\"\n");
+			put_error_msg("argv is not \"--save\"\n");
 			exit(1);
 		}
 		initialize_game(&game, false);
 		lodev_loop(&game);
 		write_game2bmp(&game, "output.bmp");
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 	initialize_game(&game, true);
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
