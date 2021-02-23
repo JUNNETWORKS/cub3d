@@ -187,17 +187,20 @@ int	set_resolution(t_game *game, int width, int height)
 	return (0);
 }
 
-int	load_cubfile(t_game *game, char *filepath)
+int	load_cubfile(t_game *game, char *path)
 {
 	int		fd;
 	char	*line;
 	int		status;
 	char	**params;
+	size_t	path_len;
 
 	// cubfileの名前が正しいかチェックする(*.cubか)
-	if (ft_strlen(filepath) < 4 || ft_strncmp(filepath + ft_strlen(filepath) - 4, ".cub", 4))
+	path_len = ft_strlen(path);
+	if (path_len < 5 || path[path_len - 5] == '/'
+		|| ft_strncmp(path + path_len - 4, ".cub", 4))
 		return (put_and_return_err("File extension is not .cub"));
-	if ((fd = open(filepath, O_RDONLY)) == -1)
+	if ((fd = open(path, O_RDONLY)) == -1)
 		return (put_and_return_err("Failed to open file"));
 	status = 0;
 	while (status >= 0 && (status = get_next_line(fd, &line)) == 1)
