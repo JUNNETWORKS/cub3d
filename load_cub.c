@@ -155,14 +155,14 @@ int	set_color(t_game *game, char name, char *rgbstr)
 	int g = ft_atoi(rgb[1]);
 	int b = ft_atoi(rgb[2]);
 	free_ptrarr((void**)rgb);
-	if (name == 'F'){
+	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
+		return (put_and_return_err("provided color is invalid"));
+	if (name == 'F')
 		game->ground_color = rgb2hex(r, g, b);
-	}else if (name == 'C'){
+	else if (name == 'C')
 		game->sky_color = rgb2hex(r, g, b);
-	}else{
-		put_error_msg("Unknow key is provided");
-		return (-1);
-	}
+	else
+		return (put_and_return_err("Unknow key is provided"));
 	return (0);
 }
 
