@@ -139,17 +139,23 @@ int	load_texture(t_game *game, char *name, char *texture_path)
 
 int	set_color(t_game *game, char name, char *rgbstr)
 {
-	char **rgb = ft_split(rgbstr, ',');
-	if (ptrarr_len((void**)rgb) != 3){
-		free_ptrarr((void**)rgb);
-		return (-1);
-	}
+	char **rgb;
+
+	if (str_c_count(rgbstr, ',') != 2)
+		return (put_and_return_err("rgb is wrong"));
+	rgb = ft_split(rgbstr, ',');
 	int r = ft_atoi(rgb[0]);
 	int g = ft_atoi(rgb[1]);
 	int b = ft_atoi(rgb[2]);
-	free_ptrarr((void**)rgb);
-	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
+	if (!str_all_true(rgb[0], ft_isdigit) ||
+		!str_all_true(rgb[1], ft_isdigit) ||
+		!str_all_true(rgb[2], ft_isdigit) ||
+		r < 0 || r > 255 || g < 0 || g > 255 ||
+		b < 0 || b > 255){
+		free_ptrarr((void**)rgb);
 		return (put_and_return_err("provided color is invalid"));
+	}
+	free_ptrarr((void**)rgb);
 	if (name == 'F')
 		game->ground_color = rgb2hex(r, g, b);
 	else if (name == 'C')
