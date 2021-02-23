@@ -133,6 +133,8 @@ void			vec2_rotate(t_vec2 *vec, double rad);  // 回転行列を掛ける
 // Player
 void			move_player(t_game *game);
 void			initialize_player(t_player *player, double x, double y, char direction);
+// BMP
+int				write_game2bmp(t_game *game, char *filepath);
 // Utils
 double			deg2rad(int x);
 int				rad2deg(double x);

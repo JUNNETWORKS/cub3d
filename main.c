@@ -369,6 +369,10 @@ int		main_loop(t_game *game)
 }
 
 int main(int argc, char **argv){
+	if (argc < 2 || argc > 3){  // ./cub3D *.cub --save
+		printf("args count is incorrect!\n");
+		exit(1);
+	}
 	t_game	game;
     game.mlx = mlx_init();
 	if ((load_cubfile(&game, argv[1])) == -1){
@@ -376,6 +380,15 @@ int main(int argc, char **argv){
 		exit(1);
 	}
 	initialize_game(&game);
+	if (argc == 3){
+		if (ft_strncmp(argv[2], "--save", ft_strlen("--save") + 1)){
+			printf("argv is not \"--save\"\n");
+			exit(1);
+		}
+		lodev_loop(&game);
+		write_game2bmp(&game, "output.bmp");
+		exit(0);
+	}
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
 	mlx_hook(game.win, KeyRelease, KeyReleaseMask, key_release_hook, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);

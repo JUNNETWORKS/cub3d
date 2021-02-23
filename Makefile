@@ -17,6 +17,7 @@ SRCS = main.c \
 	   vector_utils.c \
 	   player.c \
 	   load_cub.c \
+	   bmp.c \
 	   debug_utils.c
 OBJS = $(SRCS:.c=.o)
 
