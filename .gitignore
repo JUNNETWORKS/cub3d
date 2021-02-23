@@ -1,5 +1,12 @@
+# output files
+*.bmp
+/cub3D
 *.o
 *.a
-/cub3D
+
+# testers
 /cub3D_tester/
+/42_cub3D_error_test/
+
+# lodev original codes
 /lodev/
