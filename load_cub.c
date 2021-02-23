@@ -199,7 +199,9 @@ int	load_cubfile(t_game *game, char *filepath)
 				return (-1);
 			params2 = ft_split(params[1], ',');
 			free_ptrarr((void**)params2);
-		}else if (params[0][0] == 'S' || ft_strlen(params[0]) == 2){
+		}else if (params[0][0] == 'S' || !ft_strncmp(params[0], "NO", 3)
+			|| !ft_strncmp(params[0], "SO", 3) || !ft_strncmp(params[0], "WE", 3)
+			|| !ft_strncmp(params[0], "EA", 3)){
 			if (load_texture(game, params[0], params[1]))
 				return (-1);
 		}else{
