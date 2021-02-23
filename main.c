@@ -1,31 +1,5 @@
 #include "cub3d.h"
 
-void	initialize_game(t_game *game, bool has_window)
-{
-	int screen_width, screen_height;
-	mlx_get_screen_size(game->mlx, &screen_width, &screen_height);
-	printf("Display size\n\twidth: %d\n\theight: %d\n", screen_width, screen_height);
-	game->screen_width = game->screen_width > screen_width ? screen_width : game->screen_width;
-	game->screen_height = game->screen_height > screen_height ? screen_height : game->screen_height;
-
-	if (has_window)
-		game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
-
-	game->img.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
-	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
-	game->img.width = game->screen_width;
-	game->img.height = game->screen_height;
-
-	game->tex_width = game->tex_n.width;
-	game->tex_height = game->tex_n.height;
-
-	// スプライト用
-	game->z_buffer = ft_calloc(game->screen_width, sizeof(double));
-
-	// Game Settings
-	mlx_do_key_autorepeaton(game->mlx);
-}
-
 void	sort_sprites(t_game *game)
 {
 	// スプライトのソートで使う(スプライト番号)
@@ -375,7 +349,7 @@ int main(int argc, char **argv){
 		exit(EXIT_FAILURE);
 	}
 	t_game	game;
-    game.mlx = mlx_init();
+	initialize_game(&game);
 	if ((load_cubfile(&game, argv[1])) == -1){
 		put_error_msg("Error is occured when load cub file");
 		exit(EXIT_FAILURE);
@@ -385,12 +359,12 @@ int main(int argc, char **argv){
 			put_error_msg("argv is not \"--save\"\n");
 			exit(1);
 		}
-		initialize_game(&game, false);
+		configure_screen(&game, false);
 		lodev_loop(&game);
 		write_game2bmp(&game, "output.bmp");
 		exit(EXIT_SUCCESS);
 	}
-	initialize_game(&game, true);
+	configure_screen(&game, true);
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
 	mlx_hook(game.win, KeyRelease, KeyReleaseMask, key_release_hook, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);

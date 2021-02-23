@@ -87,12 +87,6 @@ void add_sprite(t_game *game, t_vec2 new)
 // get player and sprite positions from map
 int	get_pos_from_map(t_game *game)
 {
-	// この辺の初期化は別の場所でやるべき
-	game->sprite_num = 0;
-	game->sprites = NULL;
-	game->player.pos.x = -1;
-	game->player.pos.y = -1;
-
 	for (int i = 0; i < game->map_row; i++){
 		for (int j = 0; j < game->map_col; j++){
 			if (game->map[i][j] == '\0')
@@ -115,6 +109,9 @@ int	get_pos_from_map(t_game *game)
 	printf("-----------------------SPRITES--------------------\n");
 	for (int i = 0; i < game->sprite_num; i++)
 	  printf("sprites[%d] = {x: %lf, y: %lf}\n", i, game->sprites[i].x, game->sprites[i].y);
+	// プレイヤーの初期座標が無い場合はエラー
+	if (game->player.pos.x == PLAYER_INIT_POS_X && game->player.pos.y == PLAYER_INIT_POS_Y)
+		return (put_and_return_err("Player's position is not specified"));
 	return (0);
 }
 
@@ -192,10 +189,8 @@ int	load_cubfile(t_game *game, char *filepath)
 	char	*line;
 	int		status;
 	char	**params;
-	game->map = ft_calloc(MAX_MAP_HEIGHT, sizeof(char*));  // 200 * 200が最大MAPサイズ
-	game->map_row = 0;
-	game->map_col = 0;
 
+	// TODO: cubfileの名前が正しいかチェックする(*.cubか)
 	if ((fd = open(filepath, O_RDONLY)) == -1)
 		return (-1);
 	status = 0;
