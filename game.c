@@ -40,5 +40,17 @@ void	initialize_game(t_game *game)
 	game->sprites = NULL;
 	game->player.pos.x = PLAYER_INIT_POS_X;
 	game->player.pos.y = PLAYER_INIT_POS_Y;
+
+	// textures
+	game->tex_n.img = NULL;
+	game->tex_s.img = NULL;
+	game->tex_w.img = NULL;
+	game->tex_e.img = NULL;
+	game->tex_sprite.img = NULL;
+	game->ground_color = UINT32_MAX;
+	game->sky_color = UINT32_MAX;
+
+	game->screen_width = -1;
+	game->screen_height = -1;
 }
 

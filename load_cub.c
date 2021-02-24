@@ -180,8 +180,21 @@ int	set_color(t_game *game, char name, char *rgbstr)
 	return (0);
 }
 
+// マップ以外の設定項目が全て設定されているか
+bool	is_config_already_set(t_game *game)
+{
+	if (!game->tex_n.img || !game->tex_s.img || !game->tex_w.img ||
+		!game->tex_e.img || !game->tex_sprite.img ||
+		game->ground_color == UINT32_MAX || game->sky_color == UINT32_MAX ||
+		game->screen_width == -1 || game->screen_height == -1)
+		return (false);
+	return (true);
+}
+
 int	load_map(t_game *game, char *line)
 {
+	if (!is_config_already_set(game))
+		return (put_and_return_err("Must configure all elements before loading map"));
 	if (!line || ft_strlen(line) >= MAX_MAP_WIDTH || game->map_row >= MAX_MAP_WIDTH){
 		put_error_msg("map is too large");
 		return (ERROR);
@@ -245,7 +258,7 @@ int	load_cubfile(t_game *game, char *path)
 			|| !ft_strncmp(params[0], "EA", 3))
 			status = load_texture(game, params[0], params[1]);
 		else
-			load_map(game, line);
+			status = load_map(game, line);
 		free(line);
 		line = NULL;
 		free_ptrarr((void**)params);
@@ -253,7 +266,7 @@ int	load_cubfile(t_game *game, char *path)
 	}
 	free(line);
 	if (status == ERROR || get_pos_from_map(game) || check_map_surrounded(game))
-		return (put_and_return_err("Error occured during load cubfile"));
+		return (put_and_return_err("Error occured during load map"));
 	// print map
 	printf("----------------------INPUT MAP---------------------\n");
 	for (int i = 0; i < game->map_row; i++)
