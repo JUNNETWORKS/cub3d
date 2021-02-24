@@ -137,29 +137,44 @@ int	load_texture(t_game *game, char *name, char *texture_path)
 	return (0);
 }
 
-int	set_color(t_game *game, char name, char *rgbstr)
+uint32_t	get_color_from_rgbstr(char *rgbstr, uint32_t *color)
 {
 	char **rgb;
+	bool is_invalid;
 
 	if (str_c_count(rgbstr, ',') != 2 || get_split_size(rgbstr, ',') != 3)
 		return (put_and_return_err("rgb is wrong"));
-	rgb = ft_split(rgbstr, ',');
-	int r = ft_atoi(rgb[0]);
-	int g = ft_atoi(rgb[1]);
-	int b = ft_atoi(rgb[2]);
+	if (!(rgb = ft_split(rgbstr, ',')))
+		return (ERROR);
+	*color = ft_atoi(rgb[0]) | ft_atoi(rgb[1]) << 8 | ft_atoi(rgb[2]) << 16;
 	if (!str_all_true(rgb[0], ft_isdigit) ||
-		!str_all_true(rgb[1], ft_isdigit) ||
-		!str_all_true(rgb[2], ft_isdigit) ||
-		r < 0 || r > 255 || g < 0 || g > 255 ||
-		b < 0 || b > 255){
+			!str_all_true(rgb[1], ft_isdigit) ||
+			!str_all_true(rgb[2], ft_isdigit) ||
+			(*color & 0xff) < 0 || (*color & 0xff) > 255 ||
+			(*color >> 8 & 0xff) < 0 || (*color >> 8 & 0xff) > 255 ||
+			(*color >> 16 & 0xff) < 0 || (*color >> 16 & 0xff) > 255 ||
+			(rgb[0][0] == '0' && rgb[0][1]) ||
+			(rgb[1][0] == '0' && rgb[1][1]) ||
+			(rgb[2][0] == '0' && rgb[2][1])){
 		free_ptrarr((void**)rgb);
-		return (put_and_return_err("provided color is invalid"));
+		return (ERROR);
 	}
 	free_ptrarr((void**)rgb);
+	return (0);
+}
+
+int	set_color(t_game *game, char name, char *rgbstr)
+{
+	char **rgb;
+	uint32_t color;
+	bool is_invalid;
+
+	if (get_color_from_rgbstr(rgbstr, &color) == ERROR)
+		return (put_and_return_err("provided color is invalid"));
 	if (name == 'F')
-		game->ground_color = rgb2hex(r, g, b);
+		game->ground_color = color;
 	else if (name == 'C')
-		game->sky_color = rgb2hex(r, g, b);
+		game->sky_color = color;
 	else
 		return (put_and_return_err("Unknow key is provided"));
 	return (0);
@@ -208,7 +223,11 @@ int	load_cubfile(t_game *game, char *path)
 	status = 0;
 	while (status >= 0 && (status = get_next_line(fd, &line)) == 1)
 	{
-		params = ft_split(line, ' ');
+		if (!(params = ft_split(line, ' ')))
+		{
+			status = ERROR;
+			break;
+		}
 
 		printf("params[0]: |%s|\n", params[0]);
 		if (params[0] == NULL)
