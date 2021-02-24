@@ -141,7 +141,7 @@ int	set_color(t_game *game, char name, char *rgbstr)
 {
 	char **rgb;
 
-	if (str_c_count(rgbstr, ',') != 2)
+	if (str_c_count(rgbstr, ',') != 2 || get_split_size(rgbstr, ',') != 3)
 		return (put_and_return_err("rgb is wrong"));
 	rgb = ft_split(rgbstr, ',');
 	int r = ft_atoi(rgb[0]);
