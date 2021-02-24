@@ -6,14 +6,14 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/11 04:52:46 by jtanaka           #+#    #+#             */
-/*   Updated: 2020/10/28 03:38:03 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/02/24 09:05:50 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdio.h>
 
-static	int		get_split_size(char *str, char c)
+int		get_split_size(char *str, char c)
 {
 	int		split_size;
 
