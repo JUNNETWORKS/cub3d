@@ -49,6 +49,8 @@ bool		str_all_true(char *str, int(*f)(int))
 {
 	int i;
 
+	if (!str)
+		return (false);
 	i = 0;
 	while (str[i])
 	{
