@@ -2,18 +2,38 @@
 
 void	clear_img(t_img *img)
 {
-	for (int x = 0; x < img->width; x++)
-	  for (int y = 0; y < img->height; y++)
-		my_mlx_pixel_put(img, x, y, 0xff000000);
+	int	x;
+	int	y;
+
+	x = 0;
+	while (x < img->width)
+	{
+		y = 0;
+		while (y < img->height)
+		{
+			my_mlx_pixel_put(img, x, y, 0xff000000);
+			y++;
+		}
+		x++;
+	}
 }
 
+// 正方形を描画
 void	draw_block(t_img *img, int x, int y, int color)
 {
-	// 正方形を描画
-	for (int xx = 0; xx < BLOCK_SIZE; xx++){
-		for (int yy = 0; yy < BLOCK_SIZE; yy++){
+	int	xx;
+	int	yy;
+
+	xx = 0;
+	while (xx < BLOCK_SIZE)
+	{
+		yy = 0;
+		while (yy < BLOCK_SIZE)
+		{
 			my_mlx_pixel_put(img, x + xx, y + yy, color);
+			yy++;
 		}
+		xx++;
 	}
 }
 
@@ -66,20 +86,3 @@ void	draw_2vec2(t_img *img, t_vec2 v1, t_vec2 v2, int color, int thickness)
 		}
 	}
 }
-
-// position: 位置ベクトル
-// angle: 角度(rad)
-// length: 線の長さ
-void	draw_line_angle_length(t_img *img, t_vec2 position, double angle, int length, int color)
-{
-	/* 長さ分の線を描画 */
-	for(int l = 0; l < length; l++){
-		/* x座標とy座標を計算 */
-		int x = position.x + l * cos(angle);
-		int y = position.y + l * sin(angle);
-		if (x < 0 || x >= img->width || y < 0 || y >= img->height)
-			continue;
-		my_mlx_pixel_put(img, x, y, color);
-	}
-}
-
