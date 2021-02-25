@@ -44,7 +44,7 @@ void	initialize_game(t_game *game)
 	game->ground_color = UINT32_MAX;
 	game->sky_color = UINT32_MAX;
 
-	game->screen_width = -1;
-	game->screen_height = -1;
+	game->screen_width = 0;
+	game->screen_height = 0;
 }
 
