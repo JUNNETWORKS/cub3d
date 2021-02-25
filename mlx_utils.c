@@ -20,5 +20,7 @@ int			load_image(t_game *game, t_img *img, char *filepath){
 	if (img->img == NULL)
 		return (ERROR);
     img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length, &img->endian);
+	if (img->addr == NULL)
+		return (ERROR);
 	return (0);
 }
