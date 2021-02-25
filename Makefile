@@ -15,6 +15,7 @@ SRCS = main.c \
 	   key_hooks.c \
 	   drawers.c \
 	   utils.c \
+	   ptrarr_utils.c \
 	   vector_utils.c \
 	   player.c \
 	   load_cub.c \

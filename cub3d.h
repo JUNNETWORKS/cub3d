@@ -149,6 +149,8 @@ void			put_error_msg(char *str);
 int			put_and_return_err(char *str);
 bool		str_all_true(char *str, int(*f)(int));
 size_t		str_c_count(char *str, char c);
+size_t		ptrarr_len(void **ptrarr);
+void		free_ptrarr(void **ptrarr);
 // Debug
 void			print_game(t_game *game);
 void			print_vec2(t_vec2 vec);
