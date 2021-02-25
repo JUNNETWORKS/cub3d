@@ -1,19 +1,24 @@
 #include "./cub3d.h"
 
-void	add_sprite(t_game *game, t_vec2 new)
+int		add_sprite(t_game *game, double x, double y)
 {
+	t_vec2 new;
 	t_vec2 *new_sprites;
 
-	new_sprites = malloc(sizeof(t_vec2) * (game->sprite_num + 1));
+	new.x = x;
+	new.y = y;
+	if (!(new_sprites = malloc(sizeof(t_vec2) * (game->sprite_num + 1))))
+		return (ERROR);
 	if (game->sprites)
 		ft_memcpy(new_sprites, game->sprites, sizeof(t_vec2) * game->sprite_num);
 	free(game->sprites);
 	new_sprites[game->sprite_num++] = new;
 	game->sprites = new_sprites;
+	return (0);
 }
 
 // get player and sprite positions from map
-int	get_pos_from_map(t_game *game)
+int		get_pos_from_map(t_game *game)
 {
 	for (int i = 0; i < game->map_row; i++){
 		for (int j = 0; j < game->map_col; j++){
@@ -22,11 +27,9 @@ int	get_pos_from_map(t_game *game)
 			if (!ft_strchr(" 012NSWE", game->map[i][j]))
 				return (put_and_return_err("The map has invalid character"));
 			if (game->map[i][j] == '2'){
-				t_vec2 sprite;
-				sprite.x = j + 0.5;
-				sprite.y = i + 0.5;
-				printf("add sprite {x: %lf, y: %lf}\n", sprite.x, sprite.y);
-				add_sprite(game, sprite);
+				printf("add sprite {x: %lf, y: %lf}\n", j + 0.5, i + 0.5);
+				if (add_sprite(game, j + 0.5, i + 0.5) == ERROR)
+					return (put_and_return_err("malloc is failed"));
 			}
 			else if (ft_strchr("NSWE", game->map[i][j])){
 				if (game->player.pos.x != PLAYER_INIT_POS_X &&
