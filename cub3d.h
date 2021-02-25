@@ -121,7 +121,9 @@ int				load_image(t_game *game, t_img *img, char *filepath);
 // Game functions
 int				initialize_game(t_game *game);
 void			configure_screen(t_game *game, bool has_window);
+// load cubfile
 int				load_cubfile(t_game *game, char *filepath);
+int				check_map_surrounded(t_game *game);
 // Hooks
 int 			key_press_hook(int keycode, t_game *game);
 int 			key_release_hook(int keycode, t_game *game);
