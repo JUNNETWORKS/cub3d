@@ -256,7 +256,9 @@ int	set_resolution(t_game *game, char *width_str, char *height_str)
 	if (!str_all_true(width_str, ft_isdigit) ||
 		!str_all_true(height_str, ft_isdigit) ||
 		(width = ft_atoi(width_str)) <= 0 ||
-		(height = ft_atoi(height_str)) <= 0)
+		(height = ft_atoi(height_str)) <= 0 ||
+		(width_str[0] == '0' && width) ||
+		(height_str[0] == '0' && height))
 		return (put_and_return_err("Resolution is invalid"));
 	mlx_get_screen_size(game->mlx, &max_width, &max_height);
 	printf("Display size\n\twidth: %d\n\theight: %d\n", max_width, max_height);
