@@ -1,15 +1,17 @@
 #include "./cub3d.h"
 
 // returun value is false if floodfill hit outside of map
-bool floodfill(t_game *game, bool **filled_map, int i, int j)
+bool	floodfill(t_game *game, bool **filled_map, int i, int j)
 {
+	bool is_surrounded;
+
 	if (i < 0 || i >= game->map_row || j < 0 || j >= game->map_col)
 		return (false);
 	if (game->map[i][j] == '1' || filled_map[i][j] == true)
 		return (true);
 	else
 		filled_map[i][j] = true;
-	bool is_surrounded = true;
+	is_surrounded = true;
 	is_surrounded &= floodfill(game, filled_map, i - 1, j);
 	is_surrounded &= floodfill(game, filled_map, i + 1, j);
 	is_surrounded &= floodfill(game, filled_map, i, j - 1);
