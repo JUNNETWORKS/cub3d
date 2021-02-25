@@ -215,11 +215,23 @@ int	load_map(t_game *game, char *line)
 	return (0);
 }
 
-int	set_resolution(t_game *game, int width, int height)
+int	set_resolution(t_game *game, char *width_str, char *height_str)
 {
-	game->screen_width = width;
-	game->screen_height = height;
-	printf("screen_width: %d, screen_height: %d\n",game->screen_width, game->screen_height);
+	int	width;
+	int	height;
+	int	max_width;
+	int	max_height;
+
+	width = ft_atoi(width_str);
+	height = ft_atoi(height_str);
+	if (!str_all_true(width_str, ft_isdigit) ||
+		!str_all_true(height_str, ft_isdigit) ||
+		width < 0 || height < 0)
+		return (put_and_return_err("Resolution is invalid"));
+	mlx_get_screen_size(game->mlx, &max_width, &max_height);
+	printf("Display size\n\twidth: %d\n\theight: %d\n", max_width, max_height);
+	game->screen_width = width > max_width ? max_width : width;
+	game->screen_height = height > max_height ? max_height : height;
 	return (0);
 }
 
@@ -255,7 +267,7 @@ int	load_cubfile(t_game *game, char *path)
 		}
 		printf("params[1]: |%s|\n", params[1]);
 		if (ft_strnstr(params[0], "R", ft_strlen(params[0])))
-			set_resolution(game, ft_atoi(params[1]), ft_atoi(params[2]));
+			status = set_resolution(game, params[1], params[2]);
 		else if (params[0][0] == 'F' || params[0][0] == 'C')
 			status = set_color(game, params[0][0], params[1]);
 		else if (params[0][0] == 'S' || !ft_strncmp(params[0], "NO", 3)

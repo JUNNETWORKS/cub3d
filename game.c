@@ -2,12 +2,6 @@
 
 void	configure_screen(t_game *game, bool has_window)
 {
-	int screen_width, screen_height;
-	mlx_get_screen_size(game->mlx, &screen_width, &screen_height);
-	printf("Display size\n\twidth: %d\n\theight: %d\n", screen_width, screen_height);
-	game->screen_width = game->screen_width > screen_width ? screen_width : game->screen_width;
-	game->screen_height = game->screen_height > screen_height ? screen_height : game->screen_height;
-
 	if (has_window)
 		game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
 
