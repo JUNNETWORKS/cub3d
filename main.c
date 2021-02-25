@@ -349,8 +349,7 @@ int main(int argc, char **argv){
 		exit(EXIT_FAILURE);
 	}
 	t_game	game;
-	initialize_game(&game);
-	if ((load_cubfile(&game, argv[1])) == ERROR){
+	if ((initialize_game(&game)) == ERROR || (load_cubfile(&game, argv[1])) == ERROR){
 		put_error_msg("Error is occured when load cub file");
 		exit(EXIT_FAILURE);
 	}

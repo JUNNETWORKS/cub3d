@@ -20,12 +20,13 @@ void	configure_screen(t_game *game, bool has_window)
 	mlx_do_key_autorepeaton(game->mlx);
 }
 
-void	initialize_game(t_game *game)
+int		initialize_game(t_game *game)
 {
 	game->mlx = mlx_init();
 
 	// MAP
-	game->map = ft_calloc(MAX_MAP_HEIGHT, sizeof(char*));  // 200 * 200が最大MAPサイズ
+	if (!(game->map = ft_calloc(MAX_MAP_HEIGHT, sizeof(char*))))  // 200 * 200が最大MAPサイズ
+		return (put_and_return_err("failed malloc"));
 	game->map_row = 0;
 	game->map_col = 0;
 
@@ -47,5 +48,6 @@ void	initialize_game(t_game *game)
 
 	game->screen_width = 0;
 	game->screen_height = 0;
+	return (0);
 }
 
