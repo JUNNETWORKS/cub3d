@@ -1,46 +1,57 @@
 #include "cub3d.h"
 
-int	write_game2bmp(t_game *game, char *filepath)
+int	write_game2bmp(t_game *game, char *fpath)
 {
-	int fd;
-	if ((fd = open(filepath, O_WRONLY | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXO)) == -1)
+	int			fd;
+	uint32_t	len;
+	uint32_t	tmp;
+	int			x;
+	int			y;
+
+	if ((fd = open(fpath, O_WRONLY | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXO)) == -1)
 		return (-1);
 	
 	// File Header
 	// bfType
 	write(fd, "BM", 2);
 	// bfSize  ファイルサイズ[byte]
-	uint32_t filesize = 14 + 10 + game->screen_width * game->screen_height * 4;  // FileHeader + InformationHeader + imagedata
-	write(fd, &filesize, 4);
+	len = 14 + 10 + game->screen_width * game->screen_height * 4;  // FileHeader + InformationHeader + imagedata
+	write(fd, &len, 4);
 	// bfReserved1
 	write(fd, "\0\0", 2);
 	// bfReserved2
 	write(fd, "\0\0", 2);
 	// bfOffBits  ファイル先頭から画像データまでのオフセット[byte]
-	uint32_t bfOffBits = 14 + 10;
-	write(fd, &bfOffBits, 4);
+	len = 14 + 10;
+	write(fd, &len, 4);
 	
 	// Information Header
 	// bcSize
-	uint32_t a = 12;
-	write(fd, &a, 4);
+	tmp = 12;
+	write(fd, &tmp, 4);
 	// bcWidth  画像の幅[ピクセル]
 	write(fd, &game->screen_width, 2);
 	// bcHeight 画像の高さ[ピクセル]
 	write(fd, &game->screen_height, 2);
 	// bcPlanes
-	a = 1;
-	write(fd, &a, 2);
+	tmp = 1;
+	write(fd, &tmp, 2);
 	// bcBitCount
-	a = 32;
-	write(fd, &a, 2);
+	tmp = 32;
+	write(fd, &tmp, 2);
 	
 	// Image Data
-	for (int y = game->screen_height - 1; y >= 0; y--){
-	  for (int x = 0; x < game->screen_width; x++){
-			uint32_t color = get_color_from_img(game->img, x, y);
-			write(fd, &color, 4);
-	  }
+	y = game->screen_height - 1;
+	while (y >= 0)
+	{
+		x = 0;
+		while (x < game->screen_height)
+		{
+			tmp = get_color_from_img(game->img, x, y);
+			write(fd, &tmp, 4);
+			x++;
+		}
+		y--;
 	}
 	close(fd);
 	return (0);
