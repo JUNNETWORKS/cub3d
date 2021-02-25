@@ -185,6 +185,15 @@ uint32_t	get_color_from_rgbstr(char *rgbstr, uint32_t *color)
 	return (0);
 }
 
+bool	has_color_set(t_game *game, char name)
+{
+	if (name == 'F' && game->ground_color == UINT32_MAX)
+		return (false);
+	else if (name == 'C' && game->sky_color == UINT32_MAX)
+		return (false);
+	return (true);
+}
+
 int	set_color(t_game *game, char name, char *rgbstr)
 {
 	char **rgb;
@@ -193,6 +202,8 @@ int	set_color(t_game *game, char name, char *rgbstr)
 
 	if (get_color_from_rgbstr(rgbstr, &color) == ERROR)
 		return (put_and_return_err("provided color is invalid"));
+	if (has_color_set(game, name))
+		return (put_and_return_err("color has already set"));
 	if (name == 'F')
 		game->ground_color = color;
 	else if (name == 'C')
