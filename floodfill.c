@@ -24,6 +24,7 @@ int			check_map_surrounded(t_game *game)
 {
 	int		x;
 	int		y;
+	int		i;
 	bool	**filled_map;
 	bool	is_surrounded;
 
@@ -32,9 +33,17 @@ int			check_map_surrounded(t_game *game)
 
 	// +1 はNULL終端用
 	filled_map = ft_calloc(game->map_row + 1, sizeof(bool*));
-	y = 0;
-	while (y < game->map_row)
-		filled_map[y++] = ft_calloc(game->map_col, sizeof(bool));
+	i = 0;
+	while (i < game->map_row)
+	{
+		filled_map[i] = ft_calloc(game->map_col, sizeof(bool));
+		if (!filled_map[i])
+		{
+			free_ptrarr((void**)filled_map);
+			return (put_and_return_err("Malloc is failed"));
+		}
+		i++;
+	}
 
 	// floodfill
 	is_surrounded = floodfill(game, filled_map, y, x);
