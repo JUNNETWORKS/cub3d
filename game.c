@@ -41,6 +41,7 @@ void	initialize_game(t_game *game)
 	game->tex_w.img = NULL;
 	game->tex_e.img = NULL;
 	game->tex_sprite.img = NULL;
+	// cubfileで指定出来るのはRGBのみなのでUINT32_MAXが入ることはない
 	game->ground_color = UINT32_MAX;
 	game->sky_color = UINT32_MAX;
 
