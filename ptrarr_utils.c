@@ -2,7 +2,7 @@
 
 size_t	ptrarr_len(void **ptrarr)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (ptrarr[i])
@@ -12,7 +12,7 @@ size_t	ptrarr_len(void **ptrarr)
 
 void	free_ptrarr(void **ptrarr)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (ptrarr[i])

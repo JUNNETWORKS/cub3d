@@ -23,4 +23,3 @@ int		set_resolution(t_game *game, char *width_str, char *height_str)
 	game->screen_height = height > max_height ? max_height : height;
 	return (0);
 }
-

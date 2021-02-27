@@ -6,7 +6,8 @@ void		my_mlx_pixel_put(t_img *img, int x, int y, int color)
     char	*dst;
 
 	// line_lengthは実際のウィンドウの横幅と違うので計算する必要がある
-    dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+    dst = img->addr + (y * img->line_length +
+		x * (img->bits_per_pixel / 8));
     *(unsigned int*)dst = color;
 }
 
@@ -17,7 +18,8 @@ uint32_t	get_color_from_img(t_img img, int x, int y)
 }
 
 int			load_image(t_game *game, t_img *img, char *filepath){
-	img->img = mlx_xpm_file_to_image(game->mlx, filepath, &img->width, &img->height);
+	img->img = mlx_xpm_file_to_image(game->mlx, filepath,
+		&img->width, &img->height);
 	if (img->img == NULL)
 		return (ERROR);
     img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel,

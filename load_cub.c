@@ -120,4 +120,3 @@ int			load_cubfile(t_game *game, char *path)
 
 	return (0);
 }
-

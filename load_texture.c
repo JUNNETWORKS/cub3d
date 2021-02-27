@@ -35,4 +35,3 @@ int			load_texture(t_game *game, char *name, char *texture_path)
 		return (put_and_return_err("Failed to load texture"));
 	return (0);
 }
-
