@@ -114,6 +114,28 @@ typedef struct  s_game {
 	double		*z_buffer;  // z_buffer[screenWidth]  // スクリーンのxにおける壁までの距離
 }               t_game;
 
+// スプライトを描画する時に必要な情報を保持する構造体
+typedef struct	s_sprite_vis_info {
+	// カメラ平面(中心を0とする)とスプライトのx座標を比較した時の差
+	double		transform_x;
+	// スプライトまでの深度となる
+	double		transform_y;
+	// スクリーン上でのスプライトの座標
+	int			screen_x;
+	// スクリーン上でのスプライトの高さ
+	int			height_screen;
+	// スプライト描画の一番上
+	int			draw_start_y;
+	// スプライト描画の一番下
+	int			draw_end_y;
+	// スクリーン上でのスプライトの横幅
+	int			width_screen;
+	// スプライト描画の一番左
+	int			draw_start_x;
+	// スプライト描画の一番右
+	int			draw_end_x;
+}				t_sprite_vis_info;
+
 // MLX Utils
 void			my_mlx_pixel_put(t_img *img, int x, int y, int color);
 uint32_t		get_color_from_img(t_img img, int x, int y);

@@ -24,12 +24,53 @@ void	calc_transform(t_game *game, t_vec2 sprite, double *transform_x, double *tr
 	printf("transform_x: %lf\ntransform_y: %lf\n", *transform_x, *transform_y);
 }
 
+void	draw_sprite_stripe(t_game *game, t_sprite_vis_info sprite_vis)
+{
+	int			x;
+	int			y;
+	int			tex_x;
+	int			tex_y;
+	uint32_t	color;
+
+	x = sprite_vis.draw_start_x;
+	while(x < sprite_vis.draw_end_x)
+	{
+		// テクスチャのx座標
+		// (stripe - (-sprite_width_screen / 2 + screen_x)) で現在何ピクセル目かを取得
+		tex_x = (int)((x - (-sprite_vis.width_screen / 2 + sprite_vis.screen_x)) *
+			game->tex_sprite.width / sprite_vis.width_screen);
+		/* 以下の条件の時描画を行う
+		 * 1. カメラの平面の前にいるか　(カメラ平面の後ろにあるスプライトは描画しない)
+		 * 2. スクリーン上にある (left)
+		 * 3. スクリーン上にある (right)
+		 * 4. zBufferに記録された壁までの距離より近い
+		 */
+		if (sprite_vis.transform_y > 0 &&
+			x >= 0 && x < game->screen_width &&
+			sprite_vis.transform_y < game->z_buffer[x]){
+			y = sprite_vis.draw_start_y;
+			while(y < sprite_vis.draw_end_y)
+			{
+				tex_y = (int)(
+					(y - (-sprite_vis.height_screen / 2 + game->screen_height / 2)) *
+					game->tex_sprite.height / sprite_vis.height_screen);
+				color = get_color_from_img(game->tex_sprite, tex_x, tex_y);
+				if (!(color & 0xff000000))
+					my_mlx_pixel_put(&(game->img), x, y, color);
+				y++;
+			}
+		}
+		x++;
+	}
+}
+
 void	draw_sprite(t_game *game, t_vec2 sprite, double plane_length, double height_base)
 {
 	// スプライトを描画する時に必要な情報を保持する構造体
-	t_sprite_vis_info sprite_vis_info;
+	t_sprite_vis_info	sprite_vis;
+
 	/* ============== ワールド座標からカメラ座標への変換 ============== */
-	calc_transform(game, sprite, &sprite_vis_info.transform_x, &sprite_vis_info.transform_y);
+	calc_transform(game, sprite, &sprite_vis.transform_x, &sprite_vis.transform_y);
 	/* ============== 実際に描画すべき座標の計算 ============== */
 	// スクリーン上でのスプライトの座標
 	/* (1.0 + transform_x / transform_y) の説明
@@ -40,66 +81,31 @@ void	draw_sprite(t_game *game, t_vec2 sprite, double plane_length, double height
 	 * となる.
 	 * これに画面サイズの半分を掛けることで画面上でのスプライトのx座標がわかる
 	 */
-	/*
-	// スクリーン上でのスプライトの座標
-	int sprite_screen_x;
+	sprite_vis.screen_x = (int)((game->screen_width / 2) * (1.0 + sprite_vis.transform_x / sprite_vis.transform_y));
+	printf("(1.0 + transform_x / transform_y): %lf\n", (1.0 + sprite_vis.transform_x / sprite_vis.transform_y));
+	printf("((game->screen_width / 2) * (1.0 + transform_x / transform_y)): %d\n", sprite_vis.screen_x);
 	// スクリーン上でのスプライトの高さ
-	int sprite_height_screen;
-	// スプライト描画の一番上
-	int draw_start_y;
-	// スプライト描画の一番下
-	int draw_end_y;
-	// スクリーン上でのスプライトの横幅
-	int sprite_width_screen;
-	// スプライト描画の一番左
-	int draw_start_x;
-	// スプライト描画の一番右
-	int draw_end_x;
-
-	sprite_screen_x = (int)((game->screen_width / 2) * (1.0 + transform_x / transform_y));
-	printf("(1.0 + transform_x / transform_y): %lf\n", (1.0 + transform_x / transform_y));
-	printf("((game->screen_width / 2) * (1.0 + transform_x / transform_y)): %d\n", sprite_screen_x);
-	// スクリーン上でのスプライトの高さ
-	sprite_height_screen = ABS((int)(height_base / transform_y));
+	sprite_vis.height_screen = ABS((int)(height_base / sprite_vis.transform_y));
 	// スプライト描画の一番下と一番上を計算する
-	draw_start_y = -sprite_height_screen / 2 + game->screen_height / 2;
-	if (draw_start_y < 0)
-		draw_start_y = 0;
-	draw_end_y = sprite_height_screen / 2 + game->screen_height / 2;
-	if (draw_end_y >= game->screen_height)
-		draw_end_y = game->screen_height - 1;
+	sprite_vis.draw_start_y = -sprite_vis.height_screen / 2 + game->screen_height / 2;
+	if (sprite_vis.draw_start_y < 0)
+		sprite_vis.draw_start_y = 0;
+	sprite_vis.draw_end_y = sprite_vis.height_screen / 2 + game->screen_height / 2;
+	if (sprite_vis.draw_end_y >= game->screen_height)
+		sprite_vis.draw_end_y = (sprite_vis.draw_end_y >= game->screen_height) ? game->screen_height - 1 : sprite_vis.draw_end_y;
 	// スプライトの横幅を計算する
-	sprite_width_screen = ABS((int)(height_base / transform_y));
-	draw_start_x = -sprite_width_screen / 2 + sprite_screen_x;
-	if (draw_start_x < 0) draw_start_x = 0;
-	draw_end_x = sprite_width_screen / 2 + sprite_screen_x;
-	if (draw_end_x >= game->screen_width) draw_end_x = game->screen_width - 1;
+	sprite_vis.width_screen = ABS((int)(height_base / sprite_vis.transform_y));
+	sprite_vis.draw_start_x = -sprite_vis.width_screen / 2 + sprite_vis.screen_x;
+	if (sprite_vis.draw_start_x < 0)
+		sprite_vis.draw_start_x = 0;
+	sprite_vis.draw_end_x = sprite_vis.width_screen / 2 + sprite_vis.screen_x;
+	if (sprite_vis.draw_end_x >= game->screen_width)
+		sprite_vis.draw_end_x = game->screen_width - 1;
 
-	printf("sprite:\n\twidth: %d\n\theight: %d\n", sprite_width_screen, sprite_height_screen);
+	printf("sprite:\n\twidth: %d\n\theight: %d\n", sprite_vis.width_screen, sprite_vis.height_screen);
 
 	// スプライトの各縦線について描画
-	for (int stripe = draw_start_x; stripe < draw_end_x; stripe++){
-		// テクスチャのx座標
-		// (stripe - (-sprite_width_screen / 2 + sprite_screen_x)) で現在何ピクセル目かを取得
-		int tex_x = (int)((stripe - (-sprite_width_screen / 2 + sprite_screen_x)) * game->tex_sprite.width / sprite_width_screen);
-		/* 以下の条件の時描画を行う
-		 * 1. カメラの平面の前にいるか　(カメラ平面の後ろにあるスプライトは描画しない)
-		 * 2. スクリーン上にある (left)
-		 * 3. スクリーン上にある (right)
-		 * 4. zBufferに記録された壁までの距離より近い
-		 */
-		if (transform_y > 0 && stripe >= 0 && stripe < game->screen_width && transform_y < game->z_buffer[stripe]){
-			for (int y = draw_start_y; y < draw_end_y; y++){
-				int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->tex_sprite.height / sprite_height_screen);
-				uint32_t color = get_color_from_img(game->tex_sprite, tex_x, tex_y);
-				if (color & 0xff000000)
-				  continue;
-				my_mlx_pixel_put(&(game->img), stripe, y, color);
-				if (tex_x == (game->tex_sprite.width) / 2)
-					my_mlx_pixel_put(&(game->img), stripe, y, 0xff0000);
-			}
-		}
-	}
+	draw_sprite_stripe(game, sprite_vis);
 }
 
 void	draw_sprites(t_game *game)
