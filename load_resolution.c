@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-int	set_resolution(t_game *game, char *width_str, char *height_str)
+int		set_resolution(t_game *game, char *width_str, char *height_str)
 {
 	int	width;
 	int	height;
