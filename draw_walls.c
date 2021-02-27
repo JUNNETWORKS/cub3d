@@ -56,39 +56,39 @@ void	simulate_ray(t_game *game, t_ray *ray)
 		ray->tex = (ray->step_y > 0) ? &game->tex_n : &game->tex_s;
 }
 
-void	draw_stripe(t_game *game, t_ray ray, int x, double height_base)
+void	calc_vis_info(t_game *game, t_ray ray, t_wall_vis_info *wall_vis, int x)
 {
-	t_wall_vis_info	wall_vis;
+	// スクリーンに描画する必要のある縦線の長さを求める
+	wall_vis->line_height = (int)(game->height_base / ray.perp_wall_dist);
+	// 実際に描画すべき場所の開始位置と終了位置を計算
+	wall_vis->draw_start = -wall_vis->line_height / 2 + game->screen_height / 2;
+	if (wall_vis->draw_start < 0)
+		wall_vis->draw_start = 0;
+	wall_vis->draw_end = wall_vis->line_height / 2 + game->screen_height / 2;
+	if (wall_vis->draw_end >= game->screen_height)
+		wall_vis->draw_end = game->screen_height - 1;
+	/* 当たった壁上の正確なx座標を求める */
+	if (ray.side == 0)
+	  wall_vis->wall_x = game->player.pos.y + ray.perp_wall_dist * ray.dir.y;
+	else
+	  wall_vis->wall_x = game->player.pos.x + ray.perp_wall_dist * ray.dir.x;
+	wall_vis->wall_x -= floor(wall_vis->wall_x);  // 正方形のどの部分にヒットしたのか0.0~1.0で表す
+	// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
+	wall_vis->texture_x = (int)(wall_vis->wall_x * ray.tex->width);
+	if ((ray.side == 0 && ray.dir.x < 0) || (ray.side == 1 && ray.dir.y > 0))
+	  wall_vis->texture_x = ray.tex->width - wall_vis->texture_x - 1;
+	/* 各ピクセルにどのテクスチャのピクセルを描画するか計算する */
+	// y方向の1ピクセルごとにテクスチャのy座標が動く量
+	wall_vis->step = 1.0 * ray.tex->height / (double)wall_vis->line_height;
+}
+
+void	draw_stripe(t_game *game, t_ray ray, t_wall_vis_info *wall_vis, int x)
+{
 	int				y;
 	uint32_t		color;
 
-	// スクリーンに描画する必要のある縦線の長さを求める
-	wall_vis.line_height = (int)(height_base / ray.perp_wall_dist);
-	// 実際に描画すべき場所の開始位置と終了位置を計算
-	wall_vis.draw_start = -wall_vis.line_height / 2 + game->screen_height / 2;
-	if (wall_vis.draw_start < 0)
-		wall_vis.draw_start = 0;
-	wall_vis.draw_end = wall_vis.line_height / 2 + game->screen_height / 2;
-	if (wall_vis.draw_end >= game->screen_height)
-		wall_vis.draw_end = game->screen_height - 1;
-
-	/* 当たった壁上の正確なx座標を求める */
-	if (ray.side == 0)
-	  wall_vis.wall_x = game->player.pos.y + ray.perp_wall_dist * ray.dir.y;
-	else
-	  wall_vis.wall_x = game->player.pos.x + ray.perp_wall_dist * ray.dir.x;
-	wall_vis.wall_x -= floor(wall_vis.wall_x);  // 正方形のどの部分にヒットしたのか0.0~1.0で表す
-
-	// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
-	wall_vis.texture_x = (int)(wall_vis.wall_x * ray.tex->width);
-	if ((ray.side == 0 && ray.dir.x < 0) || (ray.side == 1 && ray.dir.y > 0))
-	  wall_vis.texture_x = ray.tex->width - wall_vis.texture_x - 1;
-
-	/* 各ピクセルにどのテクスチャのピクセルを描画するか計算する */
-	// y方向の1ピクセルごとにテクスチャのy座標が動く量
-	wall_vis.step = 1.0 * ray.tex->height / (double)wall_vis.line_height;
 	// テクスチャの現在のy座標
-	wall_vis.texture_pos_y = (wall_vis.draw_start - game->screen_height / 2 + wall_vis.line_height / 2) * wall_vis.step;
+	wall_vis->texture_pos_y = (wall_vis->draw_start - game->screen_height / 2 + wall_vis->line_height / 2) * wall_vis->step;
 	y = 0;
 	while (y < game->screen_height)
 	{
@@ -96,13 +96,13 @@ void	draw_stripe(t_game *game, t_ray ray, int x, double height_base)
 			my_mlx_pixel_put(&(game->img), x, y, game->sky_color);  // draw sky
 		else
 			my_mlx_pixel_put(&(game->img), x, y, game->ground_color);  // draw ground
-		if (y >= wall_vis.draw_start && y < wall_vis.draw_end)
+		if (y >= wall_vis->draw_start && y < wall_vis->draw_end)
 		{
 			// テクスチャの現在のy座標(double型)を整数型に変換する.
 			//  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
-			wall_vis.texture_y = (int)wall_vis.texture_pos_y & (ray.tex->height - 1);
-			wall_vis.texture_pos_y += wall_vis.step;
-			color = get_color_from_img(*ray.tex, wall_vis.texture_x, wall_vis.texture_y);
+			wall_vis->texture_y = (int)wall_vis->texture_pos_y & (ray.tex->height - 1);
+			wall_vis->texture_pos_y += wall_vis->step;
+			color = get_color_from_img(*ray.tex, wall_vis->texture_x, wall_vis->texture_y);
 			// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
 			if (ray.side == 1)
 				color = (color >> 1) & 0x7f7f7f;
@@ -115,18 +115,13 @@ void	draw_stripe(t_game *game, t_ray ray, int x, double height_base)
 void	draw_walls(t_game *game)
 {
 	int		x;
-	double	plane_length;
-	double	wall_height_base;
 
-	// planeベクトルの大きさを計算
-	plane_length = vec2_length(game->player.plane);
-	// 基準となる壁の高さ. 視野角に応じて横幅が変わってしまうので, 視野角の逆数を掛けて1に戻す
-	wall_height_base = (double)game->screen_width * (1 / (2 * plane_length));
 	// スクリーンの全てのxについて計算する
 	x = 0;
 	while(x < game->screen_width)
 	{
 		t_ray	ray;
+		t_wall_vis_info	wall_vis;
 
 		/* ============== 初期設定 ============== */
 		initialize_ray(game, &ray, x);
@@ -134,7 +129,9 @@ void	draw_walls(t_game *game)
 		simulate_ray(game, &ray);
 		game->z_buffer[x] = ray.perp_wall_dist;
 		/* ============== 描画 ============== */
-		draw_stripe(game, ray, x++, wall_height_base);
+		calc_vis_info(game, ray, &wall_vis, x);
+		draw_stripe(game, ray, &wall_vis, x);
+		x++;
 	}
 }
 

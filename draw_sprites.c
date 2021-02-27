@@ -64,7 +64,7 @@ void	draw_sprite_stripe(t_game *game, t_sprite_vis_info sprite_vis)
 	}
 }
 
-void	draw_sprite(t_game *game, t_vec2 sprite, double plane_length, double height_base)
+void	draw_sprite(t_game *game, t_vec2 sprite)
 {
 	// スプライトを描画する時に必要な情報を保持する構造体
 	t_sprite_vis_info	sprite_vis;
@@ -85,7 +85,7 @@ void	draw_sprite(t_game *game, t_vec2 sprite, double plane_length, double height
 	printf("(1.0 + transform_x / transform_y): %lf\n", (1.0 + sprite_vis.transform_x / sprite_vis.transform_y));
 	printf("((game->screen_width / 2) * (1.0 + transform_x / transform_y)): %d\n", sprite_vis.screen_x);
 	// スクリーン上でのスプライトの高さ
-	sprite_vis.height_screen = ABS((int)(height_base / sprite_vis.transform_y));
+	sprite_vis.height_screen = ABS((int)(game->height_base / sprite_vis.transform_y));
 	// スプライト描画の一番下と一番上を計算する
 	sprite_vis.draw_start_y = -sprite_vis.height_screen / 2 + game->screen_height / 2;
 	if (sprite_vis.draw_start_y < 0)
@@ -94,7 +94,7 @@ void	draw_sprite(t_game *game, t_vec2 sprite, double plane_length, double height
 	if (sprite_vis.draw_end_y >= game->screen_height)
 		sprite_vis.draw_end_y = (sprite_vis.draw_end_y >= game->screen_height) ? game->screen_height - 1 : sprite_vis.draw_end_y;
 	// スプライトの横幅を計算する
-	sprite_vis.width_screen = ABS((int)(height_base / sprite_vis.transform_y));
+	sprite_vis.width_screen = ABS((int)(game->height_base / sprite_vis.transform_y));
 	sprite_vis.draw_start_x = -sprite_vis.width_screen / 2 + sprite_vis.screen_x;
 	if (sprite_vis.draw_start_x < 0)
 		sprite_vis.draw_start_x = 0;
@@ -116,14 +116,7 @@ void	draw_sprites(t_game *game)
 {
 	// planeベクトルの大きさを計算
 	double	plane_length;
-	// 基準となるスプライトの高さ. 視野角に応じて横幅が変わってしまうので, 視野角の逆数を掛けて1に戻す
-	double	height_base;
 	int		sprite_idx;
-
-	// planeベクトルの大きさを計算
-	plane_length = vec2_length(game->player.plane);
-	// 基準となる壁の高さ. 視野角に応じて横幅が変わってしまうので, 視野角の逆数を掛けて1に戻す
-	height_base = (double)game->screen_width * (1 / (2 * plane_length));
 
 	// スプライトを遠い順にソートする(遠いスプライトから描画するから)
 	sort_sprites(game);
@@ -133,6 +126,6 @@ void	draw_sprites(t_game *game)
 	while (sprite_idx < game->sprite_num)
 	{
 		printf("---------sprite%d---------\n", sprite_idx);
-		draw_sprite(game, game->sprites[sprite_idx++], plane_length, height_base);
+		draw_sprite(game, game->sprites[sprite_idx++]);
 	}
 }

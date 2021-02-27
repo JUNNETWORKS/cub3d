@@ -105,6 +105,7 @@ typedef struct	s_game {
 	int			tex_height;
 	uint32_t	sky_color;
 	uint32_t	ground_color;
+	double		height_base;
 
 	int			sprite_num;  // スプライトの数
 	t_vec2		*sprites;    // スプライトの座標
