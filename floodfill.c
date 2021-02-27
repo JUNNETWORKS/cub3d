@@ -3,7 +3,7 @@
 // returun value is false if floodfill hit outside of map
 static bool	floodfill(t_game *game, bool **filled_map, int i, int j)
 {
-	bool is_surrounded;
+	bool	is_surrounded;
 
 	if (i < 0 || i >= game->map_row || j < 0 || j >= game->map_col)
 		return (false);
