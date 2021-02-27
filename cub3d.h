@@ -150,7 +150,7 @@ typedef struct	s_ray {
 	double		side_dist_y;
 	// 壁に衝突したか
 	int			hit;
-	// perpWallDistは, 当たった壁とカメラ平面ベクトルとの距離を表す
+	// perpWallDistは, 当たった壁とカメラ平面ベクトルとの距離を表す (perpはperpendicular(垂直)の略)
 	double		perp_wall_dist;
 	// 壁のx面かy面どちらに当たったかを判断するための変数  0: x面, 1: y面
 	int			side;
