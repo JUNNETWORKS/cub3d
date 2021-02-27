@@ -164,6 +164,26 @@ typedef struct	s_ray {
 	t_img		*tex;
 }				t_ray;
 
+// 壁を描画するのに必要な情報を保持する構造体
+typedef struct	s_wall_vis_info {
+	// スクリーンに描画する必要のある縦線の長さを求める
+	int			line_height;
+	// 実際に描画すべき場所の開始位置
+	int			draw_start;
+	// 実際に描画すべき場所の位置
+	int			draw_end;
+	// 正確なx座標 (整数型ではない)
+	double		wall_x;
+	// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
+	int			texture_x;
+	// y方向の1ピクセルごとにテクスチャのy座標が動く量
+	double		step;
+	// テクスチャの現在のy座標
+	double		texture_pos_y;
+	// テクスチャの現在のy座標(double型)を整数型に変換する.
+	int			texture_y;
+}				t_wall_vis_info;
+
 // MLX Utils
 void			my_mlx_pixel_put(t_img *img, int x, int y, int color);
 uint32_t		get_color_from_img(t_img img, int x, int y);
