@@ -69,7 +69,8 @@ int		main_loop(t_game *game)
 	return (0);
 }
 
-int main(int argc, char **argv){
+int main(int argc, char **argv)
+{
 	if (argc < 2 || argc > 3){  // ./cub3D *.cub --save
 		put_error_msg("args count is incorrect!");
 		exit(EXIT_FAILURE);
