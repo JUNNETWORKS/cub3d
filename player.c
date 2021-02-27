@@ -40,7 +40,7 @@ static void	slide_player(t_game *game)
 {
 	double	new_pos_x;
 	double	new_pos_y;
-	t_vec2 perpendicular;
+	t_vec2	perpendicular;
 
 	if (game->player.is_sidling)
 	{
