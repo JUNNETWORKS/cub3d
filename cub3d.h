@@ -160,6 +160,8 @@ typedef struct	s_ray {
 	// deltaDistは, 光線が今の正方形から次の正方形に行くために移動する距離
 	double		delta_dist_x;
 	double		delta_dist_y;
+	// texは当たったテクスチャ
+	t_img		*tex;
 }				t_ray;
 
 // MLX Utils

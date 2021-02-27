@@ -37,6 +37,42 @@ void	initialize_ray(t_game *game, t_ray *ray, int x)
 	}
 }
 
+void	simulate_ray(t_game *game, t_ray *ray)
+{
+	/* ============== 壁まで光線を飛ばす ============== */
+	// 光線が壁にぶつかるまで光線を進める
+	while (ray->hit == 0)
+	{
+		if (ray->side_dist_x < ray->side_dist_y)
+		{
+			ray->side_dist_x += ray->delta_dist_x;
+			ray->map_x += ray->step_x;
+			ray->side = 0;
+		}
+		else
+		{
+			ray->side_dist_y += ray->delta_dist_y;
+			ray->map_y += ray->step_y;
+			ray->side = 1;
+		}
+		// 光線が壁にぶつかったか確認する
+		if (game->map[ray->map_y][ray->map_x] == '1')
+			ray->hit = 1;
+	}
+
+	// 壁までの光線の距離を計算する
+	if (ray->side == 0)
+		ray->perp_wall_dist = (ray->map_x - game->player.pos.x + (1 - ray->step_x) / 2) / ray->dir.x;
+	else
+		ray->perp_wall_dist = (ray->map_y - game->player.pos.y + (1 - ray->step_y) / 2) / ray->dir.y;
+
+	// 壁の当たった方角によってテクスチャを変更する
+	if (ray->side == 0)
+		ray->tex = (ray->step_x > 0) ? &game->tex_w : &game->tex_e;
+	else
+		ray->tex = (ray->step_y > 0) ? &game->tex_n : &game->tex_s;
+}
+
 void	draw_stripe(t_game *game, int x, double plane_length, double height_base)
 {
 	t_ray	ray;
@@ -44,46 +80,7 @@ void	draw_stripe(t_game *game, int x, double plane_length, double height_base)
 	/* ============== 初期設定 ============== */
 	initialize_ray(game, &ray, x);
 	/* ============== 壁まで光線を飛ばす ============== */
-	// 光線が壁にぶつかるまで光線を進める
-	while (ray.hit == 0)
-	{
-		if (ray.side_dist_x < ray.side_dist_y)
-		{
-			ray.side_dist_x += ray.delta_dist_x;
-			ray.map_x += ray.step_x;
-			ray.side = 0;
-		}
-		else
-		{
-			ray.side_dist_y += ray.delta_dist_y;
-			ray.map_y += ray.step_y;
-			ray.side = 1;
-		}
-		// 光線が壁にぶつかったか確認する
-		if (game->map[ray.map_y][ray.map_x] == '1')
-			ray.hit = 1;
-	}
-
-	// 壁までの光線の距離を計算する
-	if (ray.side == 0)
-		ray.perp_wall_dist = (ray.map_x - game->player.pos.x + (1 - ray.step_x) / 2) / ray.dir.x;
-	else
-		ray.perp_wall_dist = (ray.map_y - game->player.pos.y + (1 - ray.step_y) / 2) / ray.dir.y;
-
-	// 壁の当たった方角によってテクスチャを変更する
-	t_img *tex;
-	if (ray.side == 0){
-	  if (ray.step_x > 0)
-		tex = &game->tex_w;
-	  else
-		tex = &game->tex_e;
-	}else{
-	  if (ray.step_y > 0)
-		tex = &game->tex_n;
-	  else
-		tex = &game->tex_s;
-	}
-
+	simulate_ray(game, &ray);
 	/* ============== 描画 ============== */
 	// スクリーンに描画する必要のある縦線の長さを求める
 	int line_height = (int)(height_base / ray.perp_wall_dist);
@@ -105,13 +102,13 @@ void	draw_stripe(t_game *game, int x, double plane_length, double height_base)
 	wall_x -= floor(wall_x);  // 正方形のどの部分にヒットしたのか0.0~1.0で表す
 
 	// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
-	int texture_x = (int)(wall_x * tex->width);
+	int texture_x = (int)(wall_x * ray.tex->width);
 	if ((ray.side == 0 && ray.dir.x < 0) || (ray.side == 1 && ray.dir.y > 0))
-	  texture_x = tex->width - texture_x - 1;
+	  texture_x = ray.tex->width - texture_x - 1;
 
 	/* 各ピクセルにどのテクスチャのピクセルを描画するか計算する */
 	// y方向の1ピクセルごとにテクスチャのy座標が動く量
-	double step = 1.0 * tex->height / (double)line_height;
+	double step = 1.0 * ray.tex->height / (double)line_height;
 	// テクスチャの現在のy座標
 	double texture_pos_y = (draw_start - game->screen_height / 2 + line_height / 2) * step;
 	for (int y = 0; y < game->screen_height; y++)
@@ -123,9 +120,9 @@ void	draw_stripe(t_game *game, int x, double plane_length, double height_base)
 		if (y >= draw_start && y < draw_end)
 		{
 			// テクスチャの現在のy座標(double型)を整数型に変換する.
-			int texture_y = (int)texture_pos_y & (tex->height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
+			int texture_y = (int)texture_pos_y & (ray.tex->height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
 			texture_pos_y += step;
-			uint32_t color = get_color_from_img(*tex, texture_x, texture_y);
+			uint32_t color = get_color_from_img(*ray.tex, texture_x, texture_y);
 			// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
 			if (ray.side == 1)
 				color = (color >> 1) & 0x7f7f7f;
