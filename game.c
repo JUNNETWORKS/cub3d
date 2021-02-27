@@ -3,10 +3,12 @@
 void	configure_screen(t_game *game, bool has_window)
 {
 	if (has_window)
-		game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "Hello world!");
+		game->win = mlx_new_window(game->mlx, game->screen_width, game->screen_height, "cub3D");
 
-	game->img.img = mlx_new_image(game->mlx, game->screen_width, game->screen_height);
-	game->img.addr = mlx_get_data_addr(game->img.img, &game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
+	game->img.img = mlx_new_image(game->mlx,
+		game->screen_width, game->screen_height);
+	game->img.addr = mlx_get_data_addr(game->img.img,
+		&game->img.bits_per_pixel, &game->img.line_length, &game->img.endian);
 	game->img.width = game->screen_width;
 	game->img.height = game->screen_height;
 

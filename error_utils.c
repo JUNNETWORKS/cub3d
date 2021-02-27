@@ -11,4 +11,3 @@ int			put_and_return_err(char *str)
 	put_error_msg(str);
 	return (ERROR);
 }
-

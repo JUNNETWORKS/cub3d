@@ -63,4 +63,3 @@ int			check_map_surrounded(t_game *game)
 		return (put_and_return_err("Map isn't surrounded by wall"));
 	return (0);
 }
-
