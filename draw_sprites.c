@@ -1,28 +1,35 @@
 #include "cub3d.h"
 
-void	draw_sprite(t_game *game, t_vec2 sprite, double plane_length, double height_base)
+void	calc_transform(t_game *game, t_vec2 sprite, double *transform_x, double *transform_y)
 {
 	// カメラ行列の逆行列
 	double inv_det;
 	// カメラ平面(中心を0とする)とスプライトのx座標を比較した時の差
-	double transform_x;
+	// double transform_x;
 	// スプライトまでの深度となる
-	double transform_y;
+	// double transform_y;
 	// スプライトを描画する中心x座標
 	t_vec2 normalized_sprite;
+	// スプライトを描画するのに必要な情報を保持する構造体
 
-	/* ============== ワールド座標からカメラ座標への変換 ============== */
 	// スプライトの位置をカメラからの相対位置にする
 	// 透視投影変換における原点調整
 	normalized_sprite.x = sprite.x - game->player.pos.x;
 	normalized_sprite.y = sprite.y - game->player.pos.y;
 	// カメラ行列の逆行列を掛けてスクリーン上の座標を算出する
 	inv_det = 1.0 / (game->player.plane.x * game->player.dir.y - game->player.dir.x * game->player.plane.y);
-	transform_x = inv_det * (game->player.dir.y * normalized_sprite.x - game->player.dir.x * normalized_sprite.y);
-	transform_y = inv_det * (-game->player.plane.y * normalized_sprite.x + game->player.plane.x * normalized_sprite.y);
+	*transform_x = inv_det * (game->player.dir.y * normalized_sprite.x - game->player.dir.x * normalized_sprite.y);
+	*transform_y = inv_det * (-game->player.plane.y * normalized_sprite.x + game->player.plane.x * normalized_sprite.y);
 	printf("sprite_x: %lf\nsprite_y: %lf\n", normalized_sprite.x, normalized_sprite.y);
-	printf("transform_x: %lf\ntransform_y: %lf\n", transform_x, transform_y);
+	printf("transform_x: %lf\ntransform_y: %lf\n", *transform_x, *transform_y);
+}
 
+void	draw_sprite(t_game *game, t_vec2 sprite, double plane_length, double height_base)
+{
+	// スプライトを描画する時に必要な情報を保持する構造体
+	t_sprite_vis_info sprite_vis_info;
+	/* ============== ワールド座標からカメラ座標への変換 ============== */
+	calc_transform(game, sprite, &sprite_vis_info.transform_x, &sprite_vis_info.transform_y);
 	/* ============== 実際に描画すべき座標の計算 ============== */
 	// スクリーン上でのスプライトの座標
 	/* (1.0 + transform_x / transform_y) の説明
@@ -33,6 +40,7 @@ void	draw_sprite(t_game *game, t_vec2 sprite, double plane_length, double height
 	 * となる.
 	 * これに画面サイズの半分を掛けることで画面上でのスプライトのx座標がわかる
 	 */
+	/*
 	// スクリーン上でのスプライトの座標
 	int sprite_screen_x;
 	// スクリーン上でのスプライトの高さ
