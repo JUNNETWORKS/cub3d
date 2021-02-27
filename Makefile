@@ -19,6 +19,8 @@ SRCS = main.c \
 	   vector_utils.c \
 	   player.c \
 	   load_cub.c \
+	   sprite.c \
+	   load_color.c \
 	   floodfill.c \
 	   bmp.c \
 	   debug_utils.c

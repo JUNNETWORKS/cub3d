@@ -124,6 +124,10 @@ void			configure_screen(t_game *game, bool has_window);
 // load cubfile
 int				load_cubfile(t_game *game, char *filepath);
 int				check_map_surrounded(t_game *game);
+bool		is_valid_color(int r, int g, int b);
+uint32_t	get_color_from_rgbstr(char *rgbstr, uint32_t *color);
+bool	has_color_set(t_game *game, char name);
+int	set_color(t_game *game, char name, char *rgbstr);
 // Hooks
 int 			key_press_hook(int keycode, t_game *game);
 int 			key_release_hook(int keycode, t_game *game);
@@ -140,6 +144,8 @@ void			vec2_rotate(t_vec2 *vec, double rad);  // 回転行列を掛ける
 // Player
 void			move_player(t_game *game);
 void			initialize_player(t_player *player, double x, double y, char direction);
+// Sprite
+int		add_sprite(t_game *game, double x, double y);
 // BMP
 int				write_game2bmp(t_game *game, char *filepath);
 // Utils
