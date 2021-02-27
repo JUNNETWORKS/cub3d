@@ -148,8 +148,6 @@ typedef struct	s_ray {
 	// sideDistは, 光線が開始位置から最初の次の正方形に移動するまでの距離
 	double		side_dist_x;
 	double		side_dist_y;
-	// 壁に衝突したか
-	int			hit;
 	// perpWallDistは, 当たった壁とカメラ平面ベクトルとの距離を表す (perpはperpendicular(垂直)の略)
 	double		perp_wall_dist;
 	// 壁のx面かy面どちらに当たったかを判断するための変数  0: x面, 1: y面

@@ -12,8 +12,6 @@ void	initialize_ray(t_game *game, t_ray *ray, int x)
 	// deltaDistは, 光線が今の正方形から次の正方形に行くために移動する距離
 	ray->delta_dist_x = (1 / ray->dir.x) < 0 ? -1 * (1 / ray->dir.x) : (1 / ray->dir.x);
 	ray->delta_dist_y = (1 / ray->dir.y) < 0 ? -1 * (1 / ray->dir.y) : (1 / ray->dir.y);
-	// 壁に衝突したか
-	ray->hit = 0;
 	// stepとsideDistを求める
 	ray->step_x = ray->dir.x < 0 ? -1 : 1;
 	ray->side_dist_x = ray->dir.x < 0 ?
@@ -29,7 +27,7 @@ void	simulate_ray(t_game *game, t_ray *ray)
 {
 	/* ============== 壁まで光線を飛ばす ============== */
 	// 光線が壁にぶつかるまで光線を進める
-	while (ray->hit == 0)
+	while (game->map[ray->map_y][ray->map_x] != '1')
 	{
 		if (ray->side_dist_x < ray->side_dist_y)
 		{
@@ -43,11 +41,7 @@ void	simulate_ray(t_game *game, t_ray *ray)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		// 光線が壁にぶつかったか確認する
-		if (game->map[ray->map_y][ray->map_x] == '1')
-			ray->hit = 1;
 	}
-
 	// 壁までの光線の距離を計算する
 	if (ray->side == 0)
 		ray->perp_wall_dist = (ray->map_x - game->player.pos.x +
@@ -55,7 +49,6 @@ void	simulate_ray(t_game *game, t_ray *ray)
 	else
 		ray->perp_wall_dist = (ray->map_y - game->player.pos.y +
 			(1 - ray->step_y) / 2) / ray->dir.y;
-
 	// 壁の当たった方角によってテクスチャを変更する
 	if (ray->side == 0)
 		ray->tex = (ray->step_x > 0) ? &game->tex_w : &game->tex_e;
