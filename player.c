@@ -44,8 +44,8 @@ static void	slide_player(t_game *game)
 
 	if (game->player.is_sidling)
 	{
-		perpendicular.x = game->player.dir.x * cos(M_PI/2) - game->player.dir.y * sin(M_PI/2);
-		perpendicular.y = game->player.dir.x * sin(M_PI/2) + game->player.dir.y * cos(M_PI/2);
+		perpendicular = game->player.dir;
+		vec2_rotate(&perpendicular, M_PI / 2);
 		new_pos_x = game->player.pos.x + game->player.is_sidling * perpendicular.x * PLAYER_MOVE_PX;
 		new_pos_x = new_pos_x < 0 ? 0 : new_pos_x;
 		if (game->map[(int)(game->player.pos.y)][(int)new_pos_x] != '1')
