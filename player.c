@@ -16,26 +16,31 @@ static void	rotate_player(t_game *game)
 	game->player.plane.y = old_vec2.x * sin(rot_speed) + game->player.plane.y * cos(rot_speed);
 }
 
+static void	move_player(t_game *game)
+{
+	double	new_pos_x;
+	double	new_pos_y;
+
+	new_pos_x = game->player.pos.x + game->player.is_moving * game->player.dir.x * PLAYER_MOVE_PX;
+	new_pos_x = new_pos_x < 0 ? 0 : new_pos_x;
+	if (game->map[(int)(game->player.pos.y)][(int)new_pos_x] != '1')
+		game->player.pos.x = new_pos_x;
+		// game->player.pos.x += game->player.is_moving * game->player.dir.x * PLAYER_MOVE_PX;
+
+	new_pos_y = game->player.pos.y + game->player.is_moving * game->player.dir.y * PLAYER_MOVE_PX;
+	new_pos_y = new_pos_y < 0 ? 0 : new_pos_y;
+	if (game->map[(int)new_pos_y][(int)(game->player.pos.x)] != '1')
+		game->player.pos.y = new_pos_y;
+		// game->player.pos.y += game->player.is_moving * game->player.dir.y * PLAYER_MOVE_PX;
+}
+
 void		update_player(t_game *game)
 {
 	double	new_pos_x;
 	double	new_pos_y;
 
 	rotate_player(game);
-	if (game->player.is_moving)
-	{
-		new_pos_x = game->player.pos.x + game->player.is_moving * game->player.dir.x * PLAYER_MOVE_PX;
-		new_pos_x = new_pos_x < 0 ? 0 : new_pos_x;
-		if (game->map[(int)(game->player.pos.y)][(int)new_pos_x] != '1')
-			game->player.pos.x = new_pos_x;
-			// game->player.pos.x += game->player.is_moving * game->player.dir.x * PLAYER_MOVE_PX;
-
-		new_pos_y = game->player.pos.y + game->player.is_moving * game->player.dir.y * PLAYER_MOVE_PX;
-		new_pos_y = new_pos_y < 0 ? 0 : new_pos_y;
-		if (game->map[(int)new_pos_y][(int)(game->player.pos.x)] != '1')
-			game->player.pos.y = new_pos_y;
-			// game->player.pos.y += game->player.is_moving * game->player.dir.y * PLAYER_MOVE_PX;
-	}
+	move_player(game);
 	if (game->player.is_sidling)
 	{
 		t_vec2 perpendicular;
