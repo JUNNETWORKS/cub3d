@@ -27,4 +27,3 @@ void		initialize_player(t_player *player, double x, double y, char direction)
 	player->is_sidling = 0;
 	player->is_rotating = 0;
 }
-
