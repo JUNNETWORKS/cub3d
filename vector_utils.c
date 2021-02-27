@@ -19,6 +19,9 @@ void	vec2_mult(t_vec2 *vec, int num)
 
 void	vec2_rotate(t_vec2 *vec, double rad)
 {
-	vec->x = vec->x * cos(rad) - vec->y * sin(rad);
-	vec->y = vec->x * sin(rad) + vec->y * cos(rad);
+	t_vec2 old_vec2;
+
+	old_vec2 = *vec;
+	vec->x = old_vec2.x * cos(rad) - old_vec2.y * sin(rad);
+	vec->y = old_vec2.x * sin(rad) + old_vec2.y * cos(rad);
 }
