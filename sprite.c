@@ -17,4 +17,38 @@ int		add_sprite(t_game *game, double x, double y)
 	return (0);
 }
 
+void	sort_sprites(t_game *game)
+{
+	double	*sprite_distances;
+	int		i;
+	int		flag;
+	double	tmp;
+	// スプライトのソートで使う(スプライトまでの距離)
+	sprite_distances = ft_calloc(game->sprite_num, sizeof(double));
 
+	// スプライトを遠い順にソートするために距離を求める
+	for (i = 0; i < game->sprite_num; i++){
+	  sprite_distances[i] = ((game->player.pos.x - game->sprites[i].x) * (game->player.pos.x - game->sprites[i].x) + (game->player.pos.y - game->sprites[i].y) * (game->player.pos.y - game->sprites[i].y));
+	}
+
+	// 遠い順にスプライトが並ぶようにソート
+	// バブルソート
+	flag = 1;
+	while (flag){
+		flag = 0;
+		for (i = game->sprite_num - 1; i > 0; i--){
+			if (sprite_distances[i] > sprite_distances[i-1]){
+				tmp = sprite_distances[i];
+				sprite_distances[i] = sprite_distances[i-1];
+				sprite_distances[i-1] = tmp;
+
+				t_vec2 tmpvec2 = game->sprites[i];
+				game->sprites[i] = game->sprites[i-1];
+				game->sprites[i-1] = tmpvec2;
+
+				flag = 1;
+			}
+		}
+	}
+	free(sprite_distances);
+}

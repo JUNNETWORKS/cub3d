@@ -148,6 +148,8 @@ void			update_player(t_game *game);
 void			initialize_player(t_player *player, double x, double y, char direction);
 // Sprite
 int				add_sprite(t_game *game, double x, double y);
+void			sort_sprites(t_game *game);
+void			draw_sprites(t_game *game);
 // BMP
 int				write_game2bmp(t_game *game, char *filepath);
 // Utils

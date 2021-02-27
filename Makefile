@@ -10,6 +10,7 @@ NAME = cub3D
 CC = gcc
 HEADER_FILE = cub3d.h
 SRCS = main.c \
+	   draw_sprites.c \
 	   game.c \
 	   mlx_utils.c \
 	   key_hooks.c \

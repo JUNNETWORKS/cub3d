@@ -1,75 +1,53 @@
 #include "cub3d.h"
 
-void	sort_sprites(t_game *game)
-{
-	double	*sprite_distances;
-	int		i;
-	int		flag;
-	double	tmp;
-	// スプライトのソートで使う(スプライトまでの距離)
-	sprite_distances = ft_calloc(game->sprite_num, sizeof(double));
-
-	// スプライトを遠い順にソートするために距離を求める
-	for (i = 0; i < game->sprite_num; i++){
-	  sprite_distances[i] = ((game->player.pos.x - game->sprites[i].x) * (game->player.pos.x - game->sprites[i].x) + (game->player.pos.y - game->sprites[i].y) * (game->player.pos.y - game->sprites[i].y));
-	}
-
-	// 遠い順にスプライトが並ぶようにソート
-	// バブルソート
-	flag = 1;
-	while (flag){
-		flag = 0;
-		for (i = game->sprite_num - 1; i > 0; i--){
-			if (sprite_distances[i] > sprite_distances[i-1]){
-				tmp = sprite_distances[i];
-				sprite_distances[i] = sprite_distances[i-1];
-				sprite_distances[i-1] = tmp;
-
-				t_vec2 tmpvec2 = game->sprites[i];
-				game->sprites[i] = game->sprites[i-1];
-				game->sprites[i-1] = tmpvec2;
-
-				flag = 1;
-			}
-		}
-	}
-	free(sprite_distances);
-}
-
 void	lodev_loop(t_game *game)
 {
+	double	plane_length;
+	double	wall_height_base;
+
 	// planeベクトルの大きさを計算
-	double	plane_length = vec2_length(game->player.plane);
+	plane_length = vec2_length(game->player.plane);
 	// 基準となる壁の高さ. 視野角に応じて横幅が変わってしまうので, 視野角の逆数を掛けて1に戻す
-	double	wall_height_base = (double)game->screen_width * (1 / (2 * plane_length));
+	wall_height_base = (double)game->screen_width * (1 / (2 * plane_length));
 	// スクリーンの全てのxについて計算する
 	for (int x = 0; x < game->screen_width; x++)
 	{
 		// カメラ平面上のx座標 (3D表示時の画面のx座標)  -1.0~1.0
-		double camera_x = 2 * x / (double)game->screen_width - 1;
+		double	camera_x;
+		// 光線ベクトル
 		t_vec2 ray_dir;
-		ray_dir.x = game->player.dir.x + game->player.plane.x * camera_x;
-		ray_dir.y = game->player.dir.y + game->player.plane.y * camera_x;
 		// map: 現在対象としているマップ内の正方形を表す
-		int map_x = (int)game->player.pos.x;
-		int map_y = (int)game->player.pos.y;
+		int map_x;
+		int map_y;
 		// sideDistは, 光線が開始位置から最初の次の正方形に移動するまでの距離
 		double side_dist_x;
 		double side_dist_y;
-		// deltaDistは, 光線が今の正方形から次の正方形に行くために移動する距離
-		double delta_dist_x = (1 / ray_dir.x) < 0 ? -1 * (1 / ray_dir.x) : (1 / ray_dir.x);
-		double delta_dist_y = (1 / ray_dir.y) < 0 ? -1 * (1 / ray_dir.y) : (1 / ray_dir.y);
+		// 壁に衝突したか
+		int hit = 0;
 		// perpWallDistは, 当たった壁とカメラ平面ベクトルとの距離を表す
 		double perp_wall_dist;
+		// 壁のx面かy面どちらに当たったかを判断するための変数  0: x面, 1: y面
+		int side;
 		// stepはx,yそれぞれ正か負かどちらの方向に進むか記録する (必ず +1 or -1)
 		int step_x;
 		int step_y;
-		
-		// 壁に衝突したか
-		int hit = 0;
-		// 壁のx面かy面どちらに当たったかを判断するための変数  0: x面, 1: y面
-		int side;
+		// deltaDistは, 光線が今の正方形から次の正方形に行くために移動する距離
+		double delta_dist_x;
+		double delta_dist_y;
 
+		/* ============== 初期設定 ============== */
+		// カメラ平面上のx座標 (3D表示時の画面のx座標)  -1.0~1.0
+		camera_x = 2 * x / (double)game->screen_width - 1;
+		ray_dir.x = game->player.dir.x + game->player.plane.x * camera_x;
+		ray_dir.y = game->player.dir.y + game->player.plane.y * camera_x;
+		// map: 現在対象としているマップ内の正方形を表す
+		map_x = (int)game->player.pos.x;
+		map_y = (int)game->player.pos.y;
+		// deltaDistは, 光線が今の正方形から次の正方形に行くために移動する距離
+		delta_dist_x = (1 / ray_dir.x) < 0 ? -1 * (1 / ray_dir.x) : (1 / ray_dir.x);
+		delta_dist_y = (1 / ray_dir.y) < 0 ? -1 * (1 / ray_dir.y) : (1 / ray_dir.y);
+		// 壁に衝突したか
+		hit = 0;
 		// stepとsideDistを求める
 		if (ray_dir.x < 0)
 		{
@@ -92,6 +70,7 @@ void	lodev_loop(t_game *game)
 			side_dist_y = (map_y + 1.0 - game->player.pos.y) * delta_dist_y;
 		}
 
+		/* ============== 壁まで光線を飛ばす ============== */
 		// 光線が壁にぶつかるまで光線を進める
 		while (hit == 0)
 		{
@@ -132,6 +111,7 @@ void	lodev_loop(t_game *game)
 			tex = &game->tex_s;
 		}
 
+		/* ============== 描画 ============== */
 		// スクリーンに描画する必要のある縦線の長さを求める
 		int line_height = (int)(wall_height_base / perp_wall_dist);
 		// 実際に描画すべき場所の開始位置と終了位置を計算
@@ -198,82 +178,8 @@ void	lodev_loop(t_game *game)
 		*/
 	}
 
-	/*  スプライトの描画  */
-
-	// スプライトを遠い順にソートする(遠いスプライトから描画するから)
-	sort_sprites(game);
-
-	// スプライトのソートが完了したら遠いスプライトから描画していく
-	for (int i = 0; i < game->sprite_num; i++){
-		printf("---------sprite%d---------\n", i);
-		t_vec2 sprite;
-		// スプライトの位置をカメラからの相対位置にする
-		// 透視投影変換における原点調整
-		sprite.x = game->sprites[i].x - game->player.pos.x;
-		sprite.y = game->sprites[i].y - game->player.pos.y;
-
-		// カメラ行列の逆行列を掛けてスクリーン上の座標を算出する
-		double inv_det = 1.0 / (game->player.plane.x * game->player.dir.y - game->player.dir.x * game->player.plane.y);
-		double transform_x = inv_det * (game->player.dir.y * sprite.x - game->player.dir.x * sprite.y);       // カメラ平面(中心を0とする)とスプライトのx座標を比較した時の差
-		double transform_y = inv_det * (-game->player.plane.y * sprite.x + game->player.plane.x * sprite.y);  // スプライトまでの深度となる
-		printf("sprite_x: %lf\nsprite_y: %lf\n", sprite.x, sprite.y);
-		printf("transform_x: %lf\ntransform_y: %lf\n", transform_x, transform_y);
-
-		// スクリーン上でのスプライトの座標
-		/* (1.0 + transform_x / transform_y) の説明
-		 * この式はによって算出される値は,
-		 * スプライトの中心が画面左端にある時は0,
-		 * スプライトの中心が画面中央にある時は1,
-		 * スプライトの中心が画面左端にある時は2,
-		 * となる.
-		 * これに画面サイズの半分を掛けることで画面上でのスプライトのx座標がわかる
-		 */
-		int sprite_screen_x = (int)((game->screen_width / 2) * (1.0 + transform_x / transform_y));
-		printf("(1.0 + transform_x / transform_y): %lf\n", (1.0 + transform_x / transform_y));
-		printf("((game->screen_width / 2) * (1.0 + transform_x / transform_y)): %d\n", sprite_screen_x);
-
-		// スクリーン上でのスプライトの高さ
-		int sprite_height_screen = ABS((int)(wall_height_base / transform_y));
-
-		// スプライト描画の一番下と一番上を計算する
-		int draw_start_y = -sprite_height_screen / 2 + game->screen_height / 2;
-		if (draw_start_y < 0) draw_start_y = 0;
-		int draw_end_y = sprite_height_screen / 2 + game->screen_height / 2;
-		if (draw_end_y >= game->screen_height) draw_end_y = game->screen_height - 1;
-
-		// スプライトの横幅を計算する
-		int sprite_width_screen = ABS((int)(wall_height_base / transform_y));
-		int draw_start_x = -sprite_width_screen / 2 + sprite_screen_x;
-		if (draw_start_x < 0) draw_start_x = 0;
-		int draw_end_x = sprite_width_screen / 2 + sprite_screen_x;
-		if (draw_end_x >= game->screen_width) draw_end_x = game->screen_width - 1;
-
-		printf("sprite:\n\twidth: %d\n\theight: %d\n", sprite_width_screen, sprite_height_screen);
-
-		// スプライトの各縦線について描画
-		for (int stripe = draw_start_x; stripe < draw_end_x; stripe++){
-			// テクスチャのx座標
-			// (stripe - (-sprite_width_screen / 2 + sprite_screen_x)) で現在何ピクセル目かを取得
-			int tex_x = (int)((stripe - (-sprite_width_screen / 2 + sprite_screen_x)) * game->tex_sprite.width / sprite_width_screen);
-			/* 以下の条件の時描画を行う
-			 * 1. カメラの平面の前にいるか　(カメラ平面の後ろにあるスプライトは描画しない)
-			 * 2. スクリーン上にある (left)
-			 * 3. スクリーン上にある (right)
-			 * 4. zBufferに記録された壁までの距離より近い
-			 */
-			if (transform_y > 0 && stripe >= 0 && stripe < game->screen_width && transform_y < game->z_buffer[stripe]){
-				for (int y = draw_start_y; y < draw_end_y; y++){
-					int tex_y = (int)((y - (-sprite_height_screen / 2 + game->screen_height / 2)) * game->tex_sprite.height / sprite_height_screen);
-					uint32_t color = get_color_from_img(game->tex_sprite, tex_x, tex_y);
-					if (color & 0xff000000)
-					  continue;
-					my_mlx_pixel_put(&(game->img), stripe, y, color);
-					if (tex_x == (game->tex_sprite.width) / 2)
-						my_mlx_pixel_put(&(game->img), stripe, y, 0xff0000);
-				}
-			}
-		}
-	}
+	/* ============== スプライトの描画 ============== */
+	draw_sprites(game);
 }
 
 void	draw_minimap(t_game *game)
