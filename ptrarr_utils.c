@@ -23,5 +23,3 @@ void	free_ptrarr(void **ptrarr)
 	}
 	free(ptrarr);
 }
-
-
