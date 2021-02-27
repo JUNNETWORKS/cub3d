@@ -17,6 +17,7 @@ SRCS = main.c \
 	   key_hooks.c \
 	   drawers.c \
 	   utils.c \
+	   free_utils.c \
 	   ptrarr_utils.c \
 	   vector_utils.c \
 	   color_utils.c \

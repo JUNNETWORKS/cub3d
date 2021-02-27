@@ -105,8 +105,7 @@ int			load_cubfile(t_game *game, char *path)
 			status = load_texture(game, params[0], params[1]);
 		else
 			status = load_map(game, line);
-		free(line);
-		line = NULL;
+		free_and_assign_null((void**)&line);
 		free_ptrarr((void**)params);
 		params = NULL;
 	}
