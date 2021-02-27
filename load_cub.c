@@ -1,7 +1,7 @@
 #include "./cub3d.h"
 
 // get player and sprite positions from map
-int		get_pos_from_map(t_game *game)
+static int	get_pos_from_map(t_game *game)
 {
 	for (int i = 0; i < game->map_row; i++){
 		for (int j = 0; j < game->map_col; j++){
@@ -34,7 +34,7 @@ int		get_pos_from_map(t_game *game)
 
 
 // マップ以外の設定項目が全て設定されているか
-bool	is_config_already_set(t_game *game)
+static bool	has_config_already_set(t_game *game)
 {
 	if (!game->tex_n.img || !game->tex_s.img || !game->tex_w.img ||
 		!game->tex_e.img || !game->tex_sprite.img ||
@@ -44,9 +44,9 @@ bool	is_config_already_set(t_game *game)
 	return (true);
 }
 
-int	load_map(t_game *game, char *line)
+int			load_map(t_game *game, char *line)
 {
-	if (!is_config_already_set(game))
+	if (!has_config_already_set(game))
 		return (put_and_return_err("Must configure all elements before loading map"));
 	if (!line || ft_strlen(line) >= MAX_MAP_WIDTH || game->map_row >= MAX_MAP_WIDTH){
 		put_error_msg("map is too large");
@@ -63,7 +63,7 @@ int	load_map(t_game *game, char *line)
 	return (0);
 }
 
-int	load_cubfile(t_game *game, char *path)
+int			load_cubfile(t_game *game, char *path)
 {
 	int		fd;
 	char	*line;
