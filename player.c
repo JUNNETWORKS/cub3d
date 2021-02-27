@@ -34,16 +34,14 @@ static void	move_player(t_game *game)
 		// game->player.pos.y += game->player.is_moving * game->player.dir.y * PLAYER_MOVE_PX;
 }
 
-void		update_player(t_game *game)
+static void	slide_player(t_game *game)
 {
 	double	new_pos_x;
 	double	new_pos_y;
+	t_vec2 perpendicular;
 
-	rotate_player(game);
-	move_player(game);
 	if (game->player.is_sidling)
 	{
-		t_vec2 perpendicular;
 		perpendicular.x = game->player.dir.x * cos(M_PI/2) - game->player.dir.y * sin(M_PI/2);
 		perpendicular.y = game->player.dir.x * sin(M_PI/2) + game->player.dir.y * cos(M_PI/2);
 		new_pos_x = game->player.pos.x + game->player.is_sidling * perpendicular.x * PLAYER_MOVE_PX;
@@ -56,6 +54,13 @@ void		update_player(t_game *game)
 		if (game->map[(int)new_pos_y][(int)(game->player.pos.x)] != '1')
 			game->player.pos.y = new_pos_y;
 	}
+}
+
+void		update_player(t_game *game)
+{
+	rotate_player(game);
+	move_player(game);
+	slide_player(game);
 }
 
 void		initialize_player(t_player *player, double x, double y, char direction)
