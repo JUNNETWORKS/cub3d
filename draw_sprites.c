@@ -105,6 +105,10 @@ void	draw_sprite(t_game *game, t_vec2 sprite, double plane_length, double height
 	printf("sprite:\n\twidth: %d\n\theight: %d\n", sprite_vis.width_screen, sprite_vis.height_screen);
 
 	// スプライトの各縦線について描画
+	printf("transform_x: %lf, transform_y: %lf\n", sprite_vis.transform_x, sprite_vis.transform_y);
+	printf("screen_x: %d, height_screen: %d, width_screen: %d\n", sprite_vis.screen_x, sprite_vis.height_screen, sprite_vis.width_screen);
+	printf("draw_start_y: %d, draw_end_y: %d\n", sprite_vis.draw_start_y, sprite_vis.draw_end_y);
+	printf("draw_start_x: %d, draw_end_x: %d\n", sprite_vis.draw_start_x, sprite_vis.draw_end_x);
 	draw_sprite_stripe(game, sprite_vis);
 }
 
