@@ -337,7 +337,7 @@ int		main_loop(t_game *game)
 	clear_img(&game->img);
 	lodev_loop(game);
 	draw_minimap(game);
-	move_player(game);
+	update_player(game);
 	print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);

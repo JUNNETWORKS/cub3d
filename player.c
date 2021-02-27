@@ -16,7 +16,7 @@ static void	rotate_player(t_game *game)
 	game->player.plane.y = old_vec2.x * sin(rot_speed) + game->player.plane.y * cos(rot_speed);
 }
 
-void		move_player(t_game *game)
+void		update_player(t_game *game)
 {
 	double	new_pos_x;
 	double	new_pos_y;
