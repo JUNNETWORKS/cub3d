@@ -15,26 +15,14 @@ void	initialize_ray(t_game *game, t_ray *ray, int x)
 	// 壁に衝突したか
 	ray->hit = 0;
 	// stepとsideDistを求める
-	if (ray->dir.x < 0)
-	{
-		ray->step_x = -1;
-		ray->side_dist_x = (game->player.pos.x - ray->map_x) * ray->delta_dist_x;
-	}
-	else
-	{
-		ray->step_x = 1;
-		ray->side_dist_x = (ray->map_x + 1.0 - game->player.pos.x) * ray->delta_dist_x;
-	}
-	if (ray->dir.y < 0)
-	{
-		ray->step_y = -1;
-		ray->side_dist_y = (game->player.pos.y - ray->map_y) * ray->delta_dist_y;
-	}
-	else
-	{
-		ray->step_y = 1;
-		ray->side_dist_y = (ray->map_y + 1.0 - game->player.pos.y) * ray->delta_dist_y;
-	}
+	ray->step_x = ray->dir.x < 0 ? -1 : 1;
+	ray->side_dist_x = ray->dir.x < 0 ?
+	  (game->player.pos.x - ray->map_x) * ray->delta_dist_x :
+	  (ray->map_x + 1.0 - game->player.pos.x) * ray->delta_dist_x;
+	ray->step_y = ray->dir.y < 0 ? -1 : 1;
+	ray->side_dist_y = ray->dir.y < 0 ?
+	  (game->player.pos.y - ray->map_y) * ray->delta_dist_y :
+	  (ray->map_y + 1.0 - game->player.pos.y) * ray->delta_dist_y;
 }
 
 void	simulate_ray(t_game *game, t_ray *ray)
@@ -62,9 +50,11 @@ void	simulate_ray(t_game *game, t_ray *ray)
 
 	// 壁までの光線の距離を計算する
 	if (ray->side == 0)
-		ray->perp_wall_dist = (ray->map_x - game->player.pos.x + (1 - ray->step_x) / 2) / ray->dir.x;
+		ray->perp_wall_dist = (ray->map_x - game->player.pos.x +
+			(1 - ray->step_x) / 2) / ray->dir.x;
 	else
-		ray->perp_wall_dist = (ray->map_y - game->player.pos.y + (1 - ray->step_y) / 2) / ray->dir.y;
+		ray->perp_wall_dist = (ray->map_y - game->player.pos.y +
+			(1 - ray->step_y) / 2) / ray->dir.y;
 
 	// 壁の当たった方角によってテクスチャを変更する
 	if (ray->side == 0)
@@ -116,7 +106,8 @@ void	draw_stripe(t_game *game, t_ray ray, int x, double height_base)
 		if (y >= wall_vis.draw_start && y < wall_vis.draw_end)
 		{
 			// テクスチャの現在のy座標(double型)を整数型に変換する.
-			wall_vis.texture_y = (int)wall_vis.texture_pos_y & (ray.tex->height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
+			//  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
+			wall_vis.texture_y = (int)wall_vis.texture_pos_y & (ray.tex->height - 1);
 			wall_vis.texture_pos_y += wall_vis.step;
 			color = get_color_from_img(*ray.tex, wall_vis.texture_x, wall_vis.texture_y);
 			// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
