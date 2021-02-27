@@ -129,6 +129,7 @@ uint32_t		get_color_from_rgbstr(char *rgbstr, uint32_t *color);
 bool			has_color_set(t_game *game, char name);
 int				set_color(t_game *game, char name, char *rgbstr);
 int				load_texture(t_game *game, char *name, char *texture_path);
+int				set_resolution(t_game *game, char *width_str, char *height_str);
 // Hooks
 int 			key_press_hook(int keycode, t_game *game);
 int 			key_release_hook(int keycode, t_game *game);
