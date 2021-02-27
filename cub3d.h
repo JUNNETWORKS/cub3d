@@ -87,7 +87,7 @@ enum e_nswe {
 };
 
 // mlxのポインタやウィンドウのポインタを保持
-typedef struct  s_game {
+typedef struct	s_game {
 	void		*mlx;
 	void		*win;
 	t_img		img;
@@ -112,7 +112,7 @@ typedef struct  s_game {
 	int			sprite_height; // スプライトの描画する時の高さ
 	t_img		tex_sprite;  // スプライトのテクスチャ
 	double		*z_buffer;  // z_buffer[screenWidth]  // スクリーンのxにおける壁までの距離
-}               t_game;
+}				t_game;
 
 // スプライトを描画する時に必要な情報を保持する構造体
 typedef struct	s_sprite_vis_info {
@@ -136,6 +136,32 @@ typedef struct	s_sprite_vis_info {
 	int			draw_end_x;
 }				t_sprite_vis_info;
 
+// スプライトの情報を保持する構造体
+typedef struct	s_ray {
+	// カメラ平面上のx座標 (3D表示時の画面のx座標)  -1.0~1.0
+	double		camera_x;
+	// 光線ベクトル
+	t_vec2		dir;
+	// map: 現在対象としているマップ内の正方形を表す
+	int			map_x;
+	int			map_y;
+	// sideDistは, 光線が開始位置から最初の次の正方形に移動するまでの距離
+	double		side_dist_x;
+	double		side_dist_y;
+	// 壁に衝突したか
+	int			hit;
+	// perpWallDistは, 当たった壁とカメラ平面ベクトルとの距離を表す
+	double		perp_wall_dist;
+	// 壁のx面かy面どちらに当たったかを判断するための変数  0: x面, 1: y面
+	int			side;
+	// stepはx,yそれぞれ正か負かどちらの方向に進むか記録する (必ず +1 or -1)
+	int			step_x;
+	int			step_y;
+	// deltaDistは, 光線が今の正方形から次の正方形に行くために移動する距離
+	double		delta_dist_x;
+	double		delta_dist_y;
+}				t_ray;
+
 // MLX Utils
 void			my_mlx_pixel_put(t_img *img, int x, int y, int color);
 uint32_t		get_color_from_img(t_img img, int x, int y);
@@ -143,6 +169,9 @@ int				load_image(t_game *game, t_img *img, char *filepath);
 // Game functions
 int				initialize_game(t_game *game);
 void			configure_screen(t_game *game, bool has_window);
+// Draw screen
+void			draw_walls(t_game *game);
+void			draw_sprites(t_game *game);
 // load cubfile
 int				load_cubfile(t_game *game, char *filepath);
 int				check_map_surrounded(t_game *game);
@@ -171,7 +200,6 @@ void			initialize_player(t_player *player, double x, double y, char direction);
 // Sprite
 int				add_sprite(t_game *game, double x, double y);
 void			sort_sprites(t_game *game);
-void			draw_sprites(t_game *game);
 // BMP
 int				write_game2bmp(t_game *game, char *filepath);
 // Utils

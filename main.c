@@ -242,7 +242,9 @@ void	draw_minimap(t_game *game)
 int		main_loop(t_game *game)
 {
 	clear_img(&game->img);
-	lodev_loop(game);
+	// lodev_loop(game);
+	draw_walls(game);
+	draw_sprites(game);
 	draw_minimap(game);
 	update_player(game);
 	print_game(game);
