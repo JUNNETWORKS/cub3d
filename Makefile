@@ -17,6 +17,8 @@ SRCS = main.c \
 	   utils.c \
 	   ptrarr_utils.c \
 	   vector_utils.c \
+	   color_utils.c \
+	   error_utils.c \
 	   player.c \
 	   load_cub.c \
 	   sprite.c \

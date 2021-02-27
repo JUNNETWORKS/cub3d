@@ -28,8 +28,8 @@ bool		str_all_true(char *str, int(*f)(int))
 
 size_t		str_c_count(char *str, char c)
 {
-	int i;
-	int count;
+	int		i;
+	int		count;
 
 	i = 0;
 	count = 0;
