@@ -2,25 +2,26 @@
 
 void	sort_sprites(t_game *game)
 {
-	// スプライトのソートで使う(スプライト番号)
-	// int sprite_order[SPRITES_NUM];
-	
+	double	*sprite_distances;
+	int		i;
+	int		flag;
+	double	tmp;
 	// スプライトのソートで使う(スプライトまでの距離)
-	double *sprite_distances = ft_calloc(game->sprite_num, sizeof(double));
+	sprite_distances = ft_calloc(game->sprite_num, sizeof(double));
 
 	// スプライトを遠い順にソートするために距離を求める
-	for (int i = 0; i < game->sprite_num; i++){
+	for (i = 0; i < game->sprite_num; i++){
 	  sprite_distances[i] = ((game->player.pos.x - game->sprites[i].x) * (game->player.pos.x - game->sprites[i].x) + (game->player.pos.y - game->sprites[i].y) * (game->player.pos.y - game->sprites[i].y));
 	}
 
 	// 遠い順にスプライトが並ぶようにソート
 	// バブルソート
-	int flag = 1;
+	flag = 1;
 	while (flag){
 		flag = 0;
-		for (int i = game->sprite_num - 1; i > 0; i--){
+		for (i = game->sprite_num - 1; i > 0; i--){
 			if (sprite_distances[i] > sprite_distances[i-1]){
-				double tmp = sprite_distances[i];
+				tmp = sprite_distances[i];
 				sprite_distances[i] = sprite_distances[i-1];
 				sprite_distances[i-1] = tmp;
 
@@ -367,5 +368,5 @@ int main(int argc, char **argv){
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
 	mlx_hook(game.win, KeyRelease, KeyReleaseMask, key_release_hook, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);
-    mlx_loop(game.mlx);
+	mlx_loop(game.mlx);
 }
