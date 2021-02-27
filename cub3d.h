@@ -147,7 +147,7 @@ void			vec2_rotate(t_vec2 *vec, double rad);  // 回転行列を掛ける
 void			update_player(t_game *game);
 void			initialize_player(t_player *player, double x, double y, char direction);
 // Sprite
-int		add_sprite(t_game *game, double x, double y);
+int				add_sprite(t_game *game, double x, double y);
 // BMP
 int				write_game2bmp(t_game *game, char *filepath);
 // Utils
@@ -156,11 +156,11 @@ int				rad2deg(double x);
 uint32_t		rgb2hex(int r, int g, int b);
 uint32_t		alpha_blend(uint32_t dst, uint32_t src);
 void			put_error_msg(char *str);
-int			put_and_return_err(char *str);
-bool		str_all_true(char *str, int(*f)(int));
-size_t		str_c_count(char *str, char c);
-size_t		ptrarr_len(void **ptrarr);
-void		free_ptrarr(void **ptrarr);
+int				put_and_return_err(char *str);
+bool			str_all_true(char *str, int(*f)(int));
+size_t			str_c_count(char *str, char c);
+size_t			ptrarr_len(void **ptrarr);
+void			free_ptrarr(void **ptrarr);
 // Debug
 void			print_game(t_game *game);
 void			print_vec2(t_vec2 vec);
