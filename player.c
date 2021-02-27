@@ -1,22 +1,27 @@
 #include "./cub3d.h"
 
-void	move_player(t_game *game)
+static void	rotate_player(t_game *game)
 {
 	double	rot_speed;
+	t_vec2	old_vec2;
+
+	rot_speed = game->player.is_rotating * PLAYER_ROTATE_RAD;
+
+	old_vec2 = game->player.dir;
+	game->player.dir.x = old_vec2.x * cos(rot_speed) - old_vec2.y * sin(rot_speed);
+	game->player.dir.y = old_vec2.x * sin(rot_speed) + old_vec2.y * cos(rot_speed);
+
+	old_vec2 = game->player.plane;
+	game->player.plane.x = game->player.plane.x * cos(rot_speed) - game->player.plane.y * sin(rot_speed);
+	game->player.plane.y = old_vec2.x * sin(rot_speed) + game->player.plane.y * cos(rot_speed);
+}
+
+void		move_player(t_game *game)
+{
 	double	new_pos_x;
 	double	new_pos_y;
-	if (game->player.is_rotating)
-	{
-		rot_speed = game->player.is_rotating * PLAYER_ROTATE_RAD;
 
-		t_vec2 old_dir = game->player.dir;
-		game->player.dir.x = old_dir.x * cos(rot_speed) - old_dir.y * sin(rot_speed);
-		game->player.dir.y = old_dir.x * sin(rot_speed) + old_dir.y * cos(rot_speed);
-
-		t_vec2 old_plane = game->player.plane;
-		game->player.plane.x = game->player.plane.x * cos(rot_speed) - game->player.plane.y * sin(rot_speed);
-		game->player.plane.y = old_plane.x * sin(rot_speed) + game->player.plane.y * cos(rot_speed);
-	}
+	rotate_player(game);
 	if (game->player.is_moving)
 	{
 		new_pos_x = game->player.pos.x + game->player.is_moving * game->player.dir.x * PLAYER_MOVE_PX;
@@ -48,7 +53,7 @@ void	move_player(t_game *game)
 	}
 }
 
-void initialize_player(t_player *player, double x, double y, char direction)
+void		initialize_player(t_player *player, double x, double y, char direction)
 {
 	// プレイヤーの初期座標
 	player->pos.x = x;
