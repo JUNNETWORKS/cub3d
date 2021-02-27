@@ -110,20 +110,6 @@ void	draw_stripe(t_game *game, t_ray ray, int x, double height_base)
 		}
 		y++;
 	}
-	/*
-	printf("ray.dir\t");
-	print_vec2(ray.dir);
-	printf("hit at map_x: %d, map_y: %d, side: %d\n", ray.map_x, ray.map_y, ray.side);
-	printf("delta_dist_x: %lf, delta_dist_y: %lf\n", ray.delta_dist_x, ray.delta_dist_y);
-	printf("side_dist_x: %lf, side_dist_y: %lf\n", ray.side_dist_x, ray.side_dist_y);
-	printf("step_x: %d, step_y: %d\n", ray.step_x, ray.step_y);
-	printf("perp_wall_dist: %lf\n", ray.perp_wall_dist);
-	printf("line_height:    %d\n", line_height);
-	printf("draw_start:     %d\n", draw_start);
-	printf("draw_end:       %d\n", draw_end);
-	printf("v_start:\n\tx: %lf\n\ty: %lf\n", v_start.x, v_start.y);
-	printf("v_end:\n\tx: %lf\n\ty: %lf\n", v_end.x, v_end.y);
-	*/
 }
 
 void	draw_walls(t_game *game)
