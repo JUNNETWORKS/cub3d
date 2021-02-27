@@ -83,18 +83,35 @@ void	draw_stripe(t_game *game, int x, double plane_length, double height_base)
 	simulate_ray(game, &ray);
 	/* ============== 描画 ============== */
 	// スクリーンに描画する必要のある縦線の長さを求める
-	int line_height = (int)(height_base / ray.perp_wall_dist);
+	int line_height;
+	// 実際に描画すべき場所の開始位置
+	int draw_start;
+	// 実際に描画すべき場所の位置
+	int draw_end;
+	// 正確なx座標 (整数型ではない)
+	double wall_x;
+	// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
+	int texture_x;
+	// y方向の1ピクセルごとにテクスチャのy座標が動く量
+	double step;
+	// テクスチャの現在のy座標
+	double texture_pos_y;
+	int y;
+	// テクスチャの現在のy座標(double型)を整数型に変換する.
+	int texture_y;
+	uint32_t color;
+
+	// スクリーンに描画する必要のある縦線の長さを求める
+	line_height = (int)(height_base / ray.perp_wall_dist);
 	// 実際に描画すべき場所の開始位置と終了位置を計算
-	int draw_start = -line_height / 2 + game->screen_height / 2;
+	draw_start = -line_height / 2 + game->screen_height / 2;
 	if (draw_start < 0)
 		draw_start = 0;
-	int draw_end = line_height / 2 + game->screen_height / 2;
+	draw_end = line_height / 2 + game->screen_height / 2;
 	if (draw_end >= game->screen_height)
 		draw_end = game->screen_height - 1;
 
 	/* 当たった壁上の正確なx座標を求める */
-	// 正確なx座標 (整数型ではない)
-	double wall_x;
 	if (ray.side == 0)
 	  wall_x = game->player.pos.y + ray.perp_wall_dist * ray.dir.y;
 	else
@@ -102,16 +119,17 @@ void	draw_stripe(t_game *game, int x, double plane_length, double height_base)
 	wall_x -= floor(wall_x);  // 正方形のどの部分にヒットしたのか0.0~1.0で表す
 
 	// テクスチャ上のx座標 (0~TEXTURE_WIDTH)
-	int texture_x = (int)(wall_x * ray.tex->width);
+	texture_x = (int)(wall_x * ray.tex->width);
 	if ((ray.side == 0 && ray.dir.x < 0) || (ray.side == 1 && ray.dir.y > 0))
 	  texture_x = ray.tex->width - texture_x - 1;
 
 	/* 各ピクセルにどのテクスチャのピクセルを描画するか計算する */
 	// y方向の1ピクセルごとにテクスチャのy座標が動く量
-	double step = 1.0 * ray.tex->height / (double)line_height;
+	step = 1.0 * ray.tex->height / (double)line_height;
 	// テクスチャの現在のy座標
-	double texture_pos_y = (draw_start - game->screen_height / 2 + line_height / 2) * step;
-	for (int y = 0; y < game->screen_height; y++)
+	texture_pos_y = (draw_start - game->screen_height / 2 + line_height / 2) * step;
+	y = 0;
+	while (y < game->screen_height)
 	{
 		if (y <= game->screen_height / 2)
 			my_mlx_pixel_put(&(game->img), x, y, game->sky_color);  // draw sky
@@ -120,18 +138,17 @@ void	draw_stripe(t_game *game, int x, double plane_length, double height_base)
 		if (y >= draw_start && y < draw_end)
 		{
 			// テクスチャの現在のy座標(double型)を整数型に変換する.
-			int texture_y = (int)texture_pos_y & (ray.tex->height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
+			texture_y = (int)texture_pos_y & (ray.tex->height - 1);  //  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
 			texture_pos_y += step;
-			uint32_t color = get_color_from_img(*ray.tex, texture_x, texture_y);
+			color = get_color_from_img(*ray.tex, texture_x, texture_y);
 			// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
 			if (ray.side == 1)
 				color = (color >> 1) & 0x7f7f7f;
 			my_mlx_pixel_put(&(game->img), x, y, color);
 		}
+		y++;
 	}
-
 	game->z_buffer[x] = ray.perp_wall_dist;
-
 	/*
 	printf("ray.dir\t");
 	print_vec2(ray.dir);
