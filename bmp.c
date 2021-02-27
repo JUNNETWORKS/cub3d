@@ -45,7 +45,7 @@ int	write_game2bmp(t_game *game, char *fpath)
 	while (y >= 0)
 	{
 		x = 0;
-		while (x < game->screen_height)
+		while (x < game->screen_width)
 		{
 			tmp = get_color_from_img(game->img, x, y);
 			write(fd, &tmp, 4);
