@@ -2,8 +2,8 @@
 
 int		add_sprite(t_game *game, double x, double y)
 {
-	t_vec2 new;
-	t_vec2 *new_sprites;
+	t_vec2	new;
+	t_vec2	*new_sprites;
 
 	new.x = x;
 	new.y = y;
