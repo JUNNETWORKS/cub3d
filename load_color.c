@@ -10,7 +10,7 @@ bool		is_valid_color(int r, int g, int b)
 
 uint32_t	get_color_from_rgbstr(char *rgbstr, uint32_t *color)
 {
-	char **rgb;
+	char	**rgb;
 
 	if (str_c_count(rgbstr, ',') != 2 || get_split_size(rgbstr, ',') != 3)
 		return (put_and_return_err("rgb is wrong"));
@@ -42,9 +42,9 @@ bool	has_color_set(t_game *game, char name)
 
 int		set_color(t_game *game, char name, char *rgbstr)
 {
-	char **rgb;
-	uint32_t color;
-	bool is_invalid;
+	char		**rgb;
+	uint32_t	color;
+	bool		is_invalid;
 
 	if (get_color_from_rgbstr(rgbstr, &color) == ERROR)
 		return (put_and_return_err("provided color is invalid"));
@@ -58,4 +58,3 @@ int		set_color(t_game *game, char name, char *rgbstr)
 		return (put_and_return_err("Unknow key is provided"));
 	return (0);
 }
-
