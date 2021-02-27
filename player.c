@@ -3,19 +3,13 @@
 static void	rotate_player(t_game *game)
 {
 	double	rot_speed;
-	t_vec2	old_vec2;
 
 	if (game->player.is_rotating)
 	{
 		rot_speed = game->player.is_rotating * PLAYER_ROTATE_RAD;
 
-		old_vec2 = game->player.dir;
-		game->player.dir.x = old_vec2.x * cos(rot_speed) - old_vec2.y * sin(rot_speed);
-		game->player.dir.y = old_vec2.x * sin(rot_speed) + old_vec2.y * cos(rot_speed);
-
-		old_vec2 = game->player.plane;
-		game->player.plane.x = game->player.plane.x * cos(rot_speed) - game->player.plane.y * sin(rot_speed);
-		game->player.plane.y = old_vec2.x * sin(rot_speed) + game->player.plane.y * cos(rot_speed);
+		vec2_rotate(&game->player.dir, rot_speed);
+		vec2_rotate(&game->player.plane, rot_speed);
 	}
 }
 
