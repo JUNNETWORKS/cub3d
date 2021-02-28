@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/28 23:03:14 by jtanaka           #+#    #+#             */
+/*   Updated: 2021/02/28 23:03:15 by jtanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./cub3d.h"
 
 double	vec2_length(t_vec2 vec)
 {
-	return sqrt(vec.x * vec.x + vec.y * vec.y);
+	return (sqrt(vec.x * vec.x + vec.y * vec.y));
 }
 
 void	vec2_add(t_vec2 *a, t_vec2 b)
