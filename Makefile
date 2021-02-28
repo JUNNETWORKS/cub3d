@@ -26,6 +26,7 @@ SRCS = main.c \
 	   update_player.c \
 	   initialize_player.c \
 	   load_cub.c \
+	   load_map.c \
 	   sprite.c \
 	   load_color.c \
 	   load_texture.c \

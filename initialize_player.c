@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:14:03 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 18:14:31 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/02/28 22:50:51 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,17 @@ void		initialize_player_direction(t_player *player, char direction)
 	}
 }
 
-void		initialize_player(t_player *player,
+int			initialize_player(t_player *player,
 							double x, double y, char direction)
 {
+	if (player->pos.x != PLAYER_INIT_POS_X &&
+		player->pos.y != PLAYER_INIT_POS_Y)
+		return (ERROR);
 	player->pos.x = x;
 	player->pos.y = y;
 	initialize_player_direction(player, direction);
 	player->is_moving = 0;
 	player->is_sidling = 0;
 	player->is_rotating = 0;
+	return (0);
 }

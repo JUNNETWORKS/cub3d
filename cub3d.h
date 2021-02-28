@@ -203,7 +203,10 @@ uint32_t		get_color_from_rgbstr(char *rgbstr, uint32_t *color);
 bool			has_color_set(t_game *game, char name);
 int				set_color(t_game *game, char name, char *rgbstr);
 int				load_texture(t_game *game, char *name, char *texture_path);
+int				load_map(t_game *game, char *line);
+int				get_pos_from_map(t_game *game);
 int				set_resolution(t_game *game, char *width_str, char *height_str);
+bool			has_config_already_set(t_game *game);
 // Hooks
 int 			key_press_hook(int keycode, t_game *game);
 int 			key_release_hook(int keycode, t_game *game);
@@ -218,7 +221,7 @@ void			vec2_mult(t_vec2 *vec, int num);  // ベクトルを定数倍する
 void			vec2_rotate(t_vec2 *vec, double rad);  // 回転行列を掛ける
 // Player
 void			update_player(t_game *game);
-void			initialize_player(t_player *player, double x, double y, char direction);
+int				initialize_player(t_player *player, double x, double y, char direction);
 // Sprite
 int				add_sprite(t_game *game, double x, double y);
 void			sort_sprites(t_game *game);
