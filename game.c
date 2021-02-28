@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:13:06 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 18:13:36 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/02/28 18:56:38 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,18 @@
 void	configure_screen(t_game *game, bool has_window)
 {
 	double	plane_length;
+	int		max_width;
+	int		max_height;
 
+	mlx_get_screen_size(game->mlx, &max_width, &max_height);
+	printf("Display size\n\twidth: %d\n\theight: %d\n", max_width, max_height);
 	if (has_window)
+	{
+		game->screen_width = MIN(game->screen_width, max_width);
+		game->screen_height = MIN(game->screen_height, max_height);
 		game->win = mlx_new_window(game->mlx,
 			game->screen_width, game->screen_height, "cub3D");
+	}
 	game->img.img = mlx_new_image(game->mlx,
 		game->screen_width, game->screen_height);
 	game->img.addr = mlx_get_data_addr(game->img.img,
