@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/03/01 00:21:07 by jtanaka           #+#    #+#             */
+/*   Updated: 2021/03/01 00:21:45 by jtanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int		main_loop(t_game *game)
@@ -11,22 +23,19 @@ int		main_loop(t_game *game)
 	return (0);
 }
 
-int main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
-	if (argc < 2 || argc > 3){  // ./cub3D *.cub --save
-		put_error_msg("args count is incorrect!");
-		exit(EXIT_FAILURE);
-	}
 	t_game	game;
-	if ((initialize_game(&game)) == ERROR || (load_cubfile(&game, argv[1])) == ERROR){
-		put_error_msg("Error is occured when load cub file");
-		exit(EXIT_FAILURE);
-	}
-	if (argc == 3){
-		if (ft_strncmp(argv[2], "--save", ft_strlen("--save") + 1)){
-			put_error_msg("argv is not \"--save\"\n");
-			exit(EXIT_FAILURE);
-		}
+
+	if (argc < 2 || argc > 3)
+		put_and_exit_err("args count is incorrect!");
+	if ((initialize_game(&game)) == ERROR ||
+		(load_cubfile(&game, argv[1])) == ERROR)
+		put_and_exit_err("Error is occured when load cub file");
+	if (argc == 3)
+	{
+		if (ft_strncmp(argv[2], "--save", ft_strlen("--save") + 1))
+			put_and_exit_err("argv is not \"--save\"");
 		if (configure_screen(&game, false))
 			return (EXIT_FAILURE);
 		draw_walls(&game);
