@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key_hooks.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/28 18:14:52 by jtanaka           #+#    #+#             */
+/*   Updated: 2021/02/28 18:15:41 by jtanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./cub3d.h"
 
-int 			key_press_hook(int keycode, t_game *game)
+int		key_press_hook(int keycode, t_game *game)
 {
-	// printf("Pressed Key Code: %d\n", keycode);
-	if (keycode == KEY_q || keycode == KEY_esc){
+	if (keycode == KEY_q || keycode == KEY_esc)
+	{
 		mlx_destroy_window(game->mlx, game->win);
 		exit(0);
 	}
@@ -22,7 +34,7 @@ int 			key_press_hook(int keycode, t_game *game)
 	return (0);
 }
 
-int 			key_release_hook(int keycode, t_game *game)
+int		key_release_hook(int keycode, t_game *game)
 {
 	if (keycode == KEY_w || keycode == KEY_s)
 		game->player.is_moving = 0;
