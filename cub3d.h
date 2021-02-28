@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/03/01 00:29:22 by jtanaka           #+#    #+#             */
+/*   Updated: 2021/03/01 00:33:29 by jtanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 # include "./minilibx-linux/mlx.h"
@@ -22,14 +34,14 @@
 # define PLAYER_INIT_POS_X -1
 # define PLAYER_INIT_POS_Y -1
 
-# define KEY_q 113
-# define KEY_esc 65307
-# define KEY_w 119
-# define KEY_a 97
-# define KEY_s 115
-# define KEY_d 100
-# define KEY_rallow 65363
-# define KEY_lallow 65361
+# define KEY_Q 113
+# define KEY_ESC 65307
+# define KEY_W 119
+# define KEY_A 97
+# define KEY_S 115
+# define KEY_D 100
+# define KEY_R_ARROW 65363
+# define KEY_L_ARROW 65361
 
 # define ABS(x) ((x) < 0 ? -1 * (x) : (x))
 # define MIN(x, y) ((x) < (y) ? (x) : (y))
@@ -156,17 +168,19 @@ int				load_map(t_game *game, char *line);
 int				get_pos_from_map(t_game *game);
 int				set_resolution(t_game *game, char *width_str, char *height_str);
 bool			has_config_already_set(t_game *game);
-int 			key_press_hook(int keycode, t_game *game);
-int 			key_release_hook(int keycode, t_game *game);
+int				key_press_hook(int keycode, t_game *game);
+int				key_release_hook(int keycode, t_game *game);
 void			clear_img(t_img *img);
 void			draw_block(t_img *img, int x, int y, int color);
-void			draw_line_angle_length(t_img *img, t_vec2 position, double angle, int length, int color);
+void			draw_line_angle_length(t_img *img, t_vec2 position,
+					double angle, int length, int color);
 double			vec2_length(t_vec2 vec);
 void			vec2_add(t_vec2 *a, t_vec2 b);
 void			vec2_mult(t_vec2 *vec, int num);
 void			vec2_rotate(t_vec2 *vec, double rad);
 void			update_player(t_game *game);
-int				initialize_player(t_player *player, double x, double y, char direction);
+int				initialize_player(t_player *player,
+					double x, double y, char direction);
 int				add_sprite(t_game *game, double x, double y);
 void			sort_sprites(t_game *game);
 int				write_game2bmp(t_game *game, char *filepath);
