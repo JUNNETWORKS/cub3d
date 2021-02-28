@@ -41,5 +41,8 @@ C 225,30,0
 imagemagick を使って PNG や JPEG から XPM ファイルを作成することが出来る.
 
 ```bash
+# 縦横比を維持する
 convert -depth 8 -colors 16 -resize 64x64 ~/Pictures/icon/pikachu_square.jpg test.xpm
+# 縦横比を維持しない
+convert -depth 8 -colors 16 -resize 64x64! ~/Pictures/icon/pikachu_square.jpg test.xpm
 ```
