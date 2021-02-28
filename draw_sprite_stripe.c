@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 17:47:06 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 17:47:34 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/02/28 17:55:37 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	calc_tex_y(t_game *game, t_sprite_vis_info sprite_vis, int y)
 					game->tex_sprite.height / sprite_vis.height));
 }
 
-void	draw_sprite_stripe(t_game *game, t_sprite_vis_info sprite_vis)
+void		draw_sprite_stripe(t_game *game, t_sprite_vis_info sprite_vis)
 {
 	int			x;
 	int			y;
