@@ -41,7 +41,7 @@ all: $(NAME)
 $(NAME): ${HEADER_FILE} ${OBJS}
 	$(MLX_MAKE)
 	$(LIBFT_MAKE)
-	$(CC) -g -fsanitize=address -o $(NAME) $(SRCS) $(LIBFT_LIB) -L$(MLX_PATH) -lmlx -L$(INCLIB) -lXext -lX11 -lm -lbsd
+	$(CC) -o $(NAME) $(SRCS) $(LIBFT_LIB) -L$(MLX_PATH) -lmlx -L$(INCLIB) -lXext -lX11 -lm -lbsd
 
 clean:
 	$(MLX_MAKE) clean
