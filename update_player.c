@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   update_player.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/28 23:04:00 by jtanaka           #+#    #+#             */
+/*   Updated: 2021/02/28 23:04:01 by jtanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./cub3d.h"
 
 static void	rotate_player(t_game *game)
@@ -20,12 +32,12 @@ static void	move_player(t_game *game)
 	if (game->player.is_moving)
 	{
 		new_pos_x = game->player.pos.x + game->player.is_moving *
-		  game->player.dir.x * PLAYER_MOVE_PX;
+			game->player.dir.x * PLAYER_MOVE_PX;
 		new_pos_x = new_pos_x < 0 ? 0 : new_pos_x;
 		if (game->map[(int)(game->player.pos.y)][(int)new_pos_x] != '1')
 			game->player.pos.x = new_pos_x;
 		new_pos_y = game->player.pos.y + game->player.is_moving *
-		  game->player.dir.y * PLAYER_MOVE_PX;
+			game->player.dir.y * PLAYER_MOVE_PX;
 		new_pos_y = new_pos_y < 0 ? 0 : new_pos_y;
 		if (game->map[(int)new_pos_y][(int)(game->player.pos.x)] != '1')
 			game->player.pos.y = new_pos_y;
@@ -43,12 +55,12 @@ static void	slide_player(t_game *game)
 		perpendicular = game->player.dir;
 		vec2_rotate(&perpendicular, M_PI / 2);
 		new_pos_x = game->player.pos.x + game->player.is_sidling *
-		  perpendicular.x * PLAYER_MOVE_PX;
+			perpendicular.x * PLAYER_MOVE_PX;
 		new_pos_x = new_pos_x < 0 ? 0 : new_pos_x;
 		if (game->map[(int)(game->player.pos.y)][(int)new_pos_x] != '1')
 			game->player.pos.x = new_pos_x;
 		new_pos_y = game->player.pos.y + game->player.is_sidling *
-		  perpendicular.y * PLAYER_MOVE_PX;
+			perpendicular.y * PLAYER_MOVE_PX;
 		new_pos_y = new_pos_y < 0 ? 0 : new_pos_y;
 		if (game->map[(int)new_pos_y][(int)(game->player.pos.x)] != '1')
 			game->player.pos.y = new_pos_y;
