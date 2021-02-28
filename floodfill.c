@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   floodfill.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/28 18:11:48 by jtanaka           #+#    #+#             */
+/*   Updated: 2021/02/28 18:11:49 by jtanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-// returun value is false if floodfill hit outside of map
 static bool	floodfill(t_game *game, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
@@ -19,7 +30,6 @@ static bool	floodfill(t_game *game, bool **filled_map, int i, int j)
 	return (is_surrounded);
 }
 
-// determine whether the map is surrounded or not by floodfill algorithm
 int			check_map_surrounded(t_game *game)
 {
 	int		x;
@@ -30,8 +40,6 @@ int			check_map_surrounded(t_game *game)
 
 	x = game->player.pos.x;
 	y = game->player.pos.y;
-
-	// +1 はNULL終端用
 	filled_map = ft_calloc(game->map_row + 1, sizeof(bool*));
 	i = 0;
 	while (i < game->map_row)
@@ -44,20 +52,7 @@ int			check_map_surrounded(t_game *game)
 		}
 		i++;
 	}
-
-	// floodfill
 	is_surrounded = floodfill(game, filled_map, y, x);
-
-	// print floodfill result
-	printf("------------------floodfill result--------------------\n");
-	printf("result: %s\n", is_surrounded ? "is_surrounded" : "is_not_surrounded");
-	for (int y = 0; y < game->map_row; y++){
-	  printf("|");
-	  for (int x = 0; x < game->map_col; x++){
-		printf("%c ", filled_map[y][x] ? 'X' : ' ');
-	  }
-	  printf("|\n");
-	}
 	free_ptrarr((void**)filled_map);
 	if (!is_surrounded)
 		return (put_and_return_err("Map isn't surrounded by wall"));
