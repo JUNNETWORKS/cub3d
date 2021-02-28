@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:16:03 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 18:17:20 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/01 00:42:56 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 bool		is_valid_color(int r, int g, int b)
 {
-	printf("rgb: (%d, %d, %d)\n", r, g, b);
 	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
 		return (false);
 	return (true);
