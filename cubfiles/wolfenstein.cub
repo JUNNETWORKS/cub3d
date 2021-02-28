@@ -1,13 +1,13 @@
 R 1920 1080
 
-NO textures/N.xpm
-SO textures/S.xpm
-WE textures/W.xpm
-EA textures/E.xpm
-S  textures/barrel.xpm    
+NO textures/redbrick.xpm
+SO textures/colorstone.xpm
+WE textures/bluestone.xpm
+EA textures/eagle.xpm
+S  textures/barrel.xpm
 
-F 220,100,0
-C 225,30,0
+F 112,112,112
+C 54,57,56
 
 
 
