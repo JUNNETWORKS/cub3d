@@ -114,6 +114,7 @@ typedef struct	s_game {
 	int			sprite_height; // スプライトの描画する時の高さ
 	t_img		tex_sprite;  // スプライトのテクスチャ
 	double		*z_buffer;  // z_buffer[screenWidth]  // スクリーンのxにおける壁までの距離
+	double		*sprite_dists;  // スプライトの距離計算に使う
 }				t_game;
 
 // スプライトを描画する時に必要な情報を保持する構造体

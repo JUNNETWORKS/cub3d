@@ -35,10 +35,13 @@ int		configure_screen(t_game *game, bool has_window)
 	game->img.height = game->screen_height;
 	game->tex_width = game->tex_n.width;
 	game->tex_height = game->tex_n.height;
-	game->z_buffer = ft_calloc(game->screen_width, sizeof(double));
+	if (!(game->z_buffer = ft_calloc(game->screen_width, sizeof(double))) ||
+		!(game->sprite_dists = ft_calloc(game->sprite_num, sizeof(double))))
+		return (put_and_return_err("malloc failed"));
 	plane_length = vec2_length(game->player.plane);
 	game->height_base = (double)game->screen_width * (1 / (2 * plane_length));
 	mlx_do_key_autorepeaton(game->mlx);
+	return (0);
 }
 
 int		initialize_game(t_game *game)
