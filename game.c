@@ -6,27 +6,33 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:13:06 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 23:35:24 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/01 00:16:16 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int		configure_screen(t_game *game, bool has_window)
+int		configure_window(t_game *game)
 {
-	double	plane_length;
 	int		max_width;
 	int		max_height;
 
 	mlx_get_screen_size(game->mlx, &max_width, &max_height);
 	printf("Display size\n\twidth: %d\n\theight: %d\n", max_width, max_height);
-	if (has_window)
-	{
-		game->screen_width = MIN(game->screen_width, max_width);
-		game->screen_height = MIN(game->screen_height, max_height);
-		game->win = mlx_new_window(game->mlx,
-			game->screen_width, game->screen_height, "cub3D");
-	}
+	game->screen_width = MIN(game->screen_width, max_width);
+	game->screen_height = MIN(game->screen_height, max_height);
+	if (!(game->win = mlx_new_window(game->mlx,
+		game->screen_width, game->screen_height, "cub3D")))
+		return (put_and_return_err("creating window is failed"));
+	return (0);
+}
+
+int		configure_screen(t_game *game, bool has_window)
+{
+	double	plane_length;
+
+	if (has_window && configure_window(game) == ERROR)
+		return (ERROR);
 	game->img.img = mlx_new_image(game->mlx,
 		game->screen_width, game->screen_height);
 	game->img.addr = mlx_get_data_addr(game->img.img,
