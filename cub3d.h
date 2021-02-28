@@ -235,6 +235,7 @@ uint32_t		rgb2hex(int r, int g, int b);
 uint32_t		alpha_blend(uint32_t dst, uint32_t src);
 void			put_error_msg(char *str);
 int				put_and_return_err(char *str);
+int				put_and_exit_err(char *str);
 bool			str_all_true(char *str, int(*f)(int));
 size_t			str_c_count(char *str, char c);
 size_t			ptrarr_len(void **ptrarr);
