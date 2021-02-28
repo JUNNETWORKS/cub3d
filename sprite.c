@@ -17,38 +17,49 @@ int		add_sprite(t_game *game, double x, double y)
 	return (0);
 }
 
-void	sort_sprites(t_game *game)
+static void	calc_sprite_dists(t_game *game, double *sprite_distances)
 {
-	double	*sprite_distances;
+	int i;
+
+	i = 0;
+	while (i < game->sprite_num){
+		sprite_distances[i] = (
+		(game->player.pos.x - game->sprites[i].x) *
+		(game->player.pos.x - game->sprites[i].x) +
+		(game->player.pos.y - game->sprites[i].y) *
+		(game->player.pos.y - game->sprites[i].y));
+		i++;
+	}
+}
+
+int			sort_sprites(t_game *game)
+{
+	double	*sprite_dists;
 	int		i;
 	int		flag;
 	double	tmp;
-	// スプライトのソートで使う(スプライトまでの距離)
-	sprite_distances = ft_calloc(game->sprite_num, sizeof(double));
+	t_vec2	tmpvec2;
 
-	// スプライトを遠い順にソートするために距離を求める
-	for (i = 0; i < game->sprite_num; i++){
-	  sprite_distances[i] = ((game->player.pos.x - game->sprites[i].x) * (game->player.pos.x - game->sprites[i].x) + (game->player.pos.y - game->sprites[i].y) * (game->player.pos.y - game->sprites[i].y));
-	}
-
-	// 遠い順にスプライトが並ぶようにソート
-	// バブルソート
+	if (!(sprite_dists = ft_calloc(game->sprite_num, sizeof(double))))
+		return (put_and_return_err("malloc failed"));
+	calc_sprite_dists(game, sprite_dists);
 	flag = 1;
 	while (flag){
 		flag = 0;
-		for (i = game->sprite_num - 1; i > 0; i--){
-			if (sprite_distances[i] > sprite_distances[i-1]){
-				tmp = sprite_distances[i];
-				sprite_distances[i] = sprite_distances[i-1];
-				sprite_distances[i-1] = tmp;
-
-				t_vec2 tmpvec2 = game->sprites[i];
+		i = game->sprite_num - 1;
+		while (i > 0){
+			if (sprite_dists[i] > sprite_dists[i-1]){
+				tmp = sprite_dists[i];
+				sprite_dists[i] = sprite_dists[i-1];
+				sprite_dists[i-1] = tmp;
+				tmpvec2 = game->sprites[i];
 				game->sprites[i] = game->sprites[i-1];
 				game->sprites[i-1] = tmpvec2;
-
 				flag = 1;
 			}
+			i--;
 		}
 	}
-	free(sprite_distances);
+	free(sprite_dists);
+	return (0);
 }
