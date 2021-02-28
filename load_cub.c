@@ -73,43 +73,50 @@ bool		is_valid_cubpath(char *path)
 			|| ft_strncmp(path + path_len - 4, ".cub", 4));
 }
 
-int			load_cubfile(t_game *game, char *path)
+bool		is_texture_identifier(char *idenfier)
 {
-	int		fd;
+	return (idenfier[0] == 'S' || !ft_strncmp(idenfier, "NO", 3)
+			|| !ft_strncmp(idenfier, "SO", 3) || !ft_strncmp(idenfier, "WE", 3)
+			|| !ft_strncmp(idenfier, "EA", 3));
+}
+
+int			load_cubfile_fd(t_game *game, int fd)
+{
 	char	*line;
 	int		status;
 	char	**params;
-	if (!is_valid_cubpath(path))
-		return (put_and_return_err("File extension is not .cub"));
-	if ((fd = open(path, O_RDONLY)) == -1)
-		return (put_and_return_err("Failed to open file"));
+
 	status = 0;
 	while (status >= 0 && (status = get_next_line(fd, &line)) == 1)
 	{
-		if (!(params = ft_split(line, ' ')))
-			status = ERROR;
-		if (params[0] == NULL || status == ERROR)
-		{
-			free_and_assign_null((void**)&line);
-			free_ptrarr((void**)params);
-			continue;
-		}
-		printf("params[0]: |%s|\n", params[0]);
-		printf("params[1]: |%s|\n", params[1]);
-		if (ft_strnstr(params[0], "R", ft_strlen(params[0])))
+		status = !(params = ft_split(line, ' ')) ? ERROR : status;
+		if (status >= 0 && params[0] &&
+			ft_strnstr(params[0], "R", ft_strlen(params[0])))
 			status = set_resolution(game, params[1], params[2]);
-		else if (params[0][0] == 'F' || params[0][0] == 'C')
+		else if ((status >= 0 && params[0]) &&
+			(params[0][0] == 'F' || params[0][0] == 'C'))
 			status = set_color(game, params[0][0], params[1]);
-		else if (params[0][0] == 'S' || !ft_strncmp(params[0], "NO", 3)
-			|| !ft_strncmp(params[0], "SO", 3) || !ft_strncmp(params[0], "WE", 3)
-			|| !ft_strncmp(params[0], "EA", 3))
+		else if (status >= 0 && params[0] && is_texture_identifier(params[0]))
 			status = load_texture(game, params[0], params[1]);
-		else
+		else if (status >= 0 && params[0])
 			status = load_map(game, line);
 		free_and_assign_null((void**)&line);
 		free_ptrarr((void**)params);
 	}
 	free(line);
+	return (status);
+}
+
+int			load_cubfile(t_game *game, char *path)
+{
+	int		fd;
+	int		status;
+
+	if (!is_valid_cubpath(path))
+		return (put_and_return_err("File extension is not .cub"));
+	if ((fd = open(path, O_RDONLY)) == -1)
+		return (put_and_return_err("Failed to open file"));
+	status = load_cubfile_fd(game, fd);
 	if (status == ERROR || get_pos_from_map(game) || check_map_surrounded(game))
 		return (put_and_return_err("Error occured during load map"));
 	// print map
