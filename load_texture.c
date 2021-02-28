@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 23:57:46 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 23:58:45 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/01 00:45:15 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int			load_texture(t_game *game, char *name, char *texture_path)
 {
 	t_img *tex;
 
-	printf("name: %s, texture_path: %s\n", name, texture_path);
 	if (has_texture_loaded(game, name))
 		return (put_and_return_err("Duplicated texture key"));
 	if (ft_strnstr(name, "NO", ft_strlen(name)))
