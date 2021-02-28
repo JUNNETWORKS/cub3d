@@ -53,6 +53,6 @@ fclean: clean
 re: fclean all
 
 run: all
-	./$(NAME) ./cub_files/example.cub
+	./$(NAME) ./cubfiles/example.cub
 
 .PHONY: all clean fclean re run
