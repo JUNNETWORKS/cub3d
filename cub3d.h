@@ -37,6 +37,7 @@
 
 // utils
 # define ABS(x) ((x) < 0 ? -1 * (x) : (x))
+# define MIN(x, y) ((x) < (y) ? (x) : (y))
 
 // 描画するためのイメージ情報を保持
 typedef struct	s_img {
