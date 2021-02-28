@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-int		add_sprite(t_game *game, double x, double y)
+int				add_sprite(t_game *game, double x, double y)
 {
 	t_vec2	new;
 	t_vec2	*new_sprites;
@@ -17,7 +17,7 @@ int		add_sprite(t_game *game, double x, double y)
 	return (0);
 }
 
-static void	calc_sprite_dists(t_game *game)
+static void		calc_sprite_dists(t_game *game)
 {
 	int i;
 
@@ -32,12 +32,23 @@ static void	calc_sprite_dists(t_game *game)
 	}
 }
 
+static void 	swap_sprite(t_game *game, int a, int b)
+{
+	double	tmp;
+	t_vec2	tmpvec2;
+
+	tmp = game->sprite_dists[a];
+	game->sprite_dists[a] = game->sprite_dists[b];
+	game->sprite_dists[b] = tmp;
+	tmpvec2 = game->sprites[a];
+	game->sprites[a] = game->sprites[b];
+	game->sprites[b] = tmpvec2;
+}
+
 void			sort_sprites(t_game *game)
 {
 	int		i;
 	int		flag;
-	double	tmp;
-	t_vec2	tmpvec2;
 
 	calc_sprite_dists(game);
 	flag = 1;
@@ -46,12 +57,7 @@ void			sort_sprites(t_game *game)
 		i = game->sprite_num - 1;
 		while (i > 0){
 			if (game->sprite_dists[i] > game->sprite_dists[i-1]){
-				tmp = game->sprite_dists[i];
-				game->sprite_dists[i] = game->sprite_dists[i-1];
-				game->sprite_dists[i-1] = tmp;
-				tmpvec2 = game->sprites[i];
-				game->sprites[i] = game->sprites[i-1];
-				game->sprites[i-1] = tmpvec2;
+				swap_sprite(game, i, i - 1);
 				flag = 1;
 			}
 			i--;
