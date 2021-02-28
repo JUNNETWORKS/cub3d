@@ -63,18 +63,23 @@ int			load_map(t_game *game, char *line)
 	return (0);
 }
 
+bool		is_valid_cubpath(char *path)
+{
+	size_t	path_len;
+
+	// cubfileの名前が正しいかチェックする(*.cubか)
+	path_len = ft_strlen(path);
+	return !(path_len < 5 || path[path_len - 5] == '/'
+			|| ft_strncmp(path + path_len - 4, ".cub", 4));
+}
+
 int			load_cubfile(t_game *game, char *path)
 {
 	int		fd;
 	char	*line;
 	int		status;
 	char	**params;
-	size_t	path_len;
-
-	// cubfileの名前が正しいかチェックする(*.cubか)
-	path_len = ft_strlen(path);
-	if (path_len < 5 || path[path_len - 5] == '/'
-		|| ft_strncmp(path + path_len - 4, ".cub", 4))
+	if (!is_valid_cubpath(path))
 		return (put_and_return_err("File extension is not .cub"));
 	if ((fd = open(path, O_RDONLY)) == -1)
 		return (put_and_return_err("Failed to open file"));
@@ -82,18 +87,14 @@ int			load_cubfile(t_game *game, char *path)
 	while (status >= 0 && (status = get_next_line(fd, &line)) == 1)
 	{
 		if (!(params = ft_split(line, ' ')))
-		{
 			status = ERROR;
-			break;
-		}
-
-		printf("params[0]: |%s|\n", params[0]);
-		if (params[0] == NULL)
+		if (params[0] == NULL || status == ERROR)
 		{
-			free(line);
+			free_and_assign_null((void**)&line);
 			free_ptrarr((void**)params);
 			continue;
 		}
+		printf("params[0]: |%s|\n", params[0]);
 		printf("params[1]: |%s|\n", params[1]);
 		if (ft_strnstr(params[0], "R", ft_strlen(params[0])))
 			status = set_resolution(game, params[1], params[2]);
@@ -107,7 +108,6 @@ int			load_cubfile(t_game *game, char *path)
 			status = load_map(game, line);
 		free_and_assign_null((void**)&line);
 		free_ptrarr((void**)params);
-		params = NULL;
 	}
 	free(line);
 	if (status == ERROR || get_pos_from_map(game) || check_map_surrounded(game))
