@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   load_texture.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/28 23:57:46 by jtanaka           #+#    #+#             */
+/*   Updated: 2021/02/28 23:58:45 by jtanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 static int	has_texture_loaded(t_game *game, char *name)
@@ -18,6 +30,7 @@ static int	has_texture_loaded(t_game *game, char *name)
 int			load_texture(t_game *game, char *name, char *texture_path)
 {
 	t_img *tex;
+
 	printf("name: %s, texture_path: %s\n", name, texture_path);
 	if (has_texture_loaded(game, name))
 		return (put_and_return_err("Duplicated texture key"));
@@ -31,7 +44,7 @@ int			load_texture(t_game *game, char *name, char *texture_path)
 		tex = &game->tex_e;
 	else if (name[0] == 'S')
 		tex = &game->tex_sprite;
-	if(load_image(game, tex, texture_path) == ERROR)
+	if (load_image(game, tex, texture_path) == ERROR)
 		return (put_and_return_err("Failed to load texture"));
 	return (0);
 }
