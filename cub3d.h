@@ -209,7 +209,6 @@ int 			key_release_hook(int keycode, t_game *game);
 // Drawers
 void			clear_img(t_img *img);
 void			draw_block(t_img *img, int x, int y, int color);
-void			draw_2vec2(t_img *img, t_vec2 v1, t_vec2 v2, int color, int thickness);
 void			draw_line_angle_length(t_img *img, t_vec2 position, double angle, int length, int color);
 // Vector
 double			vec2_length(t_vec2 vec);         // ベクトルの長さを求める
