@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   initialize_player.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/28 18:14:03 by jtanaka           #+#    #+#             */
+/*   Updated: 2021/02/28 18:14:31 by jtanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void		initialize_player_direction(t_player *player, char direction)
@@ -18,7 +30,8 @@ void		initialize_player_direction(t_player *player, char direction)
 	}
 }
 
-void		initialize_player(t_player *player, double x, double y, char direction)
+void		initialize_player(t_player *player,
+							double x, double y, char direction)
 {
 	player->pos.x = x;
 	player->pos.y = y;
