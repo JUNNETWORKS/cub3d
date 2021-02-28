@@ -190,7 +190,7 @@ uint32_t		get_color(t_img img, int x, int y);
 int				load_image(t_game *game, t_img *img, char *filepath);
 // Game functions
 int				initialize_game(t_game *game);
-void			configure_screen(t_game *game, bool has_window);
+int				configure_screen(t_game *game, bool has_window);
 // Draw screen
 void			draw_walls(t_game *game);
 void			draw_sprites(t_game *game);

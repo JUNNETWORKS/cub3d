@@ -6,13 +6,13 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:13:06 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 18:56:38 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/02/28 23:35:24 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	configure_screen(t_game *game, bool has_window)
+int		configure_screen(t_game *game, bool has_window)
 {
 	double	plane_length;
 	int		max_width;

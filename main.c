@@ -27,13 +27,15 @@ int main(int argc, char **argv)
 			put_error_msg("argv is not \"--save\"\n");
 			exit(EXIT_FAILURE);
 		}
-		configure_screen(&game, false);
+		if (configure_screen(&game, false))
+			return (EXIT_FAILURE);
 		draw_walls(&game);
 		draw_sprites(&game);
 		write_game2bmp(&game, "output.bmp");
 		exit(EXIT_SUCCESS);
 	}
-	configure_screen(&game, true);
+	if (configure_screen(&game, true))
+		return (EXIT_FAILURE);
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
 	mlx_hook(game.win, KeyRelease, KeyReleaseMask, key_release_hook, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);
