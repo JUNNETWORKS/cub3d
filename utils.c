@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/28 23:05:53 by jtanaka           #+#    #+#             */
+/*   Updated: 2021/02/28 23:06:21 by jtanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./cub3d.h"
 
 double	deg2rad(int x)
@@ -5,12 +17,12 @@ double	deg2rad(int x)
 	return ((double)x / 180 * M_PI);
 }
 
-int	rad2deg(double x)
+int		rad2deg(double x)
 {
 	return (int)(x * 180 / M_PI);
 }
 
-bool		str_all_true(char *str, int(*f)(int))
+bool	str_all_true(char *str, int (*f)(int))
 {
 	int		i;
 
@@ -26,14 +38,14 @@ bool		str_all_true(char *str, int(*f)(int))
 	return (true);
 }
 
-size_t		str_c_count(char *str, char c)
+size_t	str_c_count(char *str, char c)
 {
-	int		i;
-	int		count;
+	int	i;
+	int	count;
 
 	i = 0;
 	count = 0;
-	while(str[i])
+	while (str[i])
 	{
 		if (str[i] == c)
 			count++;
