@@ -124,13 +124,13 @@ typedef struct	s_sprite_vis_info {
 	// スクリーン上でのスプライトの座標
 	int			screen_x;
 	// スクリーン上でのスプライトの高さ
-	int			height_screen;
+	int			height;
 	// スプライト描画の一番上
 	int			draw_start_y;
 	// スプライト描画の一番下
 	int			draw_end_y;
 	// スクリーン上でのスプライトの横幅
-	int			width_screen;
+	int			width;
 	// スプライト描画の一番左
 	int			draw_start_x;
 	// スプライト描画の一番右
@@ -185,7 +185,7 @@ typedef struct	s_wall_vis_info {
 
 // MLX Utils
 void			my_mlx_pixel_put(t_img *img, int x, int y, int color);
-uint32_t		get_color_from_img(t_img img, int x, int y);
+uint32_t		get_color(t_img img, int x, int y);
 int				load_image(t_game *game, t_img *img, char *filepath);
 // Game functions
 int				initialize_game(t_game *game);
@@ -193,6 +193,7 @@ void			configure_screen(t_game *game, bool has_window);
 // Draw screen
 void			draw_walls(t_game *game);
 void			draw_sprites(t_game *game);
+void			draw_sprite_stripe(t_game *game, t_sprite_vis_info sprite_vis);
 // load cubfile
 int				load_cubfile(t_game *game, char *filepath);
 int				check_map_surrounded(t_game *game);

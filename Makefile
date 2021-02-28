@@ -11,6 +11,7 @@ CC = gcc
 HEADER_FILE = cub3d.h
 SRCS = main.c \
 	   draw_sprites.c \
+	   draw_sprite_stripe.c \
 	   draw_walls.c \
 	   game.c \
 	   mlx_utils.c \

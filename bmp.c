@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 16:51:53 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 16:52:07 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/02/28 17:30:43 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	write_image_data(t_game *game, int fd)
 		x = 0;
 		while (x < game->screen_width)
 		{
-			tmp = get_color_from_img(game->img, x, y);
+			tmp = get_color(game->img, x, y);
 			write(fd, &tmp, 4);
 			x++;
 		}
