@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 00:21:07 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/03/01 00:21:45 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/01 00:44:43 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int		main_loop(t_game *game)
 	draw_walls(game);
 	draw_sprites(game);
 	update_player(game);
-	print_game(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
