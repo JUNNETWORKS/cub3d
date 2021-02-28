@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:13:06 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/03/01 00:16:16 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/01 00:44:54 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ int		configure_window(t_game *game)
 	int		max_height;
 
 	mlx_get_screen_size(game->mlx, &max_width, &max_height);
-	printf("Display size\n\twidth: %d\n\theight: %d\n", max_width, max_height);
 	game->screen_width = MIN(game->screen_width, max_width);
 	game->screen_height = MIN(game->screen_height, max_height);
 	if (!(game->win = mlx_new_window(game->mlx,
