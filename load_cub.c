@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:18:14 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 22:58:11 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/02 04:27:10 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int			load_cubfile_fd(t_game *game, int fd)
 	{
 		params = ft_split(line, ' ');
 		status = !(params) ? ERROR : status;
-		if (status >= 0 && params[0] &&
+		if (status >= 0 && params[0] && get_split_size(line, ' ') == 3 &&
 			ft_strnstr(params[0], "R", ft_strlen(params[0])))
 			status = set_resolution(game, params[1], params[2]);
 		else if ((status >= 0 && params[0]) &&
