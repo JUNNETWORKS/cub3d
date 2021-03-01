@@ -69,6 +69,12 @@ int		main_loop(t_game *game)
 	return (0);
 }
 
+int	exit_game(t_game *game)
+{
+	mlx_destroy_window(game->mlx, game->win);
+	exit(0);
+}
+
 int main(int argc, char **argv)
 {
 	if (argc < 2 || argc > 3){  // ./cub3D *.cub --save
@@ -94,6 +100,7 @@ int main(int argc, char **argv)
 	configure_screen(&game, true);
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
 	mlx_hook(game.win, KeyRelease, KeyReleaseMask, key_release_hook, &game);
+	mlx_hook(game.win, ClientMessage, 1L << 17, exit_game, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);
 	mlx_loop(game.mlx);
 }
