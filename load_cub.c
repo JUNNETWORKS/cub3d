@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:18:14 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/03/02 04:27:10 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/02 04:34:40 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ int			load_cubfile_fd(t_game *game, int fd)
 	{
 		params = ft_split(line, ' ');
 		status = !(params) ? ERROR : status;
+		status = game->map_row && !params[0] ? ERROR : status;
 		if (status >= 0 && params[0] && get_split_size(line, ' ') == 3 &&
 			ft_strnstr(params[0], "R", ft_strlen(params[0])))
 			status = set_resolution(game, params[1], params[2]);
-		else if ((status >= 0 && params[0]) &&
-			(params[0][0] == 'F' || params[0][0] == 'C'))
+		else if ((status >= 0 && params[0]) && is_c_f_or_c(params[0][0]))
 			status = set_color(game, params[0][0], params[1]);
 		else if (status >= 0 && params[0] &&
 			is_texture_identifier(params[0]))

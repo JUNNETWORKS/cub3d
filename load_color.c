@@ -6,11 +6,16 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:16:03 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/03/01 00:42:56 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/02 04:34:53 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+bool		is_c_f_or_c(char c)
+{
+	return (c == 'F' || c == 'C');
+}
 
 bool		is_valid_color(int r, int g, int b)
 {

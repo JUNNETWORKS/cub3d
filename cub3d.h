@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 00:29:22 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/03/02 04:14:07 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/02 04:34:48 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,7 @@ void			draw_sprites(t_game *game);
 void			draw_sprite_stripe(t_game *game, t_sprite_vis_info sprite_vis);
 int				load_cubfile(t_game *game, char *filepath);
 int				check_map_surrounded(t_game *game);
+bool			is_c_f_or_c(char c);
 bool			is_valid_color(int r, int g, int b);
 uint32_t		get_color_from_rgbstr(char *rgbstr, uint32_t *color);
 bool			has_color_set(t_game *game, char name);
