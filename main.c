@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 00:21:07 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/03/01 00:44:43 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/02 04:14:46 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int		main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	mlx_hook(game.win, KeyPress, KeyPressMask, key_press_hook, &game);
 	mlx_hook(game.win, KeyRelease, KeyReleaseMask, key_release_hook, &game);
+	mlx_hook(game.win, ClientMessage, 1L << 17, exit_game, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);
 	mlx_loop(game.mlx);
 }

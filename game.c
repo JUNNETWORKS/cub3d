@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:13:06 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/03/01 00:44:54 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/02 04:14:21 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,10 @@ int		initialize_game(t_game *game)
 	game->screen_width = 0;
 	game->screen_height = 0;
 	return (0);
+}
+
+int		exit_game(t_game *game)
+{
+	mlx_destroy_window(game->mlx, game->win);
+	exit(0);
 }

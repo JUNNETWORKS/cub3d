@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:14:52 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/03/01 00:28:51 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/02 04:13:43 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,7 @@
 int		key_press_hook(int keycode, t_game *game)
 {
 	if (keycode == KEY_Q || keycode == KEY_ESC)
-	{
-		mlx_destroy_window(game->mlx, game->win);
-		exit(0);
-	}
+		exit_game(game);
 	if (keycode == KEY_W)
 		game->player.is_moving = 1;
 	if (keycode == KEY_S)
