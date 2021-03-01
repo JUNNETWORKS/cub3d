@@ -6,7 +6,7 @@
 /*   By: jtanaka <jtanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/28 18:00:26 by jtanaka           #+#    #+#             */
-/*   Updated: 2021/02/28 18:05:16 by jtanaka          ###   ########.fr       */
+/*   Updated: 2021/03/02 03:42:33 by jtanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,9 @@ static void	draw_stripe(t_game *game, t_ray ray,
 			my_mlx_pixel_put(&(game->img), x, y, game->ground_color);
 		if (y >= wall_vis->draw_start && y < wall_vis->draw_end)
 		{
-			wall_vis->texture_y =
-				(int)wall_vis->texture_pos_y & (ray.tex->height - 1);
+			wall_vis->texture_y = (int)wall_vis->texture_pos_y;
+			if (wall_vis->texture_y >= ray.tex->height)
+				wall_vis->texture_y = ray.tex->height - 1;
 			wall_vis->texture_pos_y += wall_vis->step;
 			color = get_color(*ray.tex,
 				wall_vis->texture_x, wall_vis->texture_y);
