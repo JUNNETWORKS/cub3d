@@ -100,7 +100,9 @@ void	draw_stripe(t_game *game, t_ray ray, t_wall_vis_info *wall_vis, int x)
 		{
 			// テクスチャの現在のy座標(double型)を整数型に変換する.
 			//  (TEXTURE_HEIGHT - 1)とのANDによりテクスチャ座標がテクスチャの高さを超えないようにしている.
-			wall_vis->texture_y = (int)wall_vis->texture_pos_y & (ray.tex->height - 1);
+			wall_vis->texture_y = (int)wall_vis->texture_pos_y;
+			if (wall_vis->texture_y >= ray.tex->height)
+				wall_vis->texture_y = ray.tex->height-1;
 			wall_vis->texture_pos_y += wall_vis->step;
 			color = get_color_from_img(*ray.tex, wall_vis->texture_x, wall_vis->texture_y);
 			// 正方形のy面にヒットしていた場合はRGBのそれぞれを1/2にすることで暗くする
