@@ -38,7 +38,10 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): ${HEADER_FILE} ${OBJS}
+$(MLX_PATH):
+	git clone https://github.com/42Paris/minilibx-linux.git $(MLX_PATH)
+
+$(NAME): $(MLX_PATH) ${HEADER_FILE} ${OBJS}
 	$(MLX_MAKE)
 	$(LIBFT_MAKE)
 	$(CC) -o $(NAME) $(SRCS) $(LIBFT_LIB) -L$(MLX_PATH) -lmlx -L$(INCLIB) -lXext -lX11 -lm -lbsd
@@ -51,6 +54,7 @@ clean:
 fclean: clean
 	$(LIBFT_MAKE) fclean
 	${RM} ${NAME}
+	${RM} -rf ${MLX_PATH}
 
 re: fclean all
 
