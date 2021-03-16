@@ -54,7 +54,6 @@ clean:
 fclean: clean
 	$(LIBFT_MAKE) fclean
 	${RM} ${NAME}
-	${RM} -rf ${MLX_PATH}
 
 re: fclean all
 
